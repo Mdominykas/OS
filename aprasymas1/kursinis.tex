@@ -79,9 +79,13 @@ Virtuali mašina - operacinės sistemos konstruktas, kurio pagalba kiekvienos pr
 
 Vieno mašinos žodžio ilgis yra 6 baitai. Virtuali mašina turi 16 blokų po 16 žodžių.
 
+yra supervizualinė ir vartotojo atmintis. Supervizualinė - pirmas blokas. Jis yra skirtas virtualios mašinos valdymui ir virtuali mašina neturi prieigos prie jos. Vartotojo atmintis yra 3 blokai. kiekvienas jų yra skiriamas atsitiktinai realios mašinos iš turimų.
+
+Virtuali mašina gauna blokų virtualius numerius. Dėl to kiekviena virtuali mašina mato, kad jos blokai yra pirmi penki - 0, 1, 2, 3, 4. Norint juos paversti į realios mašinos blokų numerius yra taikomas puslapiavimo mechanizmas. Jo metu procesorius pagal programos numerį ir jos puslapio numerį grąžina realų bloką.
+
 \subsection{Komandos}
 
-Visos komandos yra aprašomos vienu žodžiu - 6 baitais.
+Visos komandos yra aprašomos vienu žodžiu - 6 baitais. Visose komandose simbolis * reiškia, kad šis baitas nėra naudojamas.
 
 \subsubsection{Aritmetinės}
 \begin{itemize}
@@ -99,14 +103,15 @@ Visos komandos yra aprašomos vienu žodžiu - 6 baitais.
 \end{itemize}
 
 \subsubsection{Valdymo}
+Norint tinkamai naudotis perėjimais, prieš juos reikia panaudoti CMP operaciją. 
 \begin{itemize}
-	\item jmp - jump
-	\item je - jump if equal
-	\item jne - jump if not equal
-	\item jl - jump if less
-	\item jle - jump if less or equal
-	\item jg - jump if greater
-	\item jge - jump if greater or equal
+	\item JMPxyz - besąlyginis perėjimas. $x, y, z \in \{1, 2, \cdots 9 \}$. IC := 100*x + 10 * y + z.
+	\item JExyz* - pereiti, jeigu lygu. $x, y, z \in \{1, 2, \cdots 9 \}$. Jei ZF=1, tai IC := 100*x + 10 * y + z, kitu atveju IC := IC + 1.
+	\item JNExyz* - pereiti, jei nelygu. $x, y, z \in \{1, 2, \cdots 9 \}$. Jei ZF=0, tai IC := 100*x + 10 * y + z, kitu atveju IC := IC + 1.
+	\item JLxyz* - pereiti, jeigu mažiau. $x, y, z \in \{1, 2, \cdots 9 \}$. Jei SF=1, tai IC := 100*x + 10 * y + z, kitu atveju IC := IC + 1.
+	\item JLExyz* - pereiti, jeigu mažiau arba lygu. $x, y, z \in \{1, 2, \cdots 9 \}$. Jei ZF=1 arba SF=1, tai IC := 100*x + 10 * y + z, kitu atveju IC := IC + 1.
+	\item JGxyz* - pereiti, jeigu daugiau. $x, y, z \in \{1, 2, \cdots 9 \}$. Jei SF=0, tai IC := 100*x + 10 * y + z, kitu atveju IC := IC + 1.
+	\item JGExyz* - pereiti jeigu daugiau arba lygu. $x, y, z \in \{1, 2, \cdots 9 \}$. Jei ZF=1 arba SF=0, tai IC := 100*x + 10 * y + z, kitu atveju IC := IC + 1.
 \end{itemize}
 
 \subsubsection{Darbas su failais}
@@ -129,6 +134,14 @@ Darbo su failais metu yra naudojamos simbolių eilutės. Tai nulių besibaigiant
 \begin{itemize}
 	\item HALT - baigia programos darbą.
 \end{itemize}
+
+\subsection{Programos struktūra}
+
+Programos pradžią žymi žodis \$START, o pabaigą - \$FINSH. Tarp šių žodžių yra rašomos programos komandos. Jos užima vieta kode nuo programos pradžios. Nuo žymės .DTSEG yra duomenų segmento vieta. Nuo šios vietos tolesni žodžiai programos darbo pradžioje yra užpildomi nuliais, nebent po duomenų segmento žymės neseka programos pabaigos žymė. Tokiu atveju visi tarpiniai žodžiai yra įdedami į programą.
+
+\subsection{Virtuali mašina operacinės sistemos kontekste}
+
+Operacinė sistema paleidžia virtualią mašiną kiekvienai programai. Jei operacinė sistema yra multiprograminė, tai joje vienu metu veikia tik viena programa, bet vykdomoji programa nuolatos keičiasi.
 
 \printbibliography[heading=bibintoc] % Literatūros šaltiniai aprašomi
 \appendix  % Priedai

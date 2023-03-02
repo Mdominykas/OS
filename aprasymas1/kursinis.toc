@@ -6,8 +6,10 @@
 \contentsline {subsection}{\numberline {3.2.}Komandos}{4}{}%
 \contentsline {subsubsection}{\numberline {3.2.1.}Aritmetinės}{4}{}%
 \contentsline {subsubsection}{\numberline {3.2.2.}Duomenų judėjimo}{4}{}%
-\contentsline {subsubsection}{\numberline {3.2.3.}Valdymo}{4}{}%
+\contentsline {subsubsection}{\numberline {3.2.3.}Valdymo}{5}{}%
 \contentsline {subsubsection}{\numberline {3.2.4.}Darbas su failais}{5}{}%
 \contentsline {subsubsection}{\numberline {3.2.5.}Įvedimas ir išvedimas}{5}{}%
-\contentsline {subsubsection}{\numberline {3.2.6.}Programos pabaigos}{5}{}%
+\contentsline {subsubsection}{\numberline {3.2.6.}Programos pabaigos}{6}{}%
+\contentsline {subsection}{\numberline {3.3.}Programos struktūra}{6}{}%
+\contentsline {subsection}{\numberline {3.4.}Virtuali mašina operacinės sistemos kontekste}{6}{}%
 \def \@dotsep {1000}
