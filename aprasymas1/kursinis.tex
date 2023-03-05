@@ -45,43 +45,56 @@ Vartotojas, dirbantis su sistema, programas paleidžia interaktyviai, surinkdama
 
 \section{Realios mašinos modelis}
 
-Realią mašiną sudaro procesorius.
+\subsection{Procesorius}
 
 Procesorius turi registrus:
 
-\begin{enumerate}
+\begin{itemize}
 	\item IC - komandų skaitiklis - 4 baitai.
 	\item R1, R2, R3 - bendrosios paskirties registrai iš 6 baitų.
+	\item MODE - 1 bito registras, kuris nurodo procesoriaus darbo rėžimą (0 - vartotojas, 1 - supervizorius)
 	\item FLAGS - požymių  registras, susidedantis iš 4 šių dviejų bitų (nuo didžiausio iki mažiausio): 
 	\begin{itemize}
 		\item ZF - yra 1, jei aritmetinės operacijos rezultatas yra 0, o kitu atveju išvalomas.
 		\item SF - nustatomas 1, jei aritmetinės oepracijos rezultatas yra teigiamas, o priešingu atveju - 0.
 	\end{itemize}
-	\item TI - 1 bito registras nurodantis ar įvyko laikrodžio pertraukimas.
-	\item SI - 1 bito registras nurodantis ar įvyko sisteminis pertraukimas.
-\end{enumerate}
+	\item PI - 1 bito programinių pertraukimų registras.
+	\item TI - 1 baito laikrodžio pertraukimas registras.
+	\item SI - 1 bito sisteminių pertraukimų registras.
+\end{itemize}
 
-Procesoriuje yra laikrodis, kuris kas 1000 operacijų generuoja pertraukimus.
+\subsection{Atmintis}
 
-Taip pat procesorius turi loginį aritmetinį įrenginį, kuris vykdo aritmetines operacijas.
+Mašinos atminties dydis yra 16 blokų po 16 žodžių. Vieno žodžio ilgis yra 6 baitai.
 
-Įvedimo įrenginys - klaviatūra, kuri turi savo kanalą.
+\subsection{Taimerio mechanizmas}
+Realioje mašinoje yra taimeris. Jis skirtas tam, kad viena užduotis nebūtų vykdoma daugiau nei 255 laiko momentų. Tam tikslui po kiekvienos operacijos yra sumažina TI reikšmė. Skirtingos operacijos užtrunka skirtingą laiko skaičių: išvedimo į kanalų įrenginį ar įvedimo į jį užima 5 laiko vienetus, o visos kitos - 1. Kai TI reikšmė pasiekia 1 yra sugeneruojamas taimerio pertraukimas ir valdymas perduodamas supervizoriui.
 
-Yra ekranas - išvedimo įrenginys. Jam yra skirtas kanalas.
+\subsection{Kanalų įrenginys}
 
-Taip pat yra išorinės atminties įrenginys - kietasis diskas. Jis taip pat turi savo kanalą.
+Realioje mašinoje yra įvedimo įrenginys - klaviatūra ir išvedimo įrenginys - ekranas. Jie su procesorium komunikuoja per kanalų įrenginį. Įvydžius apsikeitimo komandą EXCHGE yra perkeliamas vienas blokas. Tam, kad būtų specifikuota, tai, kas bus perkeliama yra naudojami šie kanalų įrenginio registrai:
+
+\begin{itemize}
+	\item SB - 1 baito registras, kuriame saugas takelio, iš kurio bus kopijuojama numeris
+	\item DB - 1 baito registras, kuriame saugas takelio, į kurį bus kopijuojama
+	\item TYPE - 1 bito registras, kuriame nurodytas tipas objekto, kuris bus kopijuotas. 0 - procesoriaus atmintis, 1 - išorinė atmintis/srautas.
+\end{itemize}
 
 \section{Virtualios mašinos modelis}
 
 Virtuali mašina - operacinės sistemos konstruktas, kurio pagalba kiekvienos programos veikimas yra izoliajamos nuo visų kitų.
 
+Virtuali mašina turi priėjimą tik prie šių realios mašinos registrų:
+
+\begin{itemize}
+	\item R1, R2, R3 (bendros paskirties registrai)
+	\item FLAGS (požymių registras)
+	\item IC (programos skaitiklis)
+\end{itemize}
+
 \subsection{Atmintis}
 
-Vieno mašinos žodžio ilgis yra 6 baitai. Virtuali mašina turi 16 blokų po 16 žodžių.
-
-yra supervizualinė ir vartotojo atmintis. Supervizualinė - pirmas blokas. Jis yra skirtas virtualios mašinos valdymui ir virtuali mašina neturi prieigos prie jos. Vartotojo atmintis yra 3 blokai. kiekvienas jų yra skiriamas atsitiktinai realios mašinos iš turimų.
-
-Virtuali mašina gauna blokų virtualius numerius. Dėl to kiekviena virtuali mašina mato, kad jos blokai yra pirmi penki - 0, 1, 2, 3, 4. Norint juos paversti į realios mašinos blokų numerius yra taikomas puslapiavimo mechanizmas. Jo metu procesorius pagal programos numerį ir jos puslapio numerį grąžina realų bloką.
+Virtuali mašina turi priėjimą prie 5 blokų. Virtuali mašina gauna blokų virtualius numerius. Dėl to kiekviena virtuali mašina mato, kad jos blokai yra pirmi penki - 0, 1, 2, 3, 4. Norint juos paversti į realios mašinos blokų numerius yra taikomas puslapiavimo mechanizmas. Jo metu procesorius pagal programos numerį ir jos puslapio numerį grąžina realų bloką.
 
 \subsection{Komandos}
 
@@ -138,6 +151,12 @@ Darbo su failais metu yra naudojamos simbolių eilutės. Tai nulių besibaigiant
 \subsection{Programos struktūra}
 
 Programos pradžią žymi žodis \$START, o pabaigą - \$FINSH. Tarp šių žodžių yra rašomos programos komandos. Jos užima vieta kode nuo programos pradžios. Nuo žymės .DTSEG yra duomenų segmento vieta. Nuo šios vietos tolesni žodžiai programos darbo pradžioje yra užpildomi nuliais, nebent po duomenų segmento žymės neseka programos pabaigos žymė. Tokiu atveju visi tarpiniai žodžiai yra įdedami į programą.
+
+\subsection{Išorinė Atmintis}
+
+Išorinė atmints yra realizuojama kietuoju disku. Jame yra 256 blokai po 16 žodžių.
+
+Komunikacija su išorine atmintimi yra vykdoma per kanalų įrenginį.
 
 \subsection{Virtuali mašina operacinės sistemos kontekste}
 
