@@ -25,18 +25,18 @@ class "Išorinė Atmintis"
 | 0000 |  |  |  |  |  |  |
 | 0001 |  |  |  |  |  |  |
 | 0002 |  |  |  |  |  |  |
-...
+..
 | 4095 |  |  |  |  |  |  |
 }
 class "Išorinės atminties kanalas"
 
 class "Vartotojo atmintis"
 {
-| 00 |  |  |  |  |  |  |
-| 01 |  |  |  |  |  |  |
-| 02 |  |  |  |  |  |  |
-...
-| 79 |  |  |  |  |  |  |
+| 000 |  |  |  |  |  |  |
+| 001 |  |  |  |  |  |  |
+| 002 |  |  |  |  |  |  |
+..
+| 255 |  |  |  |  |  |  |
 }
 
 class "Puslapiavimo mechanizmas"

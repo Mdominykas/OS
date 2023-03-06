@@ -78,7 +78,7 @@ Be registrų procesorius dar turi šias dalis:
 	\item 
 \end{itemize}
 
-\subsection{Atmintis}
+\subsection{Vartotojo atmintis}
 
 Mašinos atminties dydis yra 16 blokų po 16 žodžių. Vieno žodžio ilgis yra 6 baitai.
 
@@ -113,7 +113,16 @@ Reali mašina įsimena paskutinį simbolį ir jį ligi simbolis yra perskaitomas
 
 \section{Virtualios mašinos modelis}
 
-Virtuali mašina - operacinės sistemos konstruktas, kurio pagalba kiekvienos programos veikimas yra izoliajamos nuo visų kitų.
+\begin{figure}[H]
+	\centering	
+	\includegraphics[scale=0.65]{img/reali_masina}
+	\caption{Virtualios mašinos modelis}   % Antraštė įterpiama po paveikslėlio
+	\label{img:virtuali_masina}
+\end{figure}
+
+Virtuali mašina - operacinės sistemos konstruktas, kurio pagalba kiekvienos programos veikimas yra izoliajamos nuo visų kitų. Šios mašinos modelis yra pateikiamas \ref{img:virtuali_masina} paveiksliuke.
+
+\subsection{Registrai}
 
 Virtuali mašina turi priėjimą tik prie šių realios mašinos registrų:
 
@@ -132,8 +141,8 @@ Virtuali mašina turi priėjimą prie 5 blokų. Virtuali mašina gauna blokų vi
 Visos komandos yra aprašomos vienu žodžiu - 6 baitais. Visose komandose simbolis * reiškia, kad šis baitas nėra naudojamas.
 
 \subsubsection{Aritmetinės}
+Po kiekvienos aritmetinės operacijos procesorius padina IC reikšmę.
 \begin{itemize}
-	
 	\item ADDmxy - jei m = 0, tai operacija sudeda skaičius esančius registruose Rx, Ry ir rezultatą patalpina į R1.
 	\item SUBmxy - jei m = 0, tai operacija atima iš skaičiaus esančio registre Rx, skaičių iš registro Ry ir rezultatą patalpina į R1. Jei m=1, tai operaciją atlieka su registru Rx ir konstanta y.
 	\item MULmxy - jei m = 0, tai operacija sudaugina skaičius esančius registruose Rx, Ry ir rezultatą patalpina į R1. Jei m=1, tai operaciją atlieka su registru Rx ir konstanta y.
@@ -143,7 +152,7 @@ Visos komandos yra aprašomos vienu žodžiu - 6 baitais. Visose komandose simbo
 
 \subsubsection{Duomenų judėjimo}
 \begin{itemize}
-	\item MVmxy - Perkelia duomenis. m reikšmė nurodo perkelimo režimą.
+	\item MVmxy - Perkelia duomenis. m reikšmė nurodo perkelimo režimą. x ir y specifikuoja vietas, kur juda duomenys. Po šios komandos yra padidinama IC reikšmė.
 	\begin{enumerate}
 		\item m=1. Šiuo atveju perkėlimas yra iš registro į registrą. x nurodo pirmo registro (šaltinio) numerį, y - tikslo.
 		\item m = 2. Šiuo atveju perkėlimas yra iš registro R1 į atmintį. Atminties vieta yra gaunama pagal formulę $10 \cdot x + y$.
@@ -163,8 +172,10 @@ Norint tinkamai naudotis perėjimais, prieš juos reikia panaudoti CMP operacij�
 	\item JGExyz* - pereiti jeigu daugiau arba lygu. $x, y, z \in \{1, 2, \cdots 9 \}$. Jei ZF=1 arba SF=0, tai IC := 100*x + 10 * y + z, kitu atveju IC := IC + 1.
 \end{itemize}
 
+Po valdymo komandų registro FLAGS reikšmė nėra keičiama.
+
 \subsubsection{Darbas su failais}
-Darbo su failais metu yra naudojamos simbolių eilutės. Tai nulių besibaigianti baitų seka.
+Darbo su failais metu yra naudojamos simbolių eilutės. Tai nulių besibaigianti baitų seka. Visos šios operacijos iškviečia programinius pertraukimus, o procesoriui reikalinga informacija apie komandos paskirtį yra gauname per komandos pavadinimą.
 \begin{itemize}
 	\item OPENF* - atidaro failą, kurio pavadinimas yra simbolių eilutė, kurios pradžios adresas yra R1 reikšmė. Operacijos pabaigoje į R2 yra įrašomas failo numeris. Jeigu failas yra nerandamas - nustato SI=1.
 	\item CLOSEF - uždaro failą, kurio numeris yra įrašytas  R2. Jeigu norimas failas nėra rastas, ar jau buvo uždarytas yra nustatoma SI=1
@@ -173,7 +184,10 @@ Darbo su failais metu yra naudojamos simbolių eilutės. Tai nulių besibaigiant
 	\item DELETF - sunaikiną failą, kurio pavadimas yra simbolių eilutė, kurios pradžios adresas yra nurodomas R1 reikmšmėje.
 \end{itemize}
 
+Po kiekvienos iš šių komandų procesorius padidina registro IC reikšmę ir išvalo FLAGS registrą.
+
 \subsubsection{Įvedimas ir išvedimas}
+Įvedimo ir išvedimo komandos, kaip ir darbo su failais komandos, iškvieia programinį pertraukimą.
 \begin{itemize}
 	\item WRITEU - parašo simbolių eilutę, kurios pradžios adresas yra nurodytas registre R1 į ekraną.
 	\item READU* - perskaito simbolį įvestą iš klaviatūros bei reikšmę patalpina į R1. Jeigu nuskaityti nepavyko, tai gauname reikšmė R1=0.
@@ -184,13 +198,25 @@ Darbo su failais metu yra naudojamos simbolių eilutės. Tai nulių besibaigiant
 	\item HALT - baigia programos darbą.
 \end{itemize}
 
+\subsubsection{Neaptartos situacijos}
+
+Jeigu programos vykdymo metu yra sutinkama komanda, kurios procesorius nesugeba apdoroti, tai jokia programa nėra vykdoma ir padidinama IC reikšmė.
+
+Jei programos vykdymo metu IC reikšmė viršija 79 (programos žodžių skaičius), tai programa yra nutraukiama.
+
 \subsection{Programos struktūra}
 
-Programos pradžią žymi žodis \$START, o pabaigą - \$FINSH. Tarp šių žodžių yra rašomos programos komandos. Jos užima vieta kode nuo programos pradžios. Nuo žymės .DTSEG yra duomenų segmento vieta. Nuo šios vietos tolesni žodžiai programos darbo pradžioje yra užpildomi nuliais, nebent po duomenų segmento žymės neseka programos pabaigos žymė. Tokiu atveju visi tarpiniai žodžiai yra įdedami į programą.
+Programos pradžią žymi žodis \$START, o pabaigą - \$FINSH. Tarp šių žodžių yra rašomos programos komandos. Jos užima vieta kode nuo programos pradžios. 
+
+Nuo žymės .DTSEG yra duomenų segmento vieta. Nuo šios vietos tolesni žodžiai programos darbo pradžioje yra užpildomi nuliais, nebent po duomenų segmento žymės neseka programos pabaigos žymė. Tokiu atveju visi tarpiniai žodžiai yra įdedami į programą.
+
+Žymė .START žymi vykdomojo kodo pradžią. Kai programa yra perkeliama į vartotojo atmintį, yra nustatoma tokia IC reikšmė, kad  atminties ląstelėje su adresu IC – 1 būtų ši žymė. Jei programoje nėra, ar yra daugiau nei 1 .START žymė, tai programos įkėlimas į atmintį baigiasi klaida.
 
 \subsection{Virtuali mašina operacinės sistemos kontekste}
 
 Operacinė sistema paleidžia virtualią mašiną kiekvienai programai. Jei operacinė sistema yra multiprograminė, tai joje vienu metu veikia tik viena programa, bet vykdomoji programa nuolatos keičiasi.
+
+Virtualias mašinas kuria operacinė sistemą. Jos yra sukuriamos, kai vartotojas įveda programą LOAD prg, kur prg yra programos pavadinimas kietąjame diske.
 
 \printbibliography[heading=bibintoc] % Literatūros šaltiniai aprašomi
 \appendix  % Priedai
