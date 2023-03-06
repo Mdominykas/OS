@@ -45,22 +45,37 @@ Vartotojas, dirbantis su sistema, programas paleidžia interaktyviai, surinkdama
 
 \section{Realios mašinos modelis}
 
+\begin{figure}[H]
+	\centering	
+	\includegraphics[scale=0.65]{img/reali_masina}
+	\caption{Realios mašinos modelis}   % Antraštė įterpiama po paveikslėlio
+	\label{img:reali_masina}
+\end{figure}
+
+Realios mašinos modelis yra pateikiamas \ref{img:reali_masina} paveiksliuke. Tolesnėse sekcijose bus plačiau aprašoma kiekviena šios mašinos dalis
+
 \subsection{Procesorius}
 
 Procesorius turi registrus:
 
 \begin{itemize}
 	\item IC - komandų skaitiklis - 4 baitai.
-	\item R1, R2, R3 - bendrosios paskirties registrai iš 6 baitų.
+	\item R1, R2, R3 - bendrosios paskirties registrai iš 6 baitų (vienas žodis).
 	\item MODE - 1 bito registras, kuris nurodo procesoriaus darbo rėžimą (0 - vartotojas, 1 - supervizorius)
-	\item FLAGS - požymių  registras, susidedantis iš 4 šių dviejų bitų (nuo didžiausio iki mažiausio): 
+	\item FLAGS - požymių  registras, susidedantis iš šių 2 bitų (nuo didžiausio iki mažiausio): 
 	\begin{itemize}
 		\item ZF - yra 1, jei aritmetinės operacijos rezultatas yra 0, o kitu atveju išvalomas.
 		\item SF - nustatomas 1, jei aritmetinės oepracijos rezultatas yra teigiamas, o priešingu atveju - 0.
 	\end{itemize}
 	\item PI - 1 bito programinių pertraukimų registras.
-	\item TI - 1 baito laikrodžio pertraukimas registras.
-	\item SI - 1 bito sisteminių pertraukimų registras.
+	\item TI - 1 bito laikrodžio pertraukimas registras.
+	\item SI - 1 bito ?sisteminių?/?supervizorinių? pertraukimų registras.
+\end{itemize}
+
+Be registrų procesorius dar turi šias dalis:
+\begin{itemize}
+	\item Aukšto lygio kalbos procesorius - HLP. Jis atsakingas už komandų apdorojimą.
+	\item 
 \end{itemize}
 
 \subsection{Atmintis}
@@ -79,6 +94,22 @@ Realioje mašinoje yra įvedimo įrenginys - klaviatūra ir išvedimo įrenginys
 	\item DB - 1 baito registras, kuriame saugas takelio, į kurį bus kopijuojama
 	\item TYPE - 1 bito registras, kuriame nurodytas tipas objekto, kuris bus kopijuotas. 0 - procesoriaus atmintis, 1 - išorinė atmintis/srautas.
 \end{itemize}
+
+\subsection{Išorinė Atmintis}
+
+Išorinė atmints yra realizuojama kietuoju disku. Jame yra 256 blokai po 16 žodžių.
+
+Komunikacija su išorine atmintimi yra vykdoma per kanalų įrenginį.
+
+\subsection{Klaviatūra}
+
+Kiekvienas klaviatūros mygtuko paspaudimas generuoja sisteminius pertraukimus, t.y. nustato registro SI reikšmę į 1. 
+
+Reali mašina įsimena paskutinį simbolį ir jį ligi simbolis yra perskaitomas. Kai tai nutinka vietoje simbolio yra įrašoma reikšmė 0. Jei tokiu metu yra bandoma skaityti, tai laikoma, kad tai nepavyko.
+
+\subsection{Ekranas}
+
+Į ekraną galima išvesti vieną žodį. Tam programa turi perkelti reikšmę į R1 ir iškviesti programinį pertraukimą
 
 \section{Virtualios mašinos modelis}
 
@@ -112,7 +143,12 @@ Visos komandos yra aprašomos vienu žodžiu - 6 baitais. Visose komandose simbo
 
 \subsubsection{Duomenų judėjimo}
 \begin{itemize}
-	\item mov - copes data (register <-> memory (arba reg <-> reg))
+	\item MVmxy - Perkelia duomenis. m reikšmė nurodo perkelimo režimą.
+	\begin{enumerate}
+		\item m=1. Šiuo atveju perkėlimas yra iš registro į registrą. x nurodo pirmo registro (šaltinio) numerį, y - tikslo.
+		\item m = 2. Šiuo atveju perkėlimas yra iš registro R1 į atmintį. Atminties vieta yra gaunama pagal formulę $10 \cdot x + y$.
+		\item m = 2. Šiuo atveju perkėlimas yra iš atminties į registrą R1. Atminties vieta yra gaunama pagal formulę $10 \cdot x + y$.
+	\end{enumerate}(register <-> memory (arba reg <-> reg))
 \end{itemize}
 
 \subsubsection{Valdymo}
@@ -130,17 +166,17 @@ Norint tinkamai naudotis perėjimais, prieš juos reikia panaudoti CMP operacij�
 \subsubsection{Darbas su failais}
 Darbo su failais metu yra naudojamos simbolių eilutės. Tai nulių besibaigianti baitų seka.
 \begin{itemize}
-	\item OPENF - atidaro failą, kurio pavadinimas yra simbolių eilutė, kurios pradžios adresas yra R1 reikšmė. Operacijos pabaigoje į R2 yra įrašomas failo numeris. Jeigu failas yra nerandamas - nustato SI=1.
+	\item OPENF* - atidaro failą, kurio pavadinimas yra simbolių eilutė, kurios pradžios adresas yra R1 reikšmė. Operacijos pabaigoje į R2 yra įrašomas failo numeris. Jeigu failas yra nerandamas - nustato SI=1.
 	\item CLOSEF - uždaro failą, kurio numeris yra įrašytas  R2. Jeigu norimas failas nėra rastas, ar jau buvo uždarytas yra nustatoma SI=1
-	\item WRITEF - persiunčia simbolių eilutę, kurios adresas yra nurodytas R1 į kanalų įrenginį.
-	\item READ - perskaito simbolį iš failo ir jo reikšmę įrašo į R1. R2 - nuskaitomo failo numeris.
+	\item WRITEF - parašo simbolių eilutę, kurios adresas yra nurodytas R1 į failą, kurio numeris yra įrašytas į R2.
+	\item READ* - perskaito simbolį iš failo ir jo reikšmę įrašo į R1. R2 - nuskaitomo failo numeris.
 	\item DELETF - sunaikiną failą, kurio pavadimas yra simbolių eilutė, kurios pradžios adresas yra nurodomas R1 reikmšmėje.
 \end{itemize}
 
 \subsubsection{Įvedimas ir išvedimas}
 \begin{itemize}
 	\item WRITEU - parašo simbolių eilutę, kurios pradžios adresas yra nurodytas registre R1 į ekraną.
-	\item READU - perskaito simbolį įvestą iš klaviatūros bei reikšmę patalpina į R1.
+	\item READU* - perskaito simbolį įvestą iš klaviatūros bei reikšmę patalpina į R1. Jeigu nuskaityti nepavyko, tai gauname reikšmė R1=0.
 \end{itemize}
 
 \subsubsection{Programos pabaigos}
@@ -151,12 +187,6 @@ Darbo su failais metu yra naudojamos simbolių eilutės. Tai nulių besibaigiant
 \subsection{Programos struktūra}
 
 Programos pradžią žymi žodis \$START, o pabaigą - \$FINSH. Tarp šių žodžių yra rašomos programos komandos. Jos užima vieta kode nuo programos pradžios. Nuo žymės .DTSEG yra duomenų segmento vieta. Nuo šios vietos tolesni žodžiai programos darbo pradžioje yra užpildomi nuliais, nebent po duomenų segmento žymės neseka programos pabaigos žymė. Tokiu atveju visi tarpiniai žodžiai yra įdedami į programą.
-
-\subsection{Išorinė Atmintis}
-
-Išorinė atmints yra realizuojama kietuoju disku. Jame yra 256 blokai po 16 žodžių.
-
-Komunikacija su išorine atmintimi yra vykdoma per kanalų įrenginį.
 
 \subsection{Virtuali mašina operacinės sistemos kontekste}
 
