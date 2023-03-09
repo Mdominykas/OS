@@ -45,14 +45,14 @@ Vartotojas, dirbantis su sistema, programas paleidžia interaktyviai, surinkdama
 
 \section{Realios mašinos modelis}
 
+Šiame darbe bus modeliuojama reali mašina, kuri turi vieną procesorių. Jos modelis yra pateikiamas \ref{img:reali_masina} paveiksliuke. Tolesnėse sekcijose bus plačiau aprašoma kiekviena šios mašinos dalis
+
 \begin{figure}[H]
 	\centering	
 	\includegraphics[scale=0.65]{img/reali_masina}
 	\caption{Realios mašinos modelis}   % Antraštė įterpiama po paveikslėlio
 	\label{img:reali_masina}
 \end{figure}
-
-Realios mašinos modelis yra pateikiamas \ref{img:reali_masina} paveiksliuke. Tolesnėse sekcijose bus plačiau aprašoma kiekviena šios mašinos dalis
 
 \subsection{Procesorius}
 
@@ -61,29 +61,36 @@ Procesorius turi registrus:
 \begin{itemize}
 	\item IC - komandų skaitiklis - 4 baitai.
 	\item R1, R2, R3 - bendrosios paskirties registrai iš 6 baitų (vienas žodis).
+	\item CS - kodo segmento registras, 1 baitas.
+	\item DS - duomenų segmento registras, 1 baitas.
 	\item MODE - 1 bito registras, kuris nurodo procesoriaus darbo rėžimą (0 - vartotojas, 1 - supervizorius)
 	\item FLAGS - požymių  registras, susidedantis iš šių 2 bitų (nuo didžiausio iki mažiausio): 
 	\begin{itemize}
-		\item ZF - yra 1, jei aritmetinės operacijos rezultatas yra 0, o kitu atveju išvalomas.
-		\item SF - nustatomas 1, jei aritmetinės oepracijos rezultatas yra teigiamas, o priešingu atveju - 0.
+		\item ZF - yra 1, jei aritmetinės ar palyginimo operacijos rezultatas yra 0, o kitu atveju išvalomas.
+		\item SF - nustatomas 1, jei aritmetinės operacijos rezultatas yra teigiamas, o priešingu atveju - 0.
 	\end{itemize}
+	\item PTR - puslapiavimo registras - 2 baitai
 	\item PI - 1 bito programinių pertraukimų registras.
 	\item TI - 1 bito laikrodžio pertraukimas registras.
-	\item SI - 1 bito ?sisteminių?/?supervizorinių? pertraukimų registras.
+	\item SI - 1 bito sisteminių pertraukimų registras.
 \end{itemize}
 
-Be registrų procesorius dar turi šias dalis:
-\begin{itemize}
-	\item Aukšto lygio kalbos procesorius - HLP. Jis atsakingas už komandų apdorojimą.
-	\item 
-\end{itemize}
+Be registrų procesorius dar turi Aukšto lygio kalbos procesorių - HLP. Jis atsakingas už komandų apdorojimą.
 
 \subsection{Vartotojo atmintis}
 
 Mašinos atminties dydis yra 16 blokų po 16 žodžių. Vieno žodžio ilgis yra 6 baitai.
 
+\subsubsection{Puslapiavimas}
+
+Norint virtualios mašinos blokų numerius paversti į realios mašinos blokų numerius yra taikomas puslapiavimo mechanizmas. Tam tikslui, kuriant virtualią mašiną, yra išskiriamas dar vienas blokas, kuriame saugama lentelė, atliekanti pervertimą.
+
+Kai PTR reikšmė yra $a_0a_1$, kur $a_0, a_1$ yra baitai, tai $a_0$ rodo puslapiavimo lentelės bloko numerį, o $a_1$ - lentelės pradžios adresą tame bloke (abu šešioliktainiu formatu).
+
+Virtualaus adreso $x_0x_1$ realus adresas = $16 * [6 * (16 * a_0 + a_1) + x_0] + x_1$.
+
 \subsection{Taimerio mechanizmas}
-Realioje mašinoje yra taimeris. Jis skirtas tam, kad viena užduotis nebūtų vykdoma daugiau nei 255 laiko momentų. Tam tikslui po kiekvienos operacijos yra sumažina TI reikšmė. Skirtingos operacijos užtrunka skirtingą laiko skaičių: išvedimo į kanalų įrenginį ar įvedimo į jį užima 5 laiko vienetus, o visos kitos - 1. Kai TI reikšmė pasiekia 1 yra sugeneruojamas taimerio pertraukimas ir valdymas perduodamas supervizoriui.
+Realioje mašinoje yra taimeris. Jis skirtas tam, kad viena užduotis nebūtų vykdoma daugiau nei 255 laiko momentų. Tam tikslui po kiekvienos operacijos yra sumažina TI reikšmė. Skirtingos operacijos užtrunka skirtingą laiko skaičių: išvedimo į kanalų įrenginį ar įvedimo į jį užima 5 laiko vienetus, o visos kitos - 1. Kai TI reikšmė pasiekia 0 yra sugeneruojamas taimerio pertraukimas ir valdymas perduodamas supervizoriui.
 
 \subsection{Kanalų įrenginys}
 
@@ -109,18 +116,18 @@ Reali mašina įsimena paskutinį simbolį ir jį ligi simbolis yra perskaitomas
 
 \subsection{Ekranas}
 
-Į ekraną galima išvesti vieną žodį. Tam programa turi perkelti reikšmę į R1 ir iškviesti programinį pertraukimą
+Į ekraną galima išvesti vieną žodį. Tam programa turi perkelti reikšmę į R1 ir iškviesti sisteminius pertraukimą
 
 \section{Virtualios mašinos modelis}
 
+Virtuali mašina - operacinės sistemos konstruktas, kurio pagalba kiekvienos programos veikimas yra izoliajamos nuo visų kitų, o darbui su bendrais įrenginiais pasitelkiama operacinė sistemą. Reali mašina paleidžia virtualią mašiną, o ši vykdo komandas. Šios mašinos modelis yra pateikiamas \ref{img:virtuali_masina} paveiksliuke.
+
 \begin{figure}[H]
 	\centering	
-	\includegraphics[scale=0.65]{img/reali_masina}
+	\includegraphics[scale=0.65]{img/virtuali_masina}
 	\caption{Virtualios mašinos modelis}   % Antraštė įterpiama po paveikslėlio
 	\label{img:virtuali_masina}
 \end{figure}
-
-Virtuali mašina - operacinės sistemos konstruktas, kurio pagalba kiekvienos programos veikimas yra izoliajamos nuo visų kitų. Šios mašinos modelis yra pateikiamas \ref{img:virtuali_masina} paveiksliuke.
 
 \subsection{Registrai}
 
@@ -128,13 +135,15 @@ Virtuali mašina turi priėjimą tik prie šių realios mašinos registrų:
 
 \begin{itemize}
 	\item R1, R2, R3 (bendros paskirties registrai)
+	\item CS (kodo segmento registras)
+	\item DS (duomenų segmento registras)
 	\item FLAGS (požymių registras)
 	\item IC (programos skaitiklis)
 \end{itemize}
 
 \subsection{Atmintis}
 
-Virtuali mašina turi priėjimą prie 5 blokų. Virtuali mašina gauna blokų virtualius numerius. Dėl to kiekviena virtuali mašina mato, kad jos blokai yra pirmi penki - 0, 1, 2, 3, 4. Norint juos paversti į realios mašinos blokų numerius yra taikomas puslapiavimo mechanizmas. Jo metu procesorius pagal programos numerį ir jos puslapio numerį grąžina realų bloką.
+Virtuali mašina turi priėjimą prie 4 blokų. Virtuali mašina gauna blokų virtualius numerius. Dėl to kiekviena virtuali mašina mato, kad jos blokai yra pirmi keturi - 0, 1, 2, 3.
 
 \subsection{Komandos}
 
@@ -148,6 +157,13 @@ Po kiekvienos aritmetinės operacijos procesorius padina IC reikšmę.
 	\item MULmxy - jei m = 0, tai operacija sudaugina skaičius esančius registruose Rx, Ry ir rezultatą patalpina į R1. Jei m=1, tai operaciją atlieka su registru Rx ir konstanta y.
 	\item DIVmxy - jei m = 0, tai operacija padalina skaičių esantį registre Rx, iš skaičiaus esančio registre Ry ir rezultatą patalpina į R1. Jei m=1, tai operaciją atlieka su registru Rx ir konstanta y.
 	\item CMPmxy - jei m = 0, tai operacija palygina skaičius esančius registruose Rx ir Ry bei pagal Rx-Ry reikšmę nustato registro FLAGS reikšmę. Jei m=1, tai operaciją atlieka su registru Rx ir konstanta y.
+\end{itemize}
+
+Taip pat po kiekvienos aritmetinės operacijos pagal rezultatą (o palyginimo atveju - lyginamųjų skaičių skirtumą) yra nustatomos registro FLAGS reikšmės.
+
+\begin{itemize}
+	\item Jei rezultatas yra 0, tai nustatomas ZF=1, kitu atveju ZF = 0.
+	\item SF reikšmė yra nustatoma rezultato didžiausio bito reikšmei.
 \end{itemize}
 
 \subsubsection{Duomenų judėjimo}
@@ -187,7 +203,7 @@ Darbo su failais metu yra naudojamos simbolių eilutės. Tai nulių besibaigiant
 Po kiekvienos iš šių komandų procesorius padidina registro IC reikšmę ir išvalo FLAGS registrą.
 
 \subsubsection{Įvedimas ir išvedimas}
-Įvedimo ir išvedimo komandos, kaip ir darbo su failais komandos, iškvieia programinį pertraukimą.
+Įvedimo ir išvedimo komandos, kaip ir darbo su failais komandos, iškviečia programinį pertraukimą.
 \begin{itemize}
 	\item WRITEU - parašo simbolių eilutę, kurios pradžios adresas yra nurodytas registre R1 į ekraną.
 	\item READU* - perskaito simbolį įvestą iš klaviatūros bei reikšmę patalpina į R1. Jeigu nuskaityti nepavyko, tai gauname reikšmė R1=0.
@@ -195,22 +211,28 @@ Po kiekvienos iš šių komandų procesorius padidina registro IC reikšmę ir i
 
 \subsubsection{Programos pabaigos}
 \begin{itemize}
-	\item HALT - baigia programos darbą.
+	\item HALT** - baigia programos darbą.
 \end{itemize}
 
 \subsubsection{Neaptartos situacijos}
 
 Jeigu programos vykdymo metu yra sutinkama komanda, kurios procesorius nesugeba apdoroti, tai jokia programa nėra vykdoma ir padidinama IC reikšmė.
 
-Jei programos vykdymo metu IC reikšmė viršija 79 (programos žodžių skaičius), tai programa yra nutraukiama.
+Jei programos vykdymo metu IC reikšmė viršija $63_{10}$ (programos žodžių skaičius), tai programa yra nutraukiama.
 
 \subsection{Programos struktūra}
 
-Programos pradžią žymi žodis \$START, o pabaigą - \$FINSH. Tarp šių žodžių yra rašomos programos komandos. Jos užima vieta kode nuo programos pradžios. 
+Maksimalus programos dydis yra 64 žodžiai.
 
-Nuo žymės .DTSEG yra duomenų segmento vieta. Nuo šios vietos tolesni žodžiai programos darbo pradžioje yra užpildomi nuliais, nebent po duomenų segmento žymės neseka programos pabaigos žymė. Tokiu atveju visi tarpiniai žodžiai yra įdedami į programą.
+Programos pradžią žymi žodis \$START. Po jo yra programos pavadinimas, o ------ žymė pavadinimo pabaigą. 
 
-Žymė .START žymi vykdomojo kodo pradžią. Kai programa yra perkeliama į vartotojo atmintį, yra nustatoma tokia IC reikšmė, kad  atminties ląstelėje su adresu IC – 1 būtų ši žymė. Jei programoje nėra, ar yra daugiau nei 1 .START žymė, tai programos įkėlimas į atmintį baigiasi klaida.
+Tarp šių žodžių yra rašomos programos komandos. Jos užima vieta kode nuo programos pradžios. 
+
+Nuo $10_{10}$ žodžio yra kodo segentas. Programos pradžioje nustatoma IC = 10
+
+Nuo $40_{10}$ žodžio yra duomenų segmento vieta. Visi nuo šio žodžio sekantys žodžiai yra perkeliami į programą, o jei jų iki pabaigos žymės yra mažiau - programa užpildoma nuliais.
+
+Programos pabaiga žymi žodis \$FINSH. 
 
 \subsection{Virtuali mašina operacinės sistemos kontekste}
 

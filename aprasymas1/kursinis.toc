@@ -3,20 +3,21 @@
 \contentsline {section}{\numberline {2.}Realios mašinos modelis}{3}{}%
 \contentsline {subsection}{\numberline {2.1.}Procesorius}{3}{}%
 \contentsline {subsection}{\numberline {2.2.}Vartotojo atmintis}{4}{}%
+\contentsline {subsubsection}{\numberline {2.2.1.}Puslapiavimas}{4}{}%
 \contentsline {subsection}{\numberline {2.3.}Taimerio mechanizmas}{4}{}%
 \contentsline {subsection}{\numberline {2.4.}Kanalų įrenginys}{4}{}%
-\contentsline {subsection}{\numberline {2.5.}Išorinė Atmintis}{4}{}%
+\contentsline {subsection}{\numberline {2.5.}Išorinė Atmintis}{5}{}%
 \contentsline {subsection}{\numberline {2.6.}Klaviatūra}{5}{}%
 \contentsline {subsection}{\numberline {2.7.}Ekranas}{5}{}%
 \contentsline {section}{\numberline {3.}Virtualios mašinos modelis}{6}{}%
 \contentsline {subsection}{\numberline {3.1.}Registrai}{6}{}%
 \contentsline {subsection}{\numberline {3.2.}Atmintis}{6}{}%
-\contentsline {subsection}{\numberline {3.3.}Komandos}{6}{}%
+\contentsline {subsection}{\numberline {3.3.}Komandos}{7}{}%
 \contentsline {subsubsection}{\numberline {3.3.1.}Aritmetinės}{7}{}%
 \contentsline {subsubsection}{\numberline {3.3.2.}Duomenų judėjimo}{7}{}%
-\contentsline {subsubsection}{\numberline {3.3.3.}Valdymo}{7}{}%
+\contentsline {subsubsection}{\numberline {3.3.3.}Valdymo}{8}{}%
 \contentsline {subsubsection}{\numberline {3.3.4.}Darbas su failais}{8}{}%
-\contentsline {subsubsection}{\numberline {3.3.5.}Įvedimas ir išvedimas}{8}{}%
+\contentsline {subsubsection}{\numberline {3.3.5.}Įvedimas ir išvedimas}{9}{}%
 \contentsline {subsubsection}{\numberline {3.3.6.}Programos pabaigos}{9}{}%
 \contentsline {subsubsection}{\numberline {3.3.7.}Neaptartos situacijos}{9}{}%
 \contentsline {subsection}{\numberline {3.4.}Programos struktūra}{9}{}%

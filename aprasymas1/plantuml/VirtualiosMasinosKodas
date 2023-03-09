@@ -4,11 +4,13 @@ hide circle
 class "Virtualus procesorius"
 {
 Registrai:
-R1 : 6 baitai
-R2 : 6 baitai
-R3 : 6 baitai
-IC : 4 baitai
-FLAGS : 2 bitai
+R1 : 6 baitai,
+R2 : 6 baitai,
+R3 : 6 baitai,
+IC : 4 baitai,
+FLAGS : 2 bitai,
+CS : 1 baitas,
+DS : 1 baitas
 }
 
 class "Virtuali atmintis"
@@ -17,10 +19,20 @@ class "Virtuali atmintis"
 | 01 |  |  |  |  |  |  |
 | 02 |  |  |  |  |  |  |
 ..
-| 79 |  |  |  |  |  |  |
+| 63 |  |  |  |  |  |  |
 }
 
+class "Virtualus įvedimo įrenginys"
+
+class "Virtualus išvedimo įrenginys"
+
 hide "Virtualus procesorius" methods
+hide "Virtualus įvedimo įrenginys" members
+hide "Virtualus išvedimo įrenginys" members
 
 "Virtualus procesorius" <--> "Virtuali atmintis"
+
+"Virtualus procesorius" <-- "Virtualus įvedimo įrenginys"
+
+"Virtualus procesorius" --> "Virtualus išvedimo įrenginys"
 @enduml
