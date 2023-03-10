@@ -33,7 +33,6 @@ class "Išorinė Atmintis"
 ..
 | 4095 |  |  |  |  |  |  |
 }
-class "Išorinės atminties kanalas"
 
 class "Vartotojo atmintis"
 {
@@ -45,17 +44,19 @@ class "Vartotojo atmintis"
 }
 
 class "Puslapiavimo mechanizmas"
+class "Kanalų įrenginys"
 
 hide Klaviatūra members
 hide Ekranas members
-hide "Išorinės atminties kanalas" members
+hide "Kanalų įrenginys" members
+
 hide "Puslapiavimo mechanizmas" members
 
 
-Ekranas  <--> Procesorius
-Procesorius <--> Klaviatūra
-"Išorinės atminties kanalas" <--> "Išorinė Atmintis"
-"Išorinės atminties kanalas" <--> Procesorius
+Ekranas  <-- "Kanalų įrenginys"
+"Kanalų įrenginys" <--> Procesorius
+"Kanalų įrenginys" <-- Klaviatūra
+"Kanalų įrenginys" <--> "Išorinė Atmintis"
 "Puslapiavimo mechanizmas" <--> "Vartotojo atmintis"
 "Puslapiavimo mechanizmas" <--> Procesorius
 @enduml

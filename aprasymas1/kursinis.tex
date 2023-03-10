@@ -87,19 +87,32 @@ Norint virtualios mašinos blokų numerius paversti į realios mašinos blokų n
 
 Kai PTR reikšmė yra $a_0a_1$, kur $a_0, a_1$ yra baitai, tai $a_0$ rodo puslapiavimo lentelės bloko numerį, o $a_1$ - lentelės pradžios adresą tame bloke (abu šešioliktainiu formatu).
 
-Virtualaus adreso $x_0x_1$ realus adresas = $16 * [6 * (16 * a_0 + a_1) + x_0] + x_1$.
+Virtualaus adreso $x_0x_1$ realus adresas = $16 * [(16 * a_0 + a_1) + x_0] + x_1$.
 
 \subsection{Taimerio mechanizmas}
-Realioje mašinoje yra taimeris. Jis skirtas tam, kad viena užduotis nebūtų vykdoma daugiau nei 255 laiko momentų. Tam tikslui po kiekvienos operacijos yra sumažina TI reikšmė. Skirtingos operacijos užtrunka skirtingą laiko skaičių: išvedimo į kanalų įrenginį ar įvedimo į jį užima 5 laiko vienetus, o visos kitos - 1. Kai TI reikšmė pasiekia 0 yra sugeneruojamas taimerio pertraukimas ir valdymas perduodamas supervizoriui.
+Realioje mašinoje yra taimeris. Jis skirtas tam, kad viena užduotis nebūtų vykdoma daugiau nei 20 laiko momentų. Tam tikslui po kiekvienos operacijos yra sumažina TI reikšmė. Skirtingos operacijos užtrunka skirtingą laiko skaičių: išvedimo į kanalų įrenginį ar įvedimo į jį užima 5 laiko vienetus, o visos kitos - 1. Kai TI reikšmė pasiekia 0 yra sugeneruojamas taimerio pertraukimas ir valdymas perduodamas supervizoriui.
 
 \subsection{Kanalų įrenginys}
 
-Realioje mašinoje yra įvedimo įrenginys - klaviatūra ir išvedimo įrenginys - ekranas. Jie su procesorium komunikuoja per kanalų įrenginį. Įvydžius apsikeitimo komandą EXCHGE yra perkeliamas vienas blokas. Tam, kad būtų specifikuota, tai, kas bus perkeliama yra naudojami šie kanalų įrenginio registrai:
+Realioje mašinoje yra įvedimo įrenginys - klaviatūra ir išvedimo įrenginys - ekranas. Jie su procesorium komunikuoja per kanalų įrenginį. Įvydžius apsikeitimo komandą EXCHGE yra perkeliamas vienas baitas. Tam, kad būtų specifikuota, tai, kas bus perkeliama yra naudojami šie kanalų įrenginio registrai:
 
 \begin{itemize}
-	\item SB - 1 baito registras, kuriame saugas takelio, iš kurio bus kopijuojama numeris
+	\item SB - 1 baito registras, kuriame saugomas takelio, iš kurio bus kopijuojama numeris.
+	\item SW - 1 baito registras, kuriame saugoma žodžio iš kurio bus kopijuojama numeris.
 	\item DB - 1 baito registras, kuriame saugas takelio, į kurį bus kopijuojama
-	\item TYPE - 1 bito registras, kuriame nurodytas tipas objekto, kuris bus kopijuotas. 0 - procesoriaus atmintis, 1 - išorinė atmintis/srautas.
+	\item DW - 1 baito registras, kuriame saugoma žodžio į kurį  bus kopijuojama numeris.
+	\item ST - 1 baito registras, kuriame nurodytas tipas objekto, kuris bus kopijuotas. 
+	\begin{enumerate}
+		\item Procesoriaus atmintis
+		\item Išorinė atmintis
+		\item Klaviatūra
+	\end{enumerate}
+	\item DT - 1 baito registras, kuriame nurodytas tipas objekto, į kurį bus kopijuojama
+	\begin{enumerate}
+		\item Procesoriaus atmintis
+		\item Išorinė atmintis
+		\item Ekranas
+	\end{enumerate}
 \end{itemize}
 
 \subsection{Išorinė Atmintis}
@@ -150,7 +163,7 @@ Virtuali mašina turi priėjimą prie 4 blokų. Virtuali mašina gauna blokų vi
 Visos komandos yra aprašomos vienu žodžiu - 6 baitais. Visose komandose simbolis * reiškia, kad šis baitas nėra naudojamas.
 
 \subsubsection{Aritmetinės}
-Po kiekvienos aritmetinės operacijos procesorius padina IC reikšmę.
+Šiose operacijose $x, y \in \{1, 2, 3\}$, o $m \in \{0, 1\}$
 \begin{itemize}
 	\item ADDmxy - jei m = 0, tai operacija sudeda skaičius esančius registruose Rx, Ry ir rezultatą patalpina į R1.
 	\item SUBmxy - jei m = 0, tai operacija atima iš skaičiaus esančio registre Rx, skaičių iš registro Ry ir rezultatą patalpina į R1. Jei m=1, tai operaciją atlieka su registru Rx ir konstanta y.
@@ -159,7 +172,7 @@ Po kiekvienos aritmetinės operacijos procesorius padina IC reikšmę.
 	\item CMPmxy - jei m = 0, tai operacija palygina skaičius esančius registruose Rx ir Ry bei pagal Rx-Ry reikšmę nustato registro FLAGS reikšmę. Jei m=1, tai operaciją atlieka su registru Rx ir konstanta y.
 \end{itemize}
 
-Taip pat po kiekvienos aritmetinės operacijos pagal rezultatą (o palyginimo atveju - lyginamųjų skaičių skirtumą) yra nustatomos registro FLAGS reikšmės.
+Po kiekvienos aritmetinės operacijos procesorius padina IC reikšmę. Taip pat po kiekvienos aritmetinės operacijos pagal rezultatą (o palyginimo atveju - lyginamųjų skaičių skirtumą) yra nustatomos registro FLAGS reikšmės.
 
 \begin{itemize}
 	\item Jei rezultatas yra 0, tai nustatomas ZF=1, kitu atveju ZF = 0.
@@ -170,7 +183,7 @@ Taip pat po kiekvienos aritmetinės operacijos pagal rezultatą (o palyginimo at
 \begin{itemize}
 	\item MVmxy - Perkelia duomenis. m reikšmė nurodo perkelimo režimą. x ir y specifikuoja vietas, kur juda duomenys. Po šios komandos yra padidinama IC reikšmė.
 	\begin{enumerate}
-		\item m=1. Šiuo atveju perkėlimas yra iš registro į registrą. x nurodo pirmo registro (šaltinio) numerį, y - tikslo.
+		\item m = 1. Šiuo atveju perkėlimas yra iš registro į registrą. x nurodo pirmo registro (šaltinio) numerį, y - tikslo.
 		\item m = 2. Šiuo atveju perkėlimas yra iš registro R1 į atmintį. Atminties vieta yra gaunama pagal formulę $10 \cdot x + y$.
 		\item m = 2. Šiuo atveju perkėlimas yra iš atminties į registrą R1. Atminties vieta yra gaunama pagal formulę $10 \cdot x + y$.
 	\end{enumerate}(register <-> memory (arba reg <-> reg))
@@ -191,22 +204,22 @@ Norint tinkamai naudotis perėjimais, prieš juos reikia panaudoti CMP operacij�
 Po valdymo komandų registro FLAGS reikšmė nėra keičiama.
 
 \subsubsection{Darbas su failais}
-Darbo su failais metu yra naudojamos simbolių eilutės. Tai nulių besibaigianti baitų seka. Visos šios operacijos iškviečia programinius pertraukimus, o procesoriui reikalinga informacija apie komandos paskirtį yra gauname per komandos pavadinimą.
+Darbo su failais metu yra naudojamos simbolių eilutės. Tai baitų seka, kurios pabaigoje yra žodis 000000. Visos šios operacijos iškviečia programinius pertraukimus, o procesoriui reikalinga informacija apie komandos paskirtį yra gauname per komandos pavadinimą.
 \begin{itemize}
 	\item OPENF* - atidaro failą, kurio pavadinimas yra simbolių eilutė, kurios pradžios adresas yra R1 reikšmė. Operacijos pabaigoje į R2 yra įrašomas failo numeris. Jeigu failas yra nerandamas - nustato SI=1.
 	\item CLOSEF - uždaro failą, kurio numeris yra įrašytas  R2. Jeigu norimas failas nėra rastas, ar jau buvo uždarytas yra nustatoma SI=1
 	\item WRITEF - parašo simbolių eilutę, kurios adresas yra nurodytas R1 į failą, kurio numeris yra įrašytas į R2.
-	\item READ* - perskaito simbolį iš failo ir jo reikšmę įrašo į R1. R2 - nuskaitomo failo numeris.
-	\item DELETF - sunaikiną failą, kurio pavadimas yra simbolių eilutė, kurios pradžios adresas yra nurodomas R1 reikmšmėje.
+	\item READ** - kai R2 yra nuskaitomo failo numeris, perskaito simbolį iš failo ir jo reikšmę įrašo į R1.
+	\item DELETF - sunaikiną failą, kurio "handleris" nurodomas R1 reikmšmėje.
 \end{itemize}
 
 Po kiekvienos iš šių komandų procesorius padidina registro IC reikšmę ir išvalo FLAGS registrą.
 
 \subsubsection{Įvedimas ir išvedimas}
-Įvedimo ir išvedimo komandos, kaip ir darbo su failais komandos, iškviečia programinį pertraukimą.
+Įvedimo ir išvedimo komandos, kaip ir darbo su failais komandos, iškviečia sisteminį pertraukimą.
 \begin{itemize}
-	\item WRITEU - parašo simbolių eilutę, kurios pradžios adresas yra nurodytas registre R1 į ekraną.
-	\item READU* - perskaito simbolį įvestą iš klaviatūros bei reikšmę patalpina į R1. Jeigu nuskaityti nepavyko, tai gauname reikšmė R1=0.
+	\item INTER1 - išveda registro R1 reikšmę į ekraną.
+	\item INTER2 - perskaito simbolį įvestą iš klaviatūros bei reikšmę patalpina į R1. Iki kol simbolis yra įvedams, programa užsiblokuoja. Jeigu nuskaityti nepavyko, tai gauname reikšmė R1=0.
 \end{itemize}
 
 \subsubsection{Programos pabaigos}
@@ -224,11 +237,11 @@ Jei programos vykdymo metu IC reikšmė viršija $63_{10}$ (programos žodžių 
 
 Maksimalus programos dydis yra 64 žodžiai.
 
-Programos pradžią žymi žodis \$START. Po jo yra programos pavadinimas, o ------ žymė pavadinimo pabaigą. 
+Programos pradžią žymi žodis \$START. Po jo yra programos pavadinimas, o žymė ------ (šeši '-' ženklai) - pavadinimo pabaigą. 
 
 Tarp šių žodžių yra rašomos programos komandos. Jos užima vieta kode nuo programos pradžios. 
 
-Nuo $10_{10}$ žodžio yra kodo segentas. Programos pradžioje nustatoma IC = 10
+Nuo $10_{10}$ žodžio yra kodo segentas. Programos pradžioje nustatoma IC = $10_{10}$
 
 Nuo $40_{10}$ žodžio yra duomenų segmento vieta. Visi nuo šio žodžio sekantys žodžiai yra perkeliami į programą, o jei jų iki pabaigos žymės yra mažiau - programa užpildoma nuliais.
 
