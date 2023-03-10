@@ -21,5 +21,6 @@
 \contentsline {subsubsection}{\numberline {3.3.6.}Programos pabaigos}{9}{}%
 \contentsline {subsubsection}{\numberline {3.3.7.}Neaptartos situacijos}{9}{}%
 \contentsline {subsection}{\numberline {3.4.}Programos struktūra}{9}{}%
-\contentsline {subsection}{\numberline {3.5.}Virtuali mašina operacinės sistemos kontekste}{9}{}%
+\contentsline {subsection}{\numberline {3.5.}Išorinio disko pavyzdys}{9}{}%
+\contentsline {subsection}{\numberline {3.6.}Virtuali mašina operacinės sistemos kontekste}{10}{}%
 \def \@dotsep {1000}

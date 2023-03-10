@@ -181,12 +181,12 @@ Po kiekvienos aritmetinės operacijos procesorius padina IC reikšmę. Taip pat 
 
 \subsubsection{Duomenų judėjimo}
 \begin{itemize}
-	\item MVmxy - Perkelia duomenis. m reikšmė nurodo perkelimo režimą. x ir y specifikuoja vietas, kur juda duomenys. Po šios komandos yra padidinama IC reikšmė.
+	\item MVmxy* - Perkelia duomenis. m reikšmė nurodo perkelimo režimą. x ir y specifikuoja vietas, kur juda duomenys. Po šios komandos yra padidinama IC reikšmė.
 	\begin{enumerate}
 		\item m = 1. Šiuo atveju perkėlimas yra iš registro į registrą. x nurodo pirmo registro (šaltinio) numerį, y - tikslo.
 		\item m = 2. Šiuo atveju perkėlimas yra iš registro R1 į atmintį. Atminties vieta yra gaunama pagal formulę $10 \cdot x + y$.
-		\item m = 2. Šiuo atveju perkėlimas yra iš atminties į registrą R1. Atminties vieta yra gaunama pagal formulę $10 \cdot x + y$.
-	\end{enumerate}(register <-> memory (arba reg <-> reg))
+		\item m = 3. Šiuo atveju perkėlimas yra iš atminties į registrą R1. Atminties vieta yra gaunama pagal formulę $10 \cdot x + y$.
+	\end{enumerate}
 \end{itemize}
 
 \subsubsection{Valdymo}
@@ -207,10 +207,10 @@ Po valdymo komandų registro FLAGS reikšmė nėra keičiama.
 Darbo su failais metu yra naudojamos simbolių eilutės. Tai baitų seka, kurios pabaigoje yra žodis 000000. Visos šios operacijos iškviečia programinius pertraukimus, o procesoriui reikalinga informacija apie komandos paskirtį yra gauname per komandos pavadinimą.
 \begin{itemize}
 	\item OPENF* - atidaro failą, kurio pavadinimas yra simbolių eilutė, kurios pradžios adresas yra R1 reikšmė. Operacijos pabaigoje į R2 yra įrašomas failo numeris. Jeigu failas yra nerandamas - nustato SI=1.
-	\item CLOSEF - uždaro failą, kurio numeris yra įrašytas  R2. Jeigu norimas failas nėra rastas, ar jau buvo uždarytas yra nustatoma SI=1
-	\item WRITEF - parašo simbolių eilutę, kurios adresas yra nurodytas R1 į failą, kurio numeris yra įrašytas į R2.
+	\item CLOSEF - uždaro failą, kurio numeris yra įrašytas  R2. Jeigu norimas failas nėra rastas, ar jau buvo uždarytas yra nustatoma R1 = 0, kitu atveju R1 bus uždaryto failo numeris.
+	\item WRITEF - parašo simbolį iš R1 į failą, kurio numeris yra R2.
 	\item READ** - kai R2 yra nuskaitomo failo numeris, perskaito simbolį iš failo ir jo reikšmę įrašo į R1.
-	\item DELETF - sunaikiną failą, kurio "handleris" nurodomas R1 reikmšmėje.
+	\item DELETF - sunaikiną failą, kurio numeris nurodomas R2 reikmšmėje.
 \end{itemize}
 
 Po kiekvienos iš šių komandų procesorius padidina registro IC reikšmę ir išvalo FLAGS registrą.
@@ -219,7 +219,7 @@ Po kiekvienos iš šių komandų procesorius padidina registro IC reikšmę ir i
 Įvedimo ir išvedimo komandos, kaip ir darbo su failais komandos, iškviečia sisteminį pertraukimą.
 \begin{itemize}
 	\item INTER1 - išveda registro R1 reikšmę į ekraną.
-	\item INTER2 - perskaito simbolį įvestą iš klaviatūros bei reikšmę patalpina į R1. Iki kol simbolis yra įvedams, programa užsiblokuoja. Jeigu nuskaityti nepavyko, tai gauname reikšmė R1=0.
+	\item INTER2 - perskaito simbolį įvestą iš klaviatūros bei reikšmę patalpina į R1. Iki kol simbolis yra įvedamas, programa užsiblokuoja. Jeigu nuskaityti nepavyko, tai gauname reikšmė R1=0.
 \end{itemize}
 
 \subsubsection{Programos pabaigos}
@@ -241,11 +241,39 @@ Programos pradžią žymi žodis \$START. Po jo yra programos pavadinimas, o žy
 
 Tarp šių žodžių yra rašomos programos komandos. Jos užima vieta kode nuo programos pradžios. 
 
-Nuo $10_{10}$ žodžio yra kodo segentas. Programos pradžioje nustatoma IC = $10_{10}$
+Nuo $10_{10}$ žodžio yra kodo segentas. Programos pradžioje nustatoma IC = $10_{10}$. Tam, kad kode nereikėtų vesti tuščių simbolių kodo segmentas žymimas .CODES žyme.
 
 Nuo $40_{10}$ žodžio yra duomenų segmento vieta. Visi nuo šio žodžio sekantys žodžiai yra perkeliami į programą, o jei jų iki pabaigos žymės yra mažiau - programa užpildoma nuliais.
+Tam, kad kode nereikėtų vesti tuščių simbolių duomenų segmentas žymimas .DATAS žyme.
 
 Programos pabaiga žymi žodis \$FINSH. 
+
+\subsection{Išorinio disko pavyzdys}
+
+\begin{verbatim}
+	
+$START
+ciklas
+------
+.CODES
+JMP010
+.DATAS
+$FINSH
+$START
+sudeti
+------
+.CODES
+INTER2
+MV112*
+INTER2
+ADD012
+INTER1
+.DATAS
+$FINISH
+
+	
+\end{verbatim}
+
 
 \subsection{Virtuali mašina operacinės sistemos kontekste}
 
