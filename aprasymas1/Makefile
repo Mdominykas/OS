@@ -1,7 +1,7 @@
 generuoti:
-	xelatex kursinis.tex
-	biber kursinis
-	xelatex kursinis.tex
+	xelatex projektas1.tex
+	biber projektas1
+	xelatex projektas1.tex
 
 ubuntu:
 	echo "Diegiamas LaTeX (PdfLaTeX, XeTeX ir kt.)"
