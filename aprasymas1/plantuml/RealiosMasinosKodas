@@ -25,20 +25,29 @@ HLP
 
 class "Išorinė Atmintis"
 {
+(numeruojama žodžiais)
 | 0000 |  |  |  |  |  |  |
 | 0001 |  |  |  |  |  |  |
 | 0002 |  |  |  |  |  |  |
-..
+|.......| .| .| .| .| .| .|
 | 4095 |  |  |  |  |  |  |
 }
 
-class "Vartotojo atmintis"
+class "Atmintis"
 {
+(numeruojama žodžiais)
+Supervizorinė atmintis
 | 000 |  |  |  |  |  |  |
 | 001 |  |  |  |  |  |  |
 | 002 |  |  |  |  |  |  |
-..
+|.........| .| .| .| .| .| .|
 | 255 |  |  |  |  |  |  |
+Vartotojo Atmintis
+| 256 |  |  |  |  |  |  |
+| 257 |  |  |  |  |  |  |
+| 258 |  |  |  |  |  |  |
+|.........| .| .| .| .| .| .|
+| 4095 |  |  |  |  |  |  |
 }
 
 class "Puslapiavimo mechanizmas"
@@ -55,6 +64,6 @@ Ekranas  <-- "Kanalų įrenginys"
 "Kanalų įrenginys" <--> Procesorius
 "Kanalų įrenginys" <-- Klaviatūra
 "Kanalų įrenginys" <--> "Išorinė Atmintis"
-"Puslapiavimo mechanizmas" <--> "Vartotojo atmintis"
+"Puslapiavimo mechanizmas" <--> "Atmintis"
 "Puslapiavimo mechanizmas" <--> Procesorius
 @enduml

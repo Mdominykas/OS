@@ -83,10 +83,6 @@ Be registrų procesorius dar turi Aukšto lygio kalbos procesorių - HLP. Jis at
 
 Realios mašinos atminties dydis yra 256 blokai po 16 žodžių. Vieno žodžio ilgis yra 6 baitai.
 
-\subsection{Supervizorinė atmintis}
-
-Pirmi 16 realios mašinos blokų yra skiriami supervizorinei atminčiai.
-
 \subsubsection{Puslapiavimas}
 
 Norint virtualios mašinos blokų numerius paversti į realios mašinos blokų numerius yra taikomas puslapiavimo mechanizmas. Tam tikslui, kuriant virtualią mašiną, yra išskiriamas dar vienas blokas, kuriame saugama lentelė, atliekanti pervertimą.
@@ -94,6 +90,10 @@ Norint virtualios mašinos blokų numerius paversti į realios mašinos blokų n
 Kai PTR reikšmė yra $a_0a_1$, kur $a_0, a_1$ yra šešioliktainiai skaičiai. Tada puslapių lentelės bloko adresas yra $16 * a_0 + a_1$  
 
 Virtualaus adreso $x_0x_1$ ($x_0, \ x_1$ - šešioliktainiai skaičiai) realus adresas = $16 * [(16 * a_0 + a_1) + x_0] + x_1$.
+
+\subsection{Supervizorinė atmintis}
+
+Pirmi 16 realios mašinos blokų yra skiriami supervizorinei atminčiai.
 
 \subsection{Pertraukimai}
 

@@ -14,11 +14,12 @@ DS : 1 baitas
 
 class "Virtuali atmintis"
 {
+(numeruojama žodžiais)
 | 00 |  |  |  |  |  |  |
 | 01 |  |  |  |  |  |  |
 | 02 |  |  |  |  |  |  |
-..
-| 63 |  |  |  |  |  |  |
+|......| .| .| .| .| .| .|
+| 255 |  |  |  |  |  |  |
 }
 
 class "Virtualus įvedimo įrenginys"
