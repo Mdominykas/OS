@@ -6,7 +6,7 @@ class "Virtualus procesorius"
 R1 : 6 baitai,
 R2 : 6 baitai,
 R3 : 6 baitai,
-IC : 4 baitai,
+IC : 2 baitai,
 FLAGS : 1 baitas,
 CS : 1 baitas,
 DS : 1 baitas
