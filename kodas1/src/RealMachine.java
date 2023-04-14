@@ -6,7 +6,7 @@ public class RealMachine {
     VirtualMachine vm = null;
     InterruptHandler interruptHandler;
     PagingMechanism pagingMechanism;
-
+    ExternalMemory externalMemory;
     RealMachine() {
         R1 = new Register(6);
         R2 = new Register(6);
@@ -20,13 +20,14 @@ public class RealMachine {
         TI = new Register(1);
         memory = new MachineMemory();
         interruptHandler = new InterruptHandler(PI, SI, TI);
-        this.pagingMechanism = new PagingMechanism(PTR, memory);
+        pagingMechanism = new PagingMechanism(PTR, memory);
+        externalMemory = new ExternalMemory();
     }
 
     public boolean load(String programName) {
+        IC.value = 0x10;
         CS.value = 0x10;
         DS.value = 0x80;
-        IC.value = 0x10;
         if(!pagingMechanism.createVirtualMachinePages())
             return false;
         this.vm = new VirtualMachine(R1, R2, R3, IC, CS, DS, this.interruptHandler, pagingMechanism);
@@ -36,8 +37,10 @@ public class RealMachine {
     public void exec() {
         while (true) {
             vm.execute();
-            if (SI.value == 1)
+            if (SI.value == 1) {
                 break;
+            }
+            MODE = true;
         }
         this.vm = null;
     }
