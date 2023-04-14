@@ -11,16 +11,20 @@ public class PagingMechanism {
     PagingMechanism(Register PTR, MachineMemory machineMemory) {
         this.PTR = PTR;
         this.machineMemory = machineMemory;
-        freePages = new LinkedList<Integer>();
+        freePages = new LinkedList<>();
         for (int pageNum = Constants.numberOfSupervisorBLocks; pageNum < Constants.realMachineLengthInBlocks; pageNum++)
             freePages.add(pageNum);
-        Collections.shuffle(freePages);
+//        Collections.shuffle(freePages);
     }
 
     Character[] getWord(int num) {
         assert (num < Constants.virtualMachineLengthInWords);
         int blockNum = num / Constants.blockLengthInWords, wordNum = num % Constants.blockLengthInWords;
-        int realBlock = Integer.parseInt(Arrays.toString(machineMemory.getWord(0x10 * PTR.value + blockNum)));
+        StringBuilder sb = new StringBuilder();
+        for (char c : machineMemory.getWord(0x10 * PTR.value + blockNum)) {
+            sb.append(c);
+        }
+        int realBlock = Conversion.ConvertHexStringToInt(sb.toString());
         return machineMemory.getWord(0x10 * realBlock + wordNum);
     }
 

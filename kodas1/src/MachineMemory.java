@@ -1,10 +1,11 @@
+import java.util.Arrays;
+
 public class MachineMemory {
     Character[] memory;
 
     MachineMemory() {
         this.memory = new Character[Constants.WordLength * Constants.realMachineLengthInWords];
-        for(int i = 0; i < Constants.WordLength * Constants.realMachineLengthInWords; i++)
-            memory[i] = '0';
+        Arrays.fill(memory, '0');
     }
 
     Character[] getWord(int num) {
@@ -23,17 +24,17 @@ public class MachineMemory {
         int offset = 1;
 //        possible error with num = 0
         while (num > 0) {
-            this.memory[(wordPoz + 1) * Constants.WordLength - offset] = (char) (num % 256);
-            num /= 256;
+            this.memory[(wordPoz + 1) * Constants.WordLength - offset] = (char) Conversion.convertDigitToHexCharacter(num % 16);
+            num /= 16;
+            offset++;
         }
     }
-    Character getByte(int byteNum)
-    {
+
+    Character getByte(int byteNum) {
         return memory[byteNum];
     }
 
-    void setByte(int byteNum, Character value)
-    {
+    void setByte(int byteNum, Character value) {
         memory[byteNum] = value;
     }
 

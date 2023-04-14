@@ -21,9 +21,9 @@ public class VirtualMachine {
         while(true)
         {
             Character[] command = pagingMechanism.getWord(IC.value);
-            System.out.println("command is:");
-            System.out.println(Arrays.toString(command));
-            /// perform command
+//            System.out.println("command is:");
+//            System.out.println(Arrays.toString(command));
+//            perform command
             if(interruptHandler.test())
                 break;
         }
