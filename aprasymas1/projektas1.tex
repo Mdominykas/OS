@@ -292,7 +292,7 @@ Jeigu WRITEF nepavyko parašyti visų simbolių, tai yra nustatomas CF = 1, o pr
 
 \subsection{Programos struktūra}
 
-Maksimalus programos dydis yra 256 žodžiai, t.y. 16 blokų. Maksimalus pavadinimo ilgis - 14 žodžių (84 baitai).
+Maksimalus programos dydis yra 256 žodžiai, t.y. 16 blokų. Failo pavadinimas gali būti tik vieno žodžio.
 
 Programos pradžią žymi žodis \$PROG\$. Po jo yra pavadinimas, o žymė ------ (šeši '-' ženklai) - pavadinimo pabaigą. Ši dalis užima pirmąjį takelį. Taip pat pabaigos žymė turi būti viename žodyje.
 
@@ -310,7 +310,7 @@ Programos pabaiga žymi žodis \$FINS\$.
 
 \subsection{Failo struktūra}
 
-Failo maksimalus dydis yra neribojamas. Tačiau pavadinimo ilgis negali viršyti 14 žodžių (84 baitai).
+Failo maksimalus dydis yra neribojamas, tačiau failo pavadinimas yra vienas žodis.
 
 Failo pradžią žymi žodis \$FILE\$. Po jo yra failo pavadinimas, o žymė ------ (šeši '-' ženklai) žymi pavadinimo pabaigą. 
 
@@ -325,7 +325,7 @@ Išorinėje atmintyje duomenys saugomi failais ir programomis. Laikoma, kad visa
 \begin{enumerate}
 	\item "ciklas" - programa vykdanti amžinąjį ciklą.
 	\item "sudeti" - iš vartotojo įvesties gauna du skaičius ir išveda jų sumą.
-	\item "dvieju-failu-sujungimas" - iš vartotojo įvesties gauna dviejų failų pavadinimus, skaito juose esantį tekstą ir sujungtą failą "sujungtas" (pradžioje pirmo, tada antro). Jei trečiasis failas pradžioje buvo netuščias, tai jį ištrina.
+	\item "jungti" - iš vartotojo įvesties gauna dviejų failų pavadinimus, skaito juose esantį tekstą ir sujungtą failą "sujungtas" (pradžioje pirmo, tada antro). Jei trečiasis failas pradžioje buvo netuščias, tai jį ištrina.
 \end{enumerate}
 
 \begin{verbatim}
@@ -371,10 +371,7 @@ gauta
 suma:  
 $FINS$
 $PROG$
-dvieju
--failu
--sujun
-gimas 
+jungti
 ------
 .CODES
 MVc1A0
@@ -423,7 +420,33 @@ adinim
 a\n
 $$A$$$
 sujung
-tas
+tas   
+$FILE$
+pirmas
+------
+pirmoj
+o fail
+o eilu
+tes, k
+urios 
+reikal
+ingos 
+jungim
+ui.   
+$FINS$
+$FILE$
+antras
+------
+antroj
+o fail
+o eilu
+tes, k
+urios 
+reikal
+ingos 
+jungim
+ui.   
+$FINS$
 \end{verbatim}
 
 \subsection{Virtuali mašina operacinės sistemos kontekste}

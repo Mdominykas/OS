@@ -10,5 +10,5 @@ public class Constants {
     public static int realMachineLengthInWords = realMachineLengthInBlocks * blockLengthInWords;
     public static int virtualMachineLengthInWords = realMachineLengthInBlocks * blockLengthInWords;
     public static int numberOfSupervisorBLocks = 16;
-
+    public static int externalMemoryLengthInWords = 4096;
 }

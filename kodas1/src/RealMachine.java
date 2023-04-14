@@ -14,6 +14,8 @@ public class RealMachine {
         R3 = new Register(6);
         IC = new Register(1);
         R1 = new Register(6);
+        CS = new Register(1);
+        DS = new Register(1);
         FLAGS = new Register(1);
         PTR = new Register(2);
         PI = new Register(1);

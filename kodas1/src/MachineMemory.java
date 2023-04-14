@@ -3,6 +3,8 @@ public class MachineMemory {
 
     MachineMemory() {
         this.memory = new Character[Constants.WordLength * Constants.realMachineLengthInWords];
+        for(int i = 0; i < Constants.WordLength * Constants.realMachineLengthInWords; i++)
+            memory[i] = '0';
     }
 
     Character[] getWord(int num) {

@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class VirtualMachine {
     private final PagingMechanism pagingMechanism;
     Register R1, R2, R3, IC, CS, DS;
@@ -19,6 +21,8 @@ public class VirtualMachine {
         while(true)
         {
             Character[] command = pagingMechanism.getWord(IC.value);
+            System.out.println("command is:");
+            System.out.println(Arrays.toString(command));
             /// perform command
             if(interruptHandler.test())
                 break;
