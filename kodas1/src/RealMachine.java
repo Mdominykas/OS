@@ -2,11 +2,12 @@ public class RealMachine {
     Register R1, R2, R3, IC, FLAGS, PTR, CS, DS;
     Register PI, SI, TI;
     boolean MODE;
-    MachineMemory memory;
+    MachineMemory machineMemory;
     VirtualMachine vm = null;
     InterruptHandler interruptHandler;
     PagingMechanism pagingMechanism;
     ExternalMemory externalMemory;
+    ChannelMechanism channelMechanism;
     RealMachine() {
         R1 = new Register(6);
         R2 = new Register(6);
@@ -18,10 +19,11 @@ public class RealMachine {
         PI = new Register(1);
         SI = new Register(1);
         TI = new Register(1);
-        memory = new MachineMemory();
+        machineMemory = new MachineMemory();
         interruptHandler = new InterruptHandler(PI, SI, TI);
-        pagingMechanism = new PagingMechanism(PTR, memory);
+        pagingMechanism = new PagingMechanism(PTR, machineMemory);
         externalMemory = new ExternalMemory();
+        channelMechanism = new ChannelMechanism(machineMemory, externalMemory);
     }
 
     public boolean load(String programName) {

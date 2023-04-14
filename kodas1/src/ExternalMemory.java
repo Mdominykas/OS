@@ -3,6 +3,7 @@ import java.io.IOException;
 
 public class ExternalMemory {
     final static String fileName = "hdd.txt";
+
     private void createFile()
     {
         File file = new File(fileName);
@@ -20,6 +21,16 @@ public class ExternalMemory {
     ExternalMemory()
     {
         createFile();
+    }
+    Character getByte(int num)
+    {
+//        TODO: implementacija
+        return 'c';
+    }
+
+    void setByte(int num, Character value)
+    {
+        throw new UnsupportedOperationException();
     }
 
 }

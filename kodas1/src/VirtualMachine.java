@@ -15,6 +15,7 @@ public class VirtualMachine {
     }
     public void execute()
     {
+//        execute 1 command
         while(true)
         {
             Character[] command = pagingMechanism.getWord(IC.value);

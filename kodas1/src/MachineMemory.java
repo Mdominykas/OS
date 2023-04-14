@@ -25,5 +25,14 @@ public class MachineMemory {
             num /= 256;
         }
     }
+    Character getByte(int byteNum)
+    {
+        return memory[byteNum];
+    }
+
+    void setByte(int byteNum, Character value)
+    {
+        memory[byteNum] = value;
+    }
 
 }
