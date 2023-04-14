@@ -1,7 +1,8 @@
 public class VirtualMachine {
+    private final PagingMechanism pagingMechanism;
     Register R1, R2, R3, IC, CS, DS;
-    InterruptHandler interruptHandler;
-    VirtualMachine(Register R1, Register R2, Register R3, Register IC, Register CS, Register DS, InterruptHandler interruptHandler)
+    private final InterruptHandler interruptHandler;
+    VirtualMachine(Register R1, Register R2, Register R3, Register IC, Register CS, Register DS, InterruptHandler interruptHandler, PagingMechanism pagingMechanism)
     {
         this.R1 = R1;
         this.R2 = R2;
@@ -10,11 +11,13 @@ public class VirtualMachine {
         this.CS = CS;
         this.DS = DS;
         this.interruptHandler = interruptHandler;
+        this.pagingMechanism = pagingMechanism;
     }
     public void execute()
     {
         while(true)
         {
+            Character[] command = pagingMechanism.getWord(IC.value);
             /// perform command
             if(interruptHandler.test())
                 break;

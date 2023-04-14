@@ -2,7 +2,7 @@ public class MachineMemory {
     Character[] memory;
 
     MachineMemory() {
-        this.memory = new Character[Constants.WordLength * Constants.MachineMemoryLengthInWords];
+        this.memory = new Character[Constants.WordLength * Constants.realMachineLengthInWords];
     }
 
     Character[] getWord(int num) {
@@ -13,8 +13,17 @@ public class MachineMemory {
     }
 
     void setWord(int num, Character[] newWord) {
-        assert(num < this.memory.length);
+        assert (num < this.memory.length);
         System.arraycopy(newWord, 0, this.memory, Constants.WordLength * num, Constants.WordLength);
+    }
+
+    void writeNumber(int wordPoz, int num) {
+        int offset = 1;
+//        possible error with num = 0
+        while (num > 0) {
+            this.memory[(wordPoz + 1) * Constants.WordLength - offset] = (char) (num % 256);
+            num /= 256;
+        }
     }
 
 }
