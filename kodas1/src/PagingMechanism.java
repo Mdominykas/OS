@@ -21,7 +21,7 @@ public class PagingMechanism {
         assert (num < Constants.virtualMachineLengthInWords);
         int blockNum = num / Constants.blockLengthInWords, wordNum = num % Constants.blockLengthInWords;
         StringBuilder sb = new StringBuilder();
-        for (char c : machineMemory.getWord(0x10 * PTR.value + blockNum)) {
+        for (char c : machineMemory.getWord(0x10 * PTR.value() + blockNum)) {
             sb.append(c);
         }
         int realBlock = Conversion.ConvertHexStringToInt(sb.toString());
@@ -31,7 +31,7 @@ public class PagingMechanism {
     void setWord(int num, Character[] newWord) {
         assert (num < Constants.virtualMachineLengthInWords);
         int blockNum = num / Constants.blockLengthInWords, wordNum = num % Constants.blockLengthInWords;
-        int realBlock = Integer.parseInt(Arrays.toString(machineMemory.getWord(0x10 * PTR.value + blockNum)));
+        int realBlock = Integer.parseInt(Arrays.toString(machineMemory.getWord(0x10 * PTR.value() + blockNum)));
         machineMemory.setWord(0x10 * realBlock + wordNum, newWord);
     }
 
@@ -39,10 +39,10 @@ public class PagingMechanism {
         if (freePages.size() < Constants.virtualMachineLengthInBlocks + 1) {
             return false;
         }
-        PTR.value = freePages.removeFirst();
+        PTR.setValue(freePages.removeFirst());
         for(int i = 0; i < Constants.virtualMachineLengthInBlocks; i++)
         {
-            machineMemory.writeNumber(PTR.value * Constants.blockLengthInWords + i, freePages.removeFirst());
+            machineMemory.writeNumber(PTR.value() * Constants.blockLengthInWords + i, freePages.removeFirst());
         }
 
         return true;

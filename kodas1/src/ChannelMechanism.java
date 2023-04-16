@@ -18,26 +18,26 @@ public class ChannelMechanism {
     void exchange() {
         ArrayList<Character> temp = new ArrayList<>();
         int readBytes = 0;
-        while (readBytes < BC.value) {
-            int byteNum = SB.value * Constants.blockLengthInWords * Constants.WordLength + SW.value + readBytes;
-            if ((ST.value == 1) || (ST.value == 2)) {
+        while (readBytes < BC.value()) {
+            int byteNum = SB.value() * Constants.blockLengthInWords * Constants.WordLength + SW.value() + readBytes;
+            if ((ST.value() == 1) || (ST.value() == 2)) {
                 temp.add(machineMemory.getByte(byteNum));
             }
-            else if (ST.value == 3){
+            else if (ST.value() == 3){
 //                optimizuoti
                 temp.add(externalMemory.getByte(byteNum));
             }
             readBytes++;
         }
         int wroteBytes = 0;
-        while(wroteBytes < BC.value)
+        while(wroteBytes < BC.value())
         {
-            int byteNum = DB.value * Constants.blockLengthInWords * Constants.WordLength + SW.value + wroteBytes;
-            if((DT.value == 1) || (DT.value == 2))
+            int byteNum = DB.value() * Constants.blockLengthInWords * Constants.WordLength + SW.value() + wroteBytes;
+            if((DT.value() == 1) || (DT.value() == 2))
             {
                 machineMemory.setByte(byteNum, temp.get(byteNum));
             }
-            else if (DT.value == 3)
+            else if (DT.value() == 3)
                 externalMemory.setByte(byteNum, temp.get(byteNum));
             wroteBytes++;
         }

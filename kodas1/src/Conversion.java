@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class Conversion {
     public static Character convertDigitToHexCharacter(int num)
     {
@@ -27,5 +30,33 @@ public class Conversion {
         }
         return ans;
     }
+
+    public static int ConvertHexStringToInt(Character [] s)
+    {
+        int ans = 0;
+        for(int i = 0; i < s.length; i++)
+        {
+            ans *= 16;
+            ans += convertHexCharacterToDigit(s[i]);
+        }
+        return ans;
+    }
+
+    public static Character[] ConvertIntToHexCharacterArray(int x)
+    {
+        ArrayList<Character> characters = new ArrayList<>();
+
+        while(x != 0){
+            characters.add(Conversion.convertDigitToHexCharacter(x % 16));
+            x /= 16;
+        }
+        Collections.reverse(characters);
+        if(characters.size() == 0)
+            characters.add('0');
+
+        return characters.toArray(new Character[0]);
+    }
+
+
 
 }

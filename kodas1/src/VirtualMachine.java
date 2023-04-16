@@ -20,7 +20,7 @@ public class VirtualMachine {
 //        execute 1 command
         while(true)
         {
-            Character[] command = pagingMechanism.getWord(IC.value);
+            Character[] command = pagingMechanism.getWord(IC.value());
 //            System.out.println("command is:");
 //            System.out.println(Arrays.toString(command));
 //            perform command

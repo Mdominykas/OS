@@ -12,10 +12,10 @@ public class RealMachine {
         R1 = new Register(6);
         R2 = new Register(6);
         R3 = new Register(6);
-        IC = new Register(1);
+        IC = new Register(2);
         R1 = new Register(6);
-        CS = new Register(1);
-        DS = new Register(1);
+        CS = new Register(2);
+        DS = new Register(2);
         FLAGS = new Register(1);
         PTR = new Register(2);
         PI = new Register(1);
@@ -29,9 +29,9 @@ public class RealMachine {
     }
 
     public boolean load(String programName) {
-        IC.value = 0x10;
-        CS.value = 0x10;
-        DS.value = 0x80;
+        IC.setValue(0x10);
+        CS.setValue(0x10);
+        DS.setValue(0x80);
         if(!pagingMechanism.createVirtualMachinePages())
             return false;
         this.vm = new VirtualMachine(R1, R2, R3, IC, CS, DS, this.interruptHandler, pagingMechanism);
@@ -41,7 +41,7 @@ public class RealMachine {
     public void exec() {
         while (true) {
             vm.execute();
-            if (SI.value == 1) {
+            if (SI.value() == 1) {
                 break;
             }
             MODE = true;

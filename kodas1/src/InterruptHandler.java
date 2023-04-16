@@ -8,6 +8,6 @@ public class InterruptHandler {
     }
     boolean test()
     {
-        return (SI.value + PI.value > 0) || (TI.value == 0);
+        return (SI.value() + PI.value() > 0) || (TI.value() == 0);
     }
 }
