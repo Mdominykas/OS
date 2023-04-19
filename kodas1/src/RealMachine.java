@@ -1,3 +1,5 @@
+import java.io.File;
+
 public class RealMachine {
     Register R1, R2, R3, IC, FLAGS, PTR, CS, DS;
     Register PI, SI, TI;
@@ -8,6 +10,7 @@ public class RealMachine {
     PagingMechanism pagingMechanism;
     ExternalMemory externalMemory;
     ChannelMechanism channelMechanism;
+    FileSystem fileSystem;
     RealMachine() {
         R1 = new Register(6);
         R2 = new Register(6);
@@ -26,6 +29,7 @@ public class RealMachine {
         pagingMechanism = new PagingMechanism(PTR, machineMemory);
         externalMemory = new ExternalMemory();
         channelMechanism = new ChannelMechanism(machineMemory, externalMemory);
+        fileSystem = new FileSystem(externalMemory);
     }
 
     public boolean load(String programName) {
@@ -34,7 +38,38 @@ public class RealMachine {
         DS.setValue(0x80);
         if(!pagingMechanism.createVirtualMachinePages())
             return false;
+
+        int startInExternal = fileSystem.findProgramStartWordNumber(programName);
+        int fileStartBlock = startInExternal / Constants.blockLengthInWords;
+        int fileStartByte = (startInExternal % Constants.blockLengthInWords) * Constants.WordLength;
+        for(int block = 0; block < 16; block++){
+            channelMechanism.SB.setValue(fileStartBlock + block);
+            channelMechanism.SW.setValue(fileStartByte);
+            channelMechanism.ST.setValue(3);
+
+            channelMechanism.DB.setValue(block);
+            channelMechanism.DW.setValue(0); // TODO sudeti REGISTRU reiksmes i klases
+            channelMechanism.DT.setValue(2);
+
+            channelMechanism.exchange();
+            int endFile = -1;
+            for(int i = 0; i < Constants.blockLengthInWords; i++)
+            {
+                if(Conversion.characterArrayToString(machineMemory.getWord(block * Constants.blockLengthInWords + i)).equals("$FINS$")){
+                    endFile = i;
+                    break;
+                }
+            }
+            if(endFile != -1){
+                for(int i = endFile; i < Constants.blockLengthInWords; i++){
+// TODO uznulinti likusius blokus
+                }
+
+                break;
+            }
+        }
         this.vm = new VirtualMachine(R1, R2, R3, IC, CS, DS, this.interruptHandler, pagingMechanism);
+
         return true;
     }
 

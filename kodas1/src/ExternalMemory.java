@@ -1,4 +1,5 @@
 import java.io.*;
+import java.lang.invoke.ConstantCallSite;
 
 public class ExternalMemory {
     final static String fileName = "hdd.txt";
@@ -38,7 +39,7 @@ public class ExternalMemory {
             }
             line = br.readLine();
             ch = line.charAt(num);
-            br.close(); // Close RandomAccessFile
+            br.close();
 
             BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
 
@@ -48,6 +49,29 @@ public class ExternalMemory {
         }
         return ch;
     }
+
+    Character[] getWord(int num)
+    {
+        Character[] characters = new Character[Constants.WordLength];
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(fileName));
+            while(num > 0)
+            {
+                br.readLine();
+                num--;
+            }
+            String line = br.readLine();
+            for(int i = 0; i < Constants.WordLength; i++)
+            {
+                characters[i] = line.charAt(i);
+            }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return characters;
+    }
+
 
     void setByte(int num, Character value) {
         String line;
@@ -65,7 +89,7 @@ public class ExternalMemory {
             for(int i = 0; i < num; i++)
                 stringBuilder.append(line.charAt(i));
             stringBuilder.append(value);
-            for(int i = num; i < Constants.WordLength; i++)
+            for(int i = num + 1; i < Constants.WordLength; i++)
                 stringBuilder.append(line.charAt(i));
             stringBuilder.append(System.lineSeparator());
             while((line = br.readLine()) != null)
@@ -73,7 +97,7 @@ public class ExternalMemory {
                 stringBuilder.append(line);
                 stringBuilder.append(System.lineSeparator());
             }
-            br.close(); // Close RandomAccessFile
+            br.close();
 
             BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
             writer.write(stringBuilder.toString());

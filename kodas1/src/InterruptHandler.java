@@ -10,4 +10,10 @@ public class InterruptHandler {
     {
         return (SI.value() + PI.value() > 0) || (TI.value() == 0);
     }
+
+    void handle()
+    {
+
+    }
+
 }

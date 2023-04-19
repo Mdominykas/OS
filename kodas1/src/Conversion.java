@@ -57,6 +57,22 @@ public class Conversion {
         return characters.toArray(new Character[0]);
     }
 
+    public static Character[] stringToCharacterArray(String s)
+    {
+        Character[] characters = new Character[s.length()];
+        for(int i = 0; i < s.length(); i++)
+            characters[i] = s.charAt(i);
+        return characters;
+    }
+
+    public static String characterArrayToString(Character[] characters)
+    {
+        StringBuilder sb = new StringBuilder();
+        for(Character ch : characters)
+            sb.append(ch);
+        return sb.toString();
+    }
+
 
 
 }
