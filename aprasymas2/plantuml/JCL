@@ -1,0 +1,16 @@
+@startuml
+repeat
+  :1. Blokavimasis laukiant “Užduotis supervizorinėje atmintyje” resurso;
+  :2. Imamas blokas iš supervizorinės atminties;
+  if (3. blokas prasideda $PROG$) is (Ne) then
+    :4. Atlaisvinti resursą "Eilutė atmintyje" su pranešimu apie $PROG$ bloko trūkumą;
+  else (Taip)
+    if (5. Ar programos pavadinimas ir atskyrimas nuo turinio yra teisingi) is (Ne) then
+       :6 Atlaisvinti resursą "Eilutė atmintyje" su pranešimu apie nekorektišką pirmą bloka;
+   else (Taip)
+      repeat
+         :7. Imamamas blokas iš supervizorinės atminties;
+         if (8. Jame yra žymė $FINS$) is (Taip) then
+           : 9. Atlaisvinti resursą "Užduotis būgne";
+           break
+@enduml

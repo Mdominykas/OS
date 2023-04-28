@@ -1,0 +1,8 @@
+@startuml
+repeat
+  :1. Blokavimasis laukiant resurso "Eilutė atmintyje";
+  :2. Blokavimasis laukiant "Kanalų įrenginio" resurso;
+  :3. Nustatomi kanalų įrenginio registrai ir įvykdoma komanda XCHG;
+  :4. Atlaisvinamas "Kanalo įrenginio" resursas;
+
+@enduml

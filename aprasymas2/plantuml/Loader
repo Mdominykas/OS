@@ -1,0 +1,9 @@
+@startuml
+repeat
+  :1. Blokavimasis laukiant resurso “Pakrovimo paketas”;
+  :2. Blokavimasis laukiant resurso "Kanalų įrenginys";
+  :3. Nustatomi kanalo įrenginio registrai ir įvykdoma komanda XCHG;
+  :4. Atlaisvinamas resursas "Kanalų įrenginys";
+  :5. Atlaisvinamas resursas "Iš Loader";
+
+@enduml

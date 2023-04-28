@@ -1,0 +1,13 @@
+@startuml
+repeat
+    :1. Blokavimasis laukiant “Iš vartotojo sąsajos” resurso;
+    switch (Įvedimo tipas)
+    case (shutdown)
+      :2. Atlaisvinti resursą "MOS pabaiga";
+    case (load prog)
+      :2. Blokavimasis laukiant supervizorinės atminties;
+      :4. Blokų kopijavimas į supervizorinę atmintį;
+      :5. Atlaisvinamas resursas "supervizorinė atmintis";
+      :5. Atlaisvinamas resursas “Užduotis supervizorinėje atmintyje”;
+    endswitch
+@enduml

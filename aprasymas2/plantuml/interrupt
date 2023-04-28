@@ -1,0 +1,8 @@
+@startuml
+repeat
+  :1. Blokavimasis laukiant resurso "Pertraukimas";
+  :2. Pertraukimo tipo identifikavimas;
+  :3. JobGovernor, atsakingo už pertraukusios VM darbą, nustatymas;
+  :4. Atlaisvinamas "Iš Interrupt" resursas skirtas konkrečiam JobGovernor;
+
+@enduml

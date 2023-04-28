@@ -1,0 +1,20 @@
+@startuml
+repeat
+  :1. Blokavimasis laukiant resurso "Darbas su failais";
+  :2. Blokavimasis laukiant resurso "Išorinė atmintis";
+  :3. Blokavimasis laukiant resurso "Kanalų įrenginys";
+  switch (Darbo tipas?)
+  case (Failo atidarymas)
+    :4. Atidaryti failą ?kaip su registrais? arba sukurti naują;
+  case (Failo uždarymas)
+    :5. Uždaryti nurodytą failą;
+  case (Failo ištrynimas)
+    :6. Ištrinti nurodytą failą;
+  case (Rašymas į failą)
+    :7. Rašyti į nurodytą failą;
+  case (Skaitymas iš failo)
+    :8. Rašyti į nurodytą failą;
+  endswitch
+  :9. Atlaisvinti resursą "Kanalų įrenginys";
+  :10. Atlaisvinti resursą "Išorinė atmintis";
+@enduml

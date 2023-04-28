@@ -1,0 +1,4 @@
+@startuml
+repeat
+  :1. Vykdyti amžiną ciklą;
+@enduml

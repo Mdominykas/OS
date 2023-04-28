@@ -1,0 +1,7 @@
+@startuml
+:1. Sisteminių resursų inicializacija;
+:2. Sistemiinių procesų initializacija;
+:3. Blokavimasis laukiant "MOS pabaiga" resurso;
+:4. Sisteminių procesų naikinimas;
+:5. Sisteminių resursų naikinimas;
+@enduml	
