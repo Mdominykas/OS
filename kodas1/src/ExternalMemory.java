@@ -1,5 +1,6 @@
+import Constants.Constants;
+
 import java.io.*;
-import java.lang.invoke.ConstantCallSite;
 
 public class ExternalMemory {
     final static String fileName = "hdd.txt";

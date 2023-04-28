@@ -1,3 +1,5 @@
+package Constants;
+
 public class Constants {
     public static int CF = 1;
     public static int ZF = 2;

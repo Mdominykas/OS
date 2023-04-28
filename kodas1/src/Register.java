@@ -1,3 +1,5 @@
+import Constants.Constants;
+
 import java.util.Arrays;
 
 public class Register {

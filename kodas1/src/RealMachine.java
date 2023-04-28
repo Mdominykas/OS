@@ -1,4 +1,4 @@
-import java.io.File;
+import Constants.*;
 
 public class RealMachine {
     Register R1, R2, R3, IC, FLAGS, PTR, CS, DS;
@@ -45,11 +45,11 @@ public class RealMachine {
         for(int block = 0; block < 16; block++){
             channelMechanism.SB.setValue(fileStartBlock + block);
             channelMechanism.SW.setValue(fileStartByte);
-            channelMechanism.ST.setValue(3);
+            channelMechanism.ST.setValue(STValues.ExternalMemory);
 
             channelMechanism.DB.setValue(block);
-            channelMechanism.DW.setValue(0); // TODO sudeti REGISTRU reiksmes i klases
-            channelMechanism.DT.setValue(2);
+            channelMechanism.DW.setValue(0);
+            channelMechanism.DT.setValue(DTValues.DTSupervisorMemory);
 
             channelMechanism.exchange();
             int endFile = -1;
@@ -62,9 +62,8 @@ public class RealMachine {
             }
             if(endFile != -1){
                 for(int i = endFile; i < Constants.blockLengthInWords; i++){
-// TODO uznulinti likusius blokus
+                    machineMemory.setWord(block * Constants.blockLengthInWords + i, Conversion.stringToCharacterArray("000000"));
                 }
-
                 break;
             }
         }

@@ -1,7 +1,7 @@
+import Constants.Constants;
+
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
-import java.util.Queue;
 
 public class PagingMechanism {
     Register PTR;

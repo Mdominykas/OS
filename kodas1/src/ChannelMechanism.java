@@ -1,3 +1,6 @@
+import Constants.Constants;
+import Constants.STValues
+
 import java.util.ArrayList;
 
 public class ChannelMechanism {
@@ -20,10 +23,10 @@ public class ChannelMechanism {
         int readBytes = 0;
         while (readBytes < BC.value()) {
             int byteNum = SB.value() * Constants.blockLengthInWords * Constants.WordLength + SW.value() + readBytes;
-            if ((ST.value() == 1) || (ST.value() == 2)) {
+            if ((ST.value() == STValues.SupervisorMemory) || (ST.value() == STValues.UserMemory)) { // galimai jos abi nuo pradžios numeruojasi
                 temp.add(machineMemory.getByte(byteNum));
             }
-            else if (ST.value() == 3){
+            else if (ST.value() == STValues.ExternalMemory){
 //                optimizuoti
                 temp.add(externalMemory.getByte(byteNum));
             }
