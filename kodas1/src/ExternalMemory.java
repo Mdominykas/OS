@@ -36,17 +36,15 @@ public class ExternalMemory {
 
             BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
             for (int i = 0; i < Constants.externalMemoryLengthInWords; i++) {
-                if(lines[i].length() == Constants.WordLengthInBytes){
+                if (lines[i].length() == Constants.WordLengthInBytes) {
                     writer.write(lines[i]);
-                }
-                else if (lines[i].length() > Constants.WordLengthInBytes){
+                } else if (lines[i].length() > Constants.WordLengthInBytes) {
                     System.out.println("too long line");
                     writer.write(lines[i].substring(0, Constants.WordLengthInBytes));
-                }
-                else{
+                } else {
                     System.out.println("too short line");
                     writer.write(lines[i]);
-                    for(int j = lines[i].length(); j < Constants.WordLengthInBytes; j++){
+                    for (int j = lines[i].length(); j < Constants.WordLengthInBytes; j++) {
                         writer.write("0");
                     }
                 }
@@ -55,8 +53,6 @@ public class ExternalMemory {
             }
 
             writer.close();
-
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -80,10 +76,6 @@ public class ExternalMemory {
             line = br.readLine();
             ch = line.charAt(num);
             br.close();
-
-            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
-
-            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -148,5 +140,10 @@ public class ExternalMemory {
             e.printStackTrace();
         }
     }
+
+    void setWord(int num, Character[] word) {
+        assert(false); // not implemented
+    }
+
 
 }

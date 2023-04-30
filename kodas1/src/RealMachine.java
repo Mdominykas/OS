@@ -45,15 +45,19 @@ public class RealMachine {
         }
         int fileStartBlock = startInExternal / Constants.blockLengthInWords;
         int fileStartByte = (startInExternal % Constants.blockLengthInWords) * Constants.WordLengthInBytes;
+        int wroteBlocks = 0;
+        boolean hadFileEnding = false;
         for(int block = 0; block < 16; block++){
+            wroteBlocks++;
             channelMechanism.SB.setValue(fileStartBlock + block);
             channelMechanism.SW.setValue(fileStartByte);
             channelMechanism.ST.setValue(STValues.ExternalMemory);
 
             channelMechanism.DB.setValue(block);
             channelMechanism.DW.setValue(0);
-            channelMechanism.DT.setValue(DTValues.DTSupervisorMemory);
+            channelMechanism.DT.setValue(DTValues.SupervisorMemory);
 
+            channelMechanism.BC.setValue(Constants.blockLengthInWords * Constants.WordLengthInBytes);
             channelMechanism.exchange();
             int endFile = -1;
             for(int i = 0; i < Constants.blockLengthInWords; i++)
@@ -64,13 +68,30 @@ public class RealMachine {
                 }
             }
             if(endFile != -1){
+                hadFileEnding = true;
                 for(int i = endFile; i < Constants.blockLengthInWords; i++){
                     machineMemory.setWord(block * Constants.blockLengthInWords + i, Conversion.stringToCharacterArray("000000"));
                 }
                 break;
             }
         }
-        this.vm = new VirtualMachine(R1, R2, R3, IC, CS, DS, this.interruptHandler, pagingMechanism);
+        if(!hadFileEnding){
+            return false;
+        }
+        for(int i = 0; i < wroteBlocks; i++)
+        {
+            channelMechanism.SB.setValue(i);
+            channelMechanism.SW.setValue(0);
+            channelMechanism.ST.setValue(STValues.SupervisorMemory);
+
+            channelMechanism.DB.setValue(pagingMechanism.getRealBlockNumber(i));
+            channelMechanism.DW.setValue(0);
+            channelMechanism.DT.setValue(DTValues.UserMemory);
+
+            channelMechanism.BC.setValue(Constants.blockLengthInWords * Constants.WordLengthInBytes);
+            channelMechanism.exchange();
+        }
+        this.vm = new VirtualMachine(R1, R2, R3, IC, CS, DS, interruptHandler, pagingMechanism);
 
         return true;
     }

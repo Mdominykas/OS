@@ -40,10 +40,10 @@ public class ChannelMechanism {
             int byteNum = DB.value() * Constants.blockLengthInWords * Constants.WordLengthInBytes + SW.value() + wroteBytes;
             if((DT.value() == 1) || (DT.value() == 2))
             {
-                machineMemory.setByte(byteNum, temp.get(byteNum));
+                machineMemory.setByte(byteNum, temp.get(wroteBytes));
             }
             else if (DT.value() == 3)
-                externalMemory.setByte(byteNum, temp.get(byteNum));
+                externalMemory.setByte(byteNum, temp.get(wroteBytes));
             wroteBytes++;
         }
     }
