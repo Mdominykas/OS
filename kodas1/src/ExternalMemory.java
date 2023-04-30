@@ -24,8 +24,48 @@ public class ExternalMemory {
         }
     }
 
+    private void fixFileSystem() {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(fileName));
+
+            String[] lines = new String[Constants.externalMemoryLengthInWords];
+            for (int i = 0; i < Constants.externalMemoryLengthInWords; i++) {
+                lines[i] = br.readLine();
+            }
+            br.close();
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+            for (int i = 0; i < Constants.externalMemoryLengthInWords; i++) {
+                if(lines[i].length() == Constants.WordLengthInBytes){
+                    writer.write(lines[i]);
+                }
+                else if (lines[i].length() > Constants.WordLengthInBytes){
+                    System.out.println("too long line");
+                    writer.write(lines[i].substring(0, Constants.WordLengthInBytes));
+                }
+                else{
+                    System.out.println("too short line");
+                    writer.write(lines[i]);
+                    for(int j = lines[i].length(); j < Constants.WordLengthInBytes; j++){
+                        writer.write("0");
+                    }
+                }
+                writer.newLine();
+
+            }
+
+            writer.close();
+
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     ExternalMemory() {
         createFile();
+        fixFileSystem();
     }
 
     Character getByte(int num) {
@@ -33,10 +73,9 @@ public class ExternalMemory {
         String line;
         try {
             BufferedReader br = new BufferedReader(new FileReader(fileName));
-            while(num >= Constants.WordLength)
-            {
+            while (num >= Constants.WordLengthInBytes) {
                 br.readLine();
-                num -= Constants.WordLength;
+                num -= Constants.WordLengthInBytes;
             }
             line = br.readLine();
             ch = line.charAt(num);
@@ -51,20 +90,21 @@ public class ExternalMemory {
         return ch;
     }
 
-    Character[] getWord(int num)
-    {
-        Character[] characters = new Character[Constants.WordLength];
+    Character[] getWord(int num) {
+        Character[] characters = new Character[Constants.WordLengthInBytes];
         try {
             BufferedReader br = new BufferedReader(new FileReader(fileName));
-            while(num > 0)
-            {
+            while (num > 0) {
                 br.readLine();
                 num--;
             }
             String line = br.readLine();
-            for(int i = 0; i < Constants.WordLength; i++)
-            {
+            assert (line.length() < Constants.WordLengthInBytes);
+            for (int i = 0; i < line.length(); i++) {
                 characters[i] = line.charAt(i);
+            }
+            for (int i = line.length(); i < Constants.WordLengthInBytes; i++) {
+                characters[i] = ' ';
             }
             br.close();
         } catch (IOException e) {
@@ -79,28 +119,28 @@ public class ExternalMemory {
         StringBuilder stringBuilder = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(fileName));
-            while(num >= Constants.WordLength)
-            {
+            while (num >= Constants.WordLengthInBytes) {
                 line = br.readLine();
-                num -= Constants.WordLength;
+                num -= Constants.WordLengthInBytes;
                 stringBuilder.append(line);
                 stringBuilder.append(System.lineSeparator());
             }
             line = br.readLine();
-            for(int i = 0; i < num; i++)
+            for (int i = 0; i < num; i++)
                 stringBuilder.append(line.charAt(i));
             stringBuilder.append(value);
-            for(int i = num + 1; i < Constants.WordLength; i++)
+            for (int i = num + 1; i < Constants.WordLengthInBytes; i++)
                 stringBuilder.append(line.charAt(i));
             stringBuilder.append(System.lineSeparator());
-            while((line = br.readLine()) != null)
-            {
+            while ((line = br.readLine()) != null) {
                 stringBuilder.append(line);
                 stringBuilder.append(System.lineSeparator());
             }
             br.close();
 
             BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+//            seems totally wrong, so for now I will use assert
+            assert (false);
             writer.write(stringBuilder.toString());
             writer.close();
 

@@ -1,5 +1,5 @@
 import Constants.Constants;
-import Constants.STValues
+import Constants.*;
 
 import java.util.ArrayList;
 
@@ -16,13 +16,15 @@ public class ChannelMechanism {
         BC = new Register(2);
         ST = new Register(1);
         DT = new Register(1);
+        this.machineMemory = machineMemory;
+        this.externalMemory = externalMemory;
     }
 
     void exchange() {
         ArrayList<Character> temp = new ArrayList<>();
         int readBytes = 0;
         while (readBytes < BC.value()) {
-            int byteNum = SB.value() * Constants.blockLengthInWords * Constants.WordLength + SW.value() + readBytes;
+            int byteNum = SB.value() * Constants.blockLengthInWords * Constants.WordLengthInBytes + SW.value() + readBytes;
             if ((ST.value() == STValues.SupervisorMemory) || (ST.value() == STValues.UserMemory)) { // galimai jos abi nuo pradžios numeruojasi
                 temp.add(machineMemory.getByte(byteNum));
             }
@@ -35,7 +37,7 @@ public class ChannelMechanism {
         int wroteBytes = 0;
         while(wroteBytes < BC.value())
         {
-            int byteNum = DB.value() * Constants.blockLengthInWords * Constants.WordLength + SW.value() + wroteBytes;
+            int byteNum = DB.value() * Constants.blockLengthInWords * Constants.WordLengthInBytes + SW.value() + wroteBytes;
             if((DT.value() == 1) || (DT.value() == 2))
             {
                 machineMemory.setByte(byteNum, temp.get(byteNum));

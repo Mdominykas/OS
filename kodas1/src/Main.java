@@ -11,23 +11,26 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         try {
-            while(true) {
+            while (true) {
                 System.out.print(">");
                 String command = br.readLine();
                 String[] parts = command.split("\\s+");
-                if((parts.length == 1) && (Objects.equals(parts[0], "shutdown"))){
+                if ((parts.length == 1) && (Objects.equals(parts[0], "shutdown"))) {
                     break;
-                }
-                else if ((parts.length == 2) && (Objects.equals(parts[0], "load"))){
-                    rm.load(parts[1]);
-                    rm.exec();
-                }
-                else{
+                } else if ((parts.length == 2) && (Objects.equals(parts[0], "load"))) {
+
+                    boolean loaded = rm.load(parts[1]);
+                    if (loaded) {
+                        rm.exec();
+                    }
+                    else {
+                        System.out.println("Couldn't load program");
+                    }
+                } else {
                     System.out.println("Unfamiliar command");
                 }
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

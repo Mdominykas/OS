@@ -7,7 +7,7 @@ public class Constants {
     public static int OF = 8;
     public static int realMachineLengthInBlocks = 256;
     public static int virtualMachineLengthInBlocks = 16;
-    public static int WordLength = 6;
+    public static int WordLengthInBytes = 6;
     public static int blockLengthInWords = 16;
     public static int realMachineLengthInWords = realMachineLengthInBlocks * blockLengthInWords;
     public static int virtualMachineLengthInWords = realMachineLengthInBlocks * blockLengthInWords;

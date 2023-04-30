@@ -6,27 +6,27 @@ public class MachineMemory {
     Character[] memory;
 
     MachineMemory() {
-        this.memory = new Character[Constants.WordLength * Constants.realMachineLengthInWords];
+        this.memory = new Character[Constants.WordLengthInBytes * Constants.realMachineLengthInWords];
         Arrays.fill(memory, '0');
     }
 
     Character[] getWord(int num) {
         assert (num < this.memory.length);
-        Character[] answer = new Character[Constants.WordLength];
-        System.arraycopy(this.memory, Constants.WordLength * num, answer, 0, Constants.WordLength);
+        Character[] answer = new Character[Constants.WordLengthInBytes];
+        System.arraycopy(this.memory, Constants.WordLengthInBytes * num, answer, 0, Constants.WordLengthInBytes);
         return answer;
     }
 
     void setWord(int num, Character[] newWord) {
         assert (num < this.memory.length);
-        System.arraycopy(newWord, 0, this.memory, Constants.WordLength * num, Constants.WordLength);
+        System.arraycopy(newWord, 0, this.memory, Constants.WordLengthInBytes * num, Constants.WordLengthInBytes);
     }
 
     void writeNumber(int wordPoz, int num) {
         int offset = 1;
 //        possible error with num = 0
         while (num > 0) {
-            this.memory[(wordPoz + 1) * Constants.WordLength - offset] = (char) Conversion.convertDigitToHexCharacter(num % 16);
+            this.memory[(wordPoz + 1) * Constants.WordLengthInBytes - offset] = (char) Conversion.convertDigitToHexCharacter(num % 16);
             num /= 16;
             offset++;
         }

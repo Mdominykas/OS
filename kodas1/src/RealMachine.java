@@ -40,8 +40,11 @@ public class RealMachine {
             return false;
 
         int startInExternal = fileSystem.findProgramStartWordNumber(programName);
+        if(startInExternal == -1){
+            return false;
+        }
         int fileStartBlock = startInExternal / Constants.blockLengthInWords;
-        int fileStartByte = (startInExternal % Constants.blockLengthInWords) * Constants.WordLength;
+        int fileStartByte = (startInExternal % Constants.blockLengthInWords) * Constants.WordLengthInBytes;
         for(int block = 0; block < 16; block++){
             channelMechanism.SB.setValue(fileStartBlock + block);
             channelMechanism.SW.setValue(fileStartByte);

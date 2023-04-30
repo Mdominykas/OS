@@ -14,48 +14,27 @@ public class FileSystem {
             this.freeFileNumbers.add(i);
     }
 
-    int findFileStartWordNumber(String filename) {
+    private int findTwoSubSequentWords(String firstWord, String secondWord)
+    {
         for (int i = 0; i < Constants.externalMemoryLengthInWords; i++) {
             Character[] characters = externalMemory.getWord(i);
-            if (Arrays.equals(characters, Conversion.stringToCharacterArray("$FILE$"))) {
+            if (Arrays.equals(characters, Conversion.stringToCharacterArray(firstWord))) {
                 Character[] newCharacters = externalMemory.getWord(i + 1);
-                if (newCharacters.length == filename.length()) {
-                    boolean match = true;
-                    for (int j = 0; j < filename.length(); j++) {
-                        if (filename.charAt(j) != newCharacters[j]) {
-                            match = false;
-                            break;
-                        }
-                    }
-                    if(match)
-                        return i + 1;
-                }
+                if(Conversion.characterArrayToString(newCharacters).equals(secondWord))
+                    return i + 1;
                 i++;
             }
         }
         return -1;
+
+    }
+
+    int findFileStartWordNumber(String filename) {
+        return findTwoSubSequentWords("$FILE$", filename);
     }
 
     int findProgramStartWordNumber(String programName) {
-        for (int i = 0; i < Constants.externalMemoryLengthInWords; i++) {
-            Character[] characters = externalMemory.getWord(i);
-            if (Arrays.equals(characters, Conversion.stringToCharacterArray("$PROG$"))) {
-                Character[] newCharacters = externalMemory.getWord(i + 1);
-                if (newCharacters.length == programName.length()) {
-                    boolean match = true;
-                    for (int j = 0; j < programName.length(); j++) {
-                        if (programName.charAt(j) != newCharacters[j]) {
-                            match = false;
-                            break;
-                        }
-                    }
-                    if(match)
-                        return i + 1;
-                }
-                i++;
-            }
-        }
-        return -1;
+        return findTwoSubSequentWords("$PROG$", programName);
     }
 
 
