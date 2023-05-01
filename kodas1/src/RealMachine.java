@@ -105,7 +105,7 @@ public class RealMachine {
             throw new IncorrectProgramSizeException("");
         }
         loadVirtualMachineFromSuperVisorMemory(wroteBlocks, wordsInLastBlock);
-        this.vm = new VirtualMachine(R1, R2, R3, IC, CS, DS, interruptHandler, pagingMechanism);
+        this.vm = new VirtualMachine(R1, R2, R3, FLAGS, IC, CS, DS, interruptHandler, pagingMechanism);
     }
 
     public void exec() {
