@@ -1,4 +1,5 @@
 import Constants.*;
+import OSException.*;
 
 public class RealMachine {
     Register R1, R2, R3, IC, FLAGS, PTR, CS, DS;
@@ -32,16 +33,17 @@ public class RealMachine {
         fileSystem = new FileSystem(externalMemory);
     }
 
-    public boolean load(String programName) {
+    public void load(String programName) throws OSException {
         IC.setValue(0x10);
         CS.setValue(0x10);
         DS.setValue(0x80);
-        if(!pagingMechanism.createVirtualMachinePages())
-            return false;
+        if(!pagingMechanism.createVirtualMachinePages()){
+            throw new NotEnoughFreePagesException("");
+        }
 
         int startInExternal = fileSystem.findProgramStartWordNumber(programName);
         if(startInExternal == -1){
-            return false;
+            throw new ProgramNotFoundException("");
         }
         int fileStartBlock = startInExternal / Constants.blockLengthInWords;
         int fileStartByte = (startInExternal % Constants.blockLengthInWords) * Constants.WordLengthInBytes;
@@ -76,7 +78,7 @@ public class RealMachine {
             }
         }
         if(!hadFileEnding){
-            return false;
+            throw new IncorrectProgramSizeException("");
         }
         for(int i = 0; i < wroteBlocks; i++)
         {
@@ -92,8 +94,6 @@ public class RealMachine {
             channelMechanism.exchange();
         }
         this.vm = new VirtualMachine(R1, R2, R3, IC, CS, DS, interruptHandler, pagingMechanism);
-
-        return true;
     }
 
     public void exec() {

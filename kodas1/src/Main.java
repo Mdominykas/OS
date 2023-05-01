@@ -1,3 +1,8 @@
+import OSException.IncorrectProgramSizeException;
+import OSException.NotEnoughFreePagesException;
+import OSException.OSException;
+import OSException.ProgramNotFoundException;
+
 import java.io.BufferedReader;
 import java.io.Console;
 import java.io.IOException;
@@ -19,12 +24,22 @@ public class Main {
                     break;
                 } else if ((parts.length == 2) && (Objects.equals(parts[0], "load"))) {
 
-                    boolean loaded = rm.load(parts[1]);
-                    if (loaded) {
+                    try{
+                        rm.load(parts[1]);
                         rm.exec();
+
                     }
-                    else {
-                        System.out.println("Couldn't load program");
+                    catch(IncorrectProgramSizeException e){
+                        System.out.println("Program size was incorrect");
+                    }
+                    catch(NotEnoughFreePagesException e){
+                        System.out.println("Real machine didn't have enough pages");
+                    }
+                    catch(ProgramNotFoundException e){
+                        System.out.println("Couldn't find program file");
+                    }
+                    catch(OSException e){
+                        System.out.println("OS exception");
                     }
                 } else {
                     System.out.println("Unfamiliar command");
