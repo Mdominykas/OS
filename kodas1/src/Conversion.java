@@ -16,7 +16,7 @@ public class Conversion {
         if(('0' <= c) && (c <= '9'))
             return c - '0';
         else if(('A' <= c) && (c <= 'F'))
-            return c - 'A';
+            return c - 'A' + 10;
         throw new IllegalArgumentException();
     }
 

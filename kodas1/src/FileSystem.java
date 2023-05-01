@@ -14,7 +14,6 @@ public class FileSystem {
             this.freeFileNumbers.add(i);
     }
 
-    //    words must be distinct. Shouldn't be used in anywhere else, except to find start of file
     private int findStartOfFile(String fileType, String fileName) {
         for (int i = 0; i + 2 < Constants.externalMemoryLengthInWords; i++) {
             Character[] characters = externalMemory.getWord(i);
@@ -23,7 +22,7 @@ public class FileSystem {
                 if (Conversion.characterArrayToString(newCharacters).equals(fileName)) {
                     Character[] thirdCharacters = externalMemory.getWord(i + 2);
                     if (Conversion.characterArrayToString(thirdCharacters).equals("------")) {
-                        return i + 2;
+                        return i + 3;
                     } else {
                         i += 2;
                     }

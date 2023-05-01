@@ -36,7 +36,7 @@ public class RealMachine {
 
     private void loadVirtualMachineFromSuperVisorMemory(int numberOfBlocks, int wordsInLastBlock) {
         int virtualBlock = 0, virtualWord = 0;
-        int lengthInSupervisor = numberOfBlocks * Constants.blockLengthInWords + wordsInLastBlock;
+        int lengthInSupervisor = (numberOfBlocks - 1) * Constants.blockLengthInWords + wordsInLastBlock;
         for (int i = 0; i < lengthInSupervisor; i++) {
             String curWord = Conversion.characterArrayToString(machineMemory.getWord(i));
             if (curWord.startsWith("$$$") && curWord.endsWith("$$")) {
@@ -110,11 +110,12 @@ public class RealMachine {
 
     public void exec() {
         while (true) {
+            MODE = true;
             vm.execute();
             if (SI.value() == 1) {
                 break;
             }
-            MODE = true;
+            MODE = false;
         }
         this.vm = null;
     }

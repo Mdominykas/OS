@@ -25,7 +25,7 @@ public class ChannelMechanism {
         int readBytes = 0;
         while (readBytes < BC.value()) {
             int byteNum = SB.value() * Constants.blockLengthInWords * Constants.WordLengthInBytes + SW.value() + readBytes;
-            if ((ST.value() == STValues.SupervisorMemory) || (ST.value() == STValues.UserMemory)) { // galimai jos abi nuo pradžios numeruojasi
+            if ((ST.value() == STValues.SupervisorMemory) || (ST.value() == STValues.UserMemory)) { // galima, nes jos abi nuo pradžios numeruojasi
                 temp.add(machineMemory.getByte(byteNum));
             }
             else if (ST.value() == STValues.ExternalMemory){
@@ -37,7 +37,7 @@ public class ChannelMechanism {
         int wroteBytes = 0;
         while(wroteBytes < BC.value())
         {
-            int byteNum = DB.value() * Constants.blockLengthInWords * Constants.WordLengthInBytes + SW.value() + wroteBytes;
+            int byteNum = DB.value() * Constants.blockLengthInWords * Constants.WordLengthInBytes + DW.value() + wroteBytes;
             if((DT.value() == 1) || (DT.value() == 2))
             {
                 machineMemory.setByte(byteNum, temp.get(wroteBytes));

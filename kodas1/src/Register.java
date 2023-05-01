@@ -26,7 +26,7 @@ public class Register {
 
     void setValue(int v)
     {
-        v %= (1L<<(8 * numberOfBytes));
+        v %= (1L<<(4 * numberOfBytes));
         Character[] newHexData = Conversion.ConvertIntToHexCharacterArray(v);
         assert(newHexData.length <= hexData.length);
         Arrays.fill(hexData, '0');
