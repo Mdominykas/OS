@@ -14,15 +14,22 @@ public class FileSystem {
             this.freeFileNumbers.add(i);
     }
 
-    private int findTwoSubSequentWords(String firstWord, String secondWord)
-    {
-        for (int i = 0; i < Constants.externalMemoryLengthInWords; i++) {
+    //    words must be distinct. Shouldn't be used in anywhere else, except to find start of file
+    private int findStartOfFile(String fileType, String fileName) {
+        for (int i = 0; i + 2 < Constants.externalMemoryLengthInWords; i++) {
             Character[] characters = externalMemory.getWord(i);
-            if (Arrays.equals(characters, Conversion.stringToCharacterArray(firstWord))) {
+            if (Arrays.equals(characters, Conversion.stringToCharacterArray(fileType))) {
                 Character[] newCharacters = externalMemory.getWord(i + 1);
-                if(Conversion.characterArrayToString(newCharacters).equals(secondWord))
-                    return i + 1;
-                i++;
+                if (Conversion.characterArrayToString(newCharacters).equals(fileName)) {
+                    Character[] thirdCharacters = externalMemory.getWord(i + 2);
+                    if (Conversion.characterArrayToString(thirdCharacters).equals("------")) {
+                        return i + 2;
+                    } else {
+                        i += 2;
+                    }
+                } else {
+                    i++;
+                }
             }
         }
         return -1;
@@ -30,11 +37,11 @@ public class FileSystem {
     }
 
     int findFileStartWordNumber(String filename) {
-        return findTwoSubSequentWords("$FILE$", filename);
+        return findStartOfFile("$FILE$", filename);
     }
 
     int findProgramStartWordNumber(String programName) {
-        return findTwoSubSequentWords("$PROG$", programName);
+        return findStartOfFile("$PROG$", programName);
     }
 
 
