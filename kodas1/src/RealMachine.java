@@ -12,6 +12,7 @@ public class RealMachine {
     ExternalMemory externalMemory;
     ChannelMechanism channelMechanism;
     FileSystem fileSystem;
+
     RealMachine() {
         R1 = new Register(6);
         R2 = new Register(6);
@@ -33,23 +34,49 @@ public class RealMachine {
         fileSystem = new FileSystem(externalMemory);
     }
 
+    private void loadVirtualMachineFromSuperVisorMemory(int numberOfBlocks, int wordsInLastBlock) {
+        int virtualBlock = 0, virtualWord = 0;
+        int lengthInSupervisor = numberOfBlocks * Constants.blockLengthInWords + wordsInLastBlock;
+        for (int i = 0; i < lengthInSupervisor; i++) {
+            String curWord = Conversion.characterArrayToString(machineMemory.getWord(i));
+            if (curWord.startsWith("$$$") && curWord.endsWith("$$")) {
+                virtualBlock = Conversion.convertHexCharacterToDigit(curWord.charAt(3));
+                virtualWord = 0;
+            } else if (curWord.equals(".CODES")) {
+                virtualBlock = 1;
+                virtualWord = 0;
+            } else if (curWord.equals(".DATAS")) {
+                virtualBlock = 8;
+                virtualWord = 0;
+            }
+            else{
+                pagingMechanism.setWord(virtualBlock * Constants.blockLengthInWords + virtualWord, machineMemory.getWord(i));
+                virtualWord++;
+                if(virtualWord == 16){
+                    virtualWord = 0;
+                    virtualBlock++;
+                }
+            }
+        }
+    }
+
     public void load(String programName) throws OSException {
         IC.setValue(0x10);
         CS.setValue(0x10);
         DS.setValue(0x80);
-        if(!pagingMechanism.createVirtualMachinePages()){
+        if (!pagingMechanism.createVirtualMachinePages()) {
             throw new NotEnoughFreePagesException("");
         }
 
         int startInExternal = fileSystem.findProgramStartWordNumber(programName);
-        if(startInExternal == -1){
+        if (startInExternal == -1) {
             throw new ProgramNotFoundException("");
         }
         int fileStartBlock = startInExternal / Constants.blockLengthInWords;
         int fileStartByte = (startInExternal % Constants.blockLengthInWords) * Constants.WordLengthInBytes;
-        int wroteBlocks = 0;
+        int wroteBlocks = 0, wordsInLastBlock = -1;
         boolean hadFileEnding = false;
-        for(int block = 0; block < 16; block++){
+        for (int block = 0; block < 16; block++) {
             wroteBlocks++;
             channelMechanism.SB.setValue(fileStartBlock + block);
             channelMechanism.SW.setValue(fileStartByte);
@@ -62,37 +89,22 @@ public class RealMachine {
             channelMechanism.BC.setValue(Constants.blockLengthInWords * Constants.WordLengthInBytes);
             channelMechanism.exchange();
             int endFile = -1;
-            for(int i = 0; i < Constants.blockLengthInWords; i++)
-            {
-                if(Conversion.characterArrayToString(machineMemory.getWord(block * Constants.blockLengthInWords + i)).equals("$FINS$")){
+            for (int i = 0; i < Constants.blockLengthInWords; i++) {
+                if (Conversion.characterArrayToString(machineMemory.getWord(block * Constants.blockLengthInWords + i)).equals("$FINS$")) {
                     endFile = i;
                     break;
                 }
             }
-            if(endFile != -1){
+            if (endFile != -1) {
                 hadFileEnding = true;
-                for(int i = endFile; i < Constants.blockLengthInWords; i++){
-                    machineMemory.setWord(block * Constants.blockLengthInWords + i, Conversion.stringToCharacterArray("000000"));
-                }
+                wordsInLastBlock = endFile + 1;
                 break;
             }
         }
-        if(!hadFileEnding){
+        if (!hadFileEnding) {
             throw new IncorrectProgramSizeException("");
         }
-        for(int i = 0; i < wroteBlocks; i++)
-        {
-            channelMechanism.SB.setValue(i);
-            channelMechanism.SW.setValue(0);
-            channelMechanism.ST.setValue(STValues.SupervisorMemory);
-
-            channelMechanism.DB.setValue(pagingMechanism.getRealBlockNumber(i));
-            channelMechanism.DW.setValue(0);
-            channelMechanism.DT.setValue(DTValues.UserMemory);
-
-            channelMechanism.BC.setValue(Constants.blockLengthInWords * Constants.WordLengthInBytes);
-            channelMechanism.exchange();
-        }
+        loadVirtualMachineFromSuperVisorMemory(wroteBlocks, wordsInLastBlock);
         this.vm = new VirtualMachine(R1, R2, R3, IC, CS, DS, interruptHandler, pagingMechanism);
     }
 
