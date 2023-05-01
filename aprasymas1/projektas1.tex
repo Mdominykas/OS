@@ -240,20 +240,20 @@ Registrai yra numeruojami taip:
 \subsubsection{Valdymo}
 Norint tinkamai naudotis perėjimais, prieš juos reikia panaudoti CMP operaciją. Komandose naudojami x, y, z yra šešioliktainiai skaičiai
 \begin{itemize}
-	\item JMPxy* - besąlyginis perėjimas. Pakeičia $ \text{IC} := 10_{16} * \text{x} + \text{y}$
+	\item JMP*xy - besąlyginis perėjimas. Pakeičia $ \text{IC} := 10_{16} * \text{x} + \text{y}$
 	
-	\item JExy** - pereiti, jeigu lygu. Jei ZF=1, tai $ \text{IC} := 10_{16} * \text{x} + \text{y}$, kitu atveju IC := IC + 1.
-	\item JNExy* - pereiti, jei nelygu. Jei ZF=0, tai $ \text{IC} := 10_{16} * \text{x} + \text{y}$, kitu atveju IC := IC + 1.
+	\item JE**xy - pereiti, jeigu lygu. Jei ZF=1, tai $ \text{IC} := 10_{16} * \text{x} + \text{y}$, kitu atveju IC := IC + 1.
+	\item JNE*xy - pereiti, jei nelygu. Jei ZF=0, tai $ \text{IC} := 10_{16} * \text{x} + \text{y}$, kitu atveju IC := IC + 1.
 	
-	\item JLxy** - pereiti, jeigu mažiau (su ženklu). Jei SF$\neq$OF, tai $ \text{IC} := 10_{16} * \text{x} + \text{y}$, kitu atveju IC := IC + 1.
-	\item JLExy* - pereiti, jeigu mažiau arba lygu (su ženklu). Jei ZF=1 arba SF$\neq$OF, tai $ \text{IC} := 10_{16} * \text{x} + \text{y}$, kitu atveju IC := IC + 1.
-	\item JGxy** - pereiti, jeigu daugiau (su ženklu). Jei ZF=0 arba SF=OF, tai $ \text{IC} := 10_{16} * \text{x} + \text{y}$, kitu atveju IC := IC + 1.
-	\item JGExy* - pereiti jeigu daugiau arba lygu (su ženklu). Jei SF=OF, tai $ \text{IC} := 10_{16} * \text{x} + \text{y}$, kitu atveju IC := IC + 1.
+	\item JL**xy - pereiti, jeigu mažiau (su ženklu). Jei SF$\neq$OF, tai $ \text{IC} := 10_{16} * \text{x} + \text{y}$, kitu atveju IC := IC + 1.
+	\item JLE*xy - pereiti, jeigu mažiau arba lygu (su ženklu). Jei ZF=1 arba SF$\neq$OF, tai $ \text{IC} := 10_{16} * \text{x} + \text{y}$, kitu atveju IC := IC + 1.
+	\item JG**xy - pereiti, jeigu daugiau (su ženklu). Jei ZF=0 arba SF=OF, tai $ \text{IC} := 10_{16} * \text{x} + \text{y}$, kitu atveju IC := IC + 1.
+	\item JGE*xy - pereiti jeigu daugiau arba lygu (su ženklu). Jei SF=OF, tai $ \text{IC} := 10_{16} * \text{x} + \text{y}$, kitu atveju IC := IC + 1.
 	
-	\item JBxy** - pereiti, jei žemiau (be ženklo). Jei CF=1, tai $ \text{IC} := 10_{16} * \text{x} + \text{y}$, kitu atveju IC := IC + 1.
-	\item JBExy* - pereiti, jei žemiau ar lygu (be ženklo). Jei CF=1 arba ZF=1, tai $ \text{IC} := 10_{16} * \text{x} + \text{y}$, kitu atveju IC := IC + 1.
-	\item JAxy** - pereiti, jei aukščiau (be ženklo). Jei CF=0 ir ZF = 0, tai $ \text{IC} := 10_{16} * \text{x} + \text{y}$, kitu atveju IC := IC + 1.
-	\item JAExy* - pereiti, jei aukščiau arba lygu (be ženklo). Jei CF = 0, tai $ \text{IC} := 10_{16} * \text{x} + \text{y}$, kitu atveju IC := IC + 1.
+	\item JB**xy - pereiti, jei žemiau (be ženklo). Jei CF=1, tai $ \text{IC} := 10_{16} * \text{x} + \text{y}$, kitu atveju IC := IC + 1.
+	\item JBE*xy - pereiti, jei žemiau ar lygu (be ženklo). Jei CF=1 arba ZF=1, tai $ \text{IC} := 10_{16} * \text{x} + \text{y}$, kitu atveju IC := IC + 1.
+	\item JA**xy - pereiti, jei aukščiau (be ženklo). Jei CF=0 ir ZF = 0, tai $ \text{IC} := 10_{16} * \text{x} + \text{y}$, kitu atveju IC := IC + 1.
+	\item JAE*xy - pereiti, jei aukščiau arba lygu (be ženklo). Jei CF = 0, tai $ \text{IC} := 10_{16} * \text{x} + \text{y}$, kitu atveju IC := IC + 1.
 \end{itemize}
 
 Po valdymo komandų registro FLAGS reikšmė nėra keičiama.
@@ -332,7 +332,7 @@ $PROG$
 ciklas
 ------
 .CODES
-JMP10*
+JMP*10
 .DATAS
 $FINS$
 $PROG$
@@ -389,7 +389,7 @@ READF*
 MVi2C0
 WRITEF
 CMPc30
-JE15**
+JE**15
 MVi2C1
 CLOSEF
 MVrr41
@@ -405,7 +405,7 @@ READF*
 MVi2C0
 WRITEF
 CMPc30
-JE20**
+JE**20
 MVi2C1
 CLOSEF
 MVi2C0

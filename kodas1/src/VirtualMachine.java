@@ -1,3 +1,5 @@
+import Constants.PIValues;
+
 import java.util.Arrays;
 
 public class VirtualMachine {
@@ -16,10 +18,29 @@ public class VirtualMachine {
         this.pagingMechanism = pagingMechanism;
     }
 
+    private void executeJump(Character[] command) {
+        Character[] locationCom = new Character[2];
+        locationCom[0] = command[4];
+        locationCom[1] = command[5];
+        int location = Conversion.ConvertHexStringToInt(locationCom);
+        String commandString = Conversion.characterArrayToString(command);
+        if (commandString.startsWith("JMP")) {
+            IC.setValue(location);
+        }
+        else{
+            interruptHandler.setPI(PIValues.InvalidOperation);
+        }
+    }
+
     public void execute() {
         Character[] command = pagingMechanism.getWord(IC.value());
         System.out.println("IC value is: " + IC.value());
         System.out.println("command is:" + Conversion.characterArrayToString(command));
-        IC.setValue(IC.value() + 1);
+        if (Conversion.characterArrayToString(command).startsWith("J")) {
+            executeJump(command);
+        } else {
+            interruptHandler.setPI(PIValues.InvalidOperation);
+            IC.setValue(IC.value() + 1);
+        }
     }
 }

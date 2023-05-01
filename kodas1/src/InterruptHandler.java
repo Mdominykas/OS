@@ -6,12 +6,20 @@ public class InterruptHandler {
         this.SI = SI;
         this.TI = TI;
     }
-    boolean test()
+    public boolean test()
     {
         return (SI.value() + PI.value() > 0) || (TI.value() == 0);
     }
 
-    void handle()
+    public void setSI(int value){
+        SI.setValue(value);
+    }
+
+    public void setPI(int value){
+        PI.setValue(value);
+    }
+
+    public void handle()
     {
 
     }
