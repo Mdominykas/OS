@@ -123,7 +123,7 @@ public class RealMachine {
         } catch (Exception ignored) {
 
         }
-        if(ans < 0)
+        if (ans < 0)
             ans = -1;
         return ans;
     }
@@ -137,7 +137,8 @@ public class RealMachine {
             if ((parts.length == 1) && (parts[0].equals("help"))) {
                 System.out.println("list of commands: \nhelp\ncontinue\ncontinue {num}\nprint registers\nprint commands");
                 System.out.println("print commands {num}\nshow virtual memory {wordNum}\nshow external memory {wordNum}");
-                System.out.println("show real memory {wordNum}\ndisplay channeling");
+                System.out.println("show real memory {wordNum}\ndisplay channeling\nchange register {name} {newVal}");
+                System.out.println("changereg real {num} {newVal}\nsetword virtual {num} {newVal}");
                 continueFor = 0;
             } else if (parts[0].equals("continue")) {
                 if (parts.length == 1) {
@@ -154,7 +155,7 @@ public class RealMachine {
                 } else if ((parts[1].equals("commands")) && (parts.length == 2)) {
                     int startVal = Math.max(0, IC.value() - 2);
                     int endVal = Math.min(IC.value() + 2, IC.maxValue() - 1);
-                    for(int i = startVal; i <= endVal; i++){
+                    for (int i = startVal; i <= endVal; i++) {
                         String hexNum = Conversion.characterArrayToString(Conversion.ConvertIntToHexCharacterArray(i));
                         System.out.println(hexNum + ": " + Conversion.characterArrayToString(pagingMechanism.getWord(i)));
                     }
@@ -162,54 +163,76 @@ public class RealMachine {
                 } else if ((parts[1].equals("commands")) && (parts.length == 3)) {
                     int num = parseDebugNumber(parts[2]);
                     final int halfOfDisplayLength = 4;
-                    if(num != -1)
-                    {
+                    if (num != -1) {
                         int startVal = Math.max(0, num - halfOfDisplayLength);
                         int endVal = Math.min(num + halfOfDisplayLength, IC.maxValue() - 1);
-                        for(int i = startVal; i <= endVal; i++){
+                        for (int i = startVal; i <= endVal; i++) {
                             String hexNum = Conversion.characterArrayToString(Conversion.ConvertIntToHexCharacterArray(i));
                             System.out.println(hexNum + ": " + Conversion.characterArrayToString(pagingMechanism.getWord(i)));
                         }
                     }
-                }
-                else{
+                } else {
                     continueFor = -1;
                 }
-            }
-            else if ((parts.length == 4) && (parts[0].equals("show")) && (parts[2].equals("memory"))){
+            } else if ((parts.length == 4) && (parts[0].equals("show")) && (parts[2].equals("memory"))) {
                 continueFor = 0;
                 final int halfOfDisplayLength = 4;
                 int num = parseDebugNumber(parts[3]);
                 int startVal = Math.max(0, num - halfOfDisplayLength);
-                if(num == -1){
+                if (num == -1) {
                     continueFor = -1;
-                }
-                else if (parts[1].equals("real")){
+                } else if (parts[1].equals("real")) {
                     int endVal = Math.min(Constants.realMachineLengthInWords - 1, num + halfOfDisplayLength);
-                    for(int i = startVal; i <= endVal; i++){
+                    for (int i = startVal; i <= endVal; i++) {
                         String hexNum = Conversion.characterArrayToString(Conversion.ConvertIntToHexCharacterArray(i));
                         System.out.println(hexNum + ": " + Conversion.characterArrayToString(machineMemory.getWord(i)));
                     }
 
-                }
-                else if (parts[1].equals("external")){
+                } else if (parts[1].equals("external")) {
                     int endVal = Math.min(Constants.externalMemoryLengthInWords - 1, num + halfOfDisplayLength);
-                    for(int i = startVal; i <= endVal; i++){
+                    for (int i = startVal; i <= endVal; i++) {
                         String hexNum = Conversion.characterArrayToString(Conversion.ConvertIntToHexCharacterArray(i));
                         System.out.println(hexNum + ": " + Conversion.characterArrayToString(externalMemory.getWord(i)));
                     }
-
-                }
-                else{
+                } else {
                     continueFor = -1;
                 }
-            }
-            else if ((parts.length == 2) && (parts[0].equals("display")) && (parts[1].equals("channeling"))){
+            } else if ((parts.length == 2) && (parts[0].equals("display")) && (parts[1].equals("channeling"))) {
                 continueFor = 0;
                 System.out.println("PTR =" + PTR.value());
-                for(int i = PTR.value() * Constants.blockLengthInWords; i < (PTR.value() + 1) * Constants.blockLengthInWords; i++){
+                for (int i = PTR.value() * Constants.blockLengthInWords; i < (PTR.value() + 1) * Constants.blockLengthInWords; i++) {
                     String id = Conversion.characterArrayToString(Conversion.ConvertIntToHexCharacterArray(i - PTR.value() * Constants.blockLengthInWords));
                     System.out.println(id + " : " + Conversion.characterArrayToString(machineMemory.getWord(i)));
+                }
+            } else if ((parts.length == 3) && (parts[0].equals("changereg"))) {
+                int newVal = parseDebugNumber(parts[2]);
+                if (newVal != -1) {
+                    continueFor = 0;
+                    switch (parts[1]) {
+                        case "R1" -> R1.setValue(newVal);
+                        case "R2" -> R2.setValue(newVal);
+                        case "R3" -> R3.setValue(newVal);
+                        case "IC" -> IC.setValue(newVal);
+                        case "FLAGS" -> FLAGS.setValue(newVal);
+                        case "PTR" -> PTR.setValue(newVal);
+                        case "CS" -> CS.setValue(newVal);
+                        case "DS" -> DS.setValue(newVal);
+                        default -> continueFor = -1;
+                    }
+                }
+//                TODO: cia patestuoti
+            } else if ((parts.length == 4) && (parts[0].equals("setword"))) {
+                int address = parseDebugNumber(parts[2]);
+                if ((address != -1) && (parts[3].length() == 6)) {
+                    Character[] newVal = Conversion.stringToCharacterArray(parts[3]);
+                    continueFor = 0;
+                    if (parts[1].equals("real")) {
+                        machineMemory.setWord(address, newVal);
+                    } else if (parts[1].equals("virtual")) {
+                        pagingMechanism.setWord(address, newVal);
+                    } else {
+                        continueFor = -1;
+                    }
                 }
             }
         } catch (IOException e) {
