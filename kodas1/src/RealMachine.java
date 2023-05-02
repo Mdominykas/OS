@@ -271,15 +271,36 @@ public class RealMachine {
     }
 
     public void exec() {
+        SI.setValue(SIValues.Nothing);
+        PI.setValue(PIValues.Nothing);
+        TI.setValue(10);
+
         while (true) {
             MODE = true;
             vm.execute();
-            if (SI.value() == SIValues.Halt) {
-                break;
-            }
             MODE = false;
-        }
+            TI.setValue(TI.value() - 1);
+            if(interruptHandler.test()) {
+                if(PI.value() != PIValues.Nothing){
+                    if(PI.value() == PIValues.InvalidOperation){
+                        System.out.println("Invalid operation");
+                        break;
+                    }
+                }
+                if(SI.value() != SIValues.Nothing){
+                    System.out.println("SI interrupt happened" + SI.value());
+                    TI.setValue(Math.max(0, TI.value() - 4));
+                    if (SI.value() == SIValues.Halt) {
+                        break;
+                    }
+                }
+                if(TI.value() == 0){
+                    System.out.println("Timer interrupt happened");
+                    TI.setValue(10);
+                }
 
+            }
+        }
         pagingMechanism.freeVirtualMachinePages();
         this.vm = null;
     }

@@ -1,6 +1,7 @@
 package Constants;
 
 public class SIValues {
+    public static int Nothing = 0;
     public static int Halt = 1;
     public static int Open = 2;
     public static int Close = 3;
