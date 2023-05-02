@@ -208,16 +208,24 @@ public class RealMachine {
                 int newVal = parseDebugNumber(parts[2]);
                 if (newVal != -1) {
                     continueFor = 0;
-                    switch (parts[1]) {
-                        case "R1" -> R1.setValue(newVal);
-                        case "R2" -> R2.setValue(newVal);
-                        case "R3" -> R3.setValue(newVal);
-                        case "IC" -> IC.setValue(newVal);
-                        case "FLAGS" -> FLAGS.setValue(newVal);
-                        case "PTR" -> PTR.setValue(newVal);
-                        case "CS" -> CS.setValue(newVal);
-                        case "DS" -> DS.setValue(newVal);
-                        default -> continueFor = -1;
+                    if (parts[1].equals("R1")) {
+                        R1.setValue(newVal);
+                    } else if (parts[1].equals("R2")) {
+                        R2.setValue(newVal);
+                    } else if (parts[1].equals("R3")) {
+                        R3.setValue(newVal);
+                    } else if (parts[1].equals("IC")) {
+                        IC.setValue(newVal);
+                    } else if (parts[1].equals("FLAGS")) {
+                        FLAGS.setValue(newVal);
+                    } else if (parts[1].equals("PTR")) {
+                        PTR.setValue(newVal);
+                    } else if (parts[1].equals("CS")) {
+                        CS.setValue(newVal);
+                    } else if (parts[1].equals("DS")) {
+                        DS.setValue(newVal);
+                    } else {
+                        continueFor = -1;
                     }
                 }
 //                TODO: cia patestuoti
