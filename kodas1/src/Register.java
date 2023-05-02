@@ -26,7 +26,7 @@ public class Register {
 
     void setValue(int v)
     {
-        v %= (1L<<(4 * numberOfBytes));
+        v %= maxValue();
         Character[] newHexData = Conversion.ConvertIntToHexCharacterArray(v);
         assert(newHexData.length <= hexData.length);
         Arrays.fill(hexData, '0');
@@ -61,8 +61,8 @@ public class Register {
         return new Register(r1.numberOfBytes, r1.value() - r2.value());
     }
 
-    private int maxValue() {
-        return (1<<(8 * this.numberOfBytes));
+    public int maxValue() {
+        return (1<<(4 * this.numberOfBytes));
     }
 
     public void setFlags(Register flags) {
@@ -82,5 +82,9 @@ public class Register {
         {
             flags.setValue(flags.value() + Constants.SF);
         }
+    }
+
+    public String toString(){
+        return Conversion.characterArrayToString(hexData);
     }
 }

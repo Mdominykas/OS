@@ -49,7 +49,10 @@ public class PagingMechanism {
         {
             machineMemory.writeNumber(PTR.value() * Constants.blockLengthInWords + i, freePages.removeFirst());
         }
-
         return true;
+    }
+
+    void freeVirtualMachinePages(){
+
     }
 }
