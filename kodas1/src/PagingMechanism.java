@@ -1,6 +1,7 @@
 import Constants.Constants;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 
 public class PagingMechanism {
@@ -14,7 +15,7 @@ public class PagingMechanism {
         freePages = new LinkedList<>();
         for (int pageNum = Constants.numberOfSupervisorBLocks; pageNum < Constants.realMachineLengthInBlocks; pageNum++)
             freePages.add(pageNum);
-//        Collections.shuffle(freePages);
+        Collections.shuffle(freePages);
     }
 
     int getRealBlockNumber(int virtualBlockNumber){
@@ -53,6 +54,11 @@ public class PagingMechanism {
     }
 
     void freeVirtualMachinePages(){
-
+        freePages.add(PTR.value());
+        for(int i = 0; i < Constants.virtualMachineLengthInBlocks; i++)
+        {
+            int val = Conversion.ConvertHexStringToInt(machineMemory.getWord(PTR.value() + Constants.blockLengthInWords + i));
+            freePages.add(val);
+        }
     }
 }

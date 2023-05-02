@@ -72,6 +72,7 @@ public class RealMachine {
 
         int startInExternal = fileSystem.findProgramStartWordNumber(programName);
         if (startInExternal == -1) {
+            pagingMechanism.freeVirtualMachinePages();
             throw new ProgramNotFoundException("");
         }
         int fileStartBlock = startInExternal / Constants.blockLengthInWords;
@@ -104,22 +105,11 @@ public class RealMachine {
             }
         }
         if (!hadFileEnding) {
+            pagingMechanism.freeVirtualMachinePages();
             throw new IncorrectProgramSizeException("");
         }
         loadVirtualMachineFromSuperVisorMemory(wroteBlocks, wordsInLastBlock);
         this.vm = new VirtualMachine(R1, R2, R3, FLAGS, IC, CS, DS, interruptHandler, pagingMechanism);
-    }
-
-    public void exec() {
-        while (true) {
-            MODE = true;
-            vm.execute();
-            if (SI.value() == SIValues.Halt) {
-                break;
-            }
-            MODE = false;
-        }
-        this.vm = null;
     }
 
     private int parseDebugNumber(String num) {
@@ -243,9 +233,23 @@ public class RealMachine {
             if (SI.value() == SIValues.Halt) {
                 break;
             }
-
             MODE = false;
-
         }
+        pagingMechanism.freeVirtualMachinePages();
+        this.vm = null;
+    }
+
+    public void exec() {
+        while (true) {
+            MODE = true;
+            vm.execute();
+            if (SI.value() == SIValues.Halt) {
+                break;
+            }
+            MODE = false;
+        }
+
+        pagingMechanism.freeVirtualMachinePages();
+        this.vm = null;
     }
 }
