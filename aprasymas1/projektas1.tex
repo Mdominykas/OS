@@ -219,10 +219,10 @@ Po kiekvienos aritmetinės operacijos procesorius padina IC reikšmę. Taip pat 
 \begin{itemize}
 	\item MVmrxy - Perkelia duomenis. m reikšmė nurodo perkelimo režimą. x ir y specifikuoja vietas, kur juda duomenys. Po šios komandos yra padidinama IC reikšmė. Čia x ir y yra šešioliktainiai skaičiai.
 	\begin{enumerate}
-		\item m = r. Šiuo atveju perkėlimas yra iš registro į registrą. x nurodo pirmo registro (šaltinio) numerį, y - tikslo. Šiuo atveju r reikšmė nenaudojama
-		\item m = o. Šiuo atveju perkėlimas yra iš registro į atmintį. Atminties vieta yra gaunama pagal formulę $10_{16} \cdot x + y$, o registro numeris - pagal r reikšmę
-		\item m = i. Šiuo atveju perkėlimas yra iš atminties į registrą. Atminties vieta yra gaunama pagal formulę $10_{16} \cdot x + y$, o registro numeris - pagal r reikšmę
-		\item m = c. Šiuo atveju į registrą yra perkeliama konstanta. Registro numerį nurodo r, o konstanta yra $10_{16} \cdot x + y$, kur x, y - šešioliktainiai skaičiai. Konstanta pakeičia registro žemiausią baitą, o likę išlieka nepakitę.
+		\item m = 'r'. Šiuo atveju perkėlimas yra iš registro į registrą. x nurodo pirmo registro (šaltinio) numerį, y - tikslo. Šiuo atveju r reikšmė nenaudojama
+		\item m = 'o'. Šiuo atveju perkėlimas yra iš registro į atmintį. Atminties vieta yra gaunama pagal formulę $10_{16} \cdot x + y$, o registro numeris - pagal r reikšmę
+		\item m = 'i'. Šiuo atveju perkėlimas yra iš atminties į registrą. Atminties vieta yra gaunama pagal formulę $10_{16} \cdot x + y$, o registro numeris - pagal r reikšmę
+		\item m = 'c'. Šiuo atveju į registrą yra perkeliama konstanta. Registro numerį nurodo r, o konstanta yra $10_{16} \cdot x + y$, kur x, y - šešioliktainiai skaičiai. Konstanta pakeičia registro žemiausią baitą, o likę išlieka nepakitę.
 	\end{enumerate}
 \end{itemize}
 

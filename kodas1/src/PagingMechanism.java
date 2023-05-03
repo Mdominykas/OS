@@ -18,7 +18,7 @@ public class PagingMechanism {
         Collections.shuffle(freePages);
     }
 
-    int getRealBlockNumber(int virtualBlockNumber){
+    public int getRealBlockNumber(int virtualBlockNumber){
         assert(virtualBlockNumber < Constants.virtualMachineLengthInBlocks);
         StringBuilder sb = new StringBuilder();
         for (char c : machineMemory.getWord(0x10 * PTR.value() + virtualBlockNumber)) {
@@ -27,14 +27,14 @@ public class PagingMechanism {
         return Conversion.ConvertHexStringToInt(sb.toString());
     }
 
-    Character[] getWord(int num) {
+    public Character[] getWord(int num) {
         assert (num < Constants.virtualMachineLengthInWords);
         int blockNum = num / Constants.blockLengthInWords, wordNum = num % Constants.blockLengthInWords;
         int realBlock = getRealBlockNumber(blockNum);
         return machineMemory.getWord(0x10 * realBlock + wordNum);
     }
 
-    void setWord(int num, Character[] newWord) {
+    public void setWord(int num, Character[] newWord) {
         assert (num < Constants.virtualMachineLengthInWords);
         int blockNum = num / Constants.blockLengthInWords, wordNum = num % Constants.blockLengthInWords;
         int realBlock = getRealBlockNumber(blockNum);
@@ -53,7 +53,11 @@ public class PagingMechanism {
         return true;
     }
 
-    void freeVirtualMachinePages(){
+    public void writeNumber(int location, int number){
+        setWord(location, Conversion.convertToWordLengthCharacterArray(number));
+    }
+
+    public void freeVirtualMachinePages(){
         freePages.add(PTR.value());
         for(int i = 0; i < Constants.virtualMachineLengthInBlocks; i++)
         {

@@ -23,13 +23,7 @@ public class MachineMemory {
     }
 
     void writeNumber(int wordPoz, int num) {
-        int offset = 1;
-//        possible error with num = 0
-        while (num > 0) {
-            this.memory[(wordPoz + 1) * Constants.WordLengthInBytes - offset] = (char) Conversion.convertDigitToHexCharacter(num % 16);
-            num /= 16;
-            offset++;
-        }
+        setWord(wordPoz, Conversion.convertToWordLengthCharacterArray(num));
     }
 
     Character getByte(int byteNum) {

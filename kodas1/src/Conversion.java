@@ -1,4 +1,7 @@
+import Constants.Constants;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class Conversion {
@@ -73,6 +76,15 @@ public class Conversion {
         return sb.toString();
     }
 
-
+    public static Character[] convertToWordLengthCharacterArray(int number)
+    {
+        Character[] ans = new Character[Constants.WordLengthInBytes];
+        Arrays.fill(ans, '0');
+        Character[] converted = Conversion.ConvertIntToHexCharacterArray(number);
+        for(int i = 1; i <= converted.length; i++){
+            ans[Constants.WordLengthInBytes - i] = converted[converted.length - i];
+        }
+        return ans;
+    }
 
 }

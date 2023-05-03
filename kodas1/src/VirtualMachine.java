@@ -152,6 +152,67 @@ public class VirtualMachine {
         Rx.cmp(otherValue, FLAGS);
     }
 
+    Register parseMvRegister(Character number){
+        if(number == '1'){
+            return R1;
+        }
+        else if (number == '2'){
+            return R2;
+        }
+        else if (number == '3'){
+            return R3;
+        }
+        else if (number == '4'){
+            return CS;
+        }
+        else if (number == '5'){
+            return DS;
+        }
+        else{
+            interruptHandler.setPI(PIValues.InvalidOperation);
+            return R1;
+        }
+    }
+
+    void executeMv(String command){
+        if(command.charAt(2) == 'r'){
+            Register rx = parseMvRegister(command.charAt(4));
+            Register ry = parseMvRegister(command.charAt(5));
+            ry.setValue(rx.value());
+        }
+        else{
+            int location;
+            try{
+                location = Conversion.ConvertHexStringToInt(command.substring(4, 6));
+            }
+            catch(IllegalArgumentException iae){
+                interruptHandler.setPI(PIValues.InvalidOperation);
+                return;
+            }
+            Register r = parseMvRegister(command.charAt(3));
+            if(command.charAt(2) == 'o'){
+                pagingMechanism.writeNumber(location, r.value());
+            }
+            else if (command.charAt(2) == 'i'){
+                r.setValue(Conversion.ConvertHexStringToInt(pagingMechanism.getWord(location)));
+            }
+            else if (command.charAt(2) == 'c'){
+                int value;
+                try{
+                    value = Conversion.ConvertHexStringToInt(command.substring(4, 6));
+                }
+                catch(IllegalArgumentException iae){
+                    interruptHandler.setPI(PIValues.InvalidOperation);
+                    return;
+                }
+                r.setValue((r.value() / 256) * 256 + value);
+            }
+            else{
+                interruptHandler.setPI(PIValues.InvalidOperation);
+            }
+        }
+    }
+
     public void execute() {
         Character[] command = pagingMechanism.getWord(IC.value());
         System.out.println("IC value is: " + IC.value());
@@ -172,7 +233,11 @@ public class VirtualMachine {
                 executeDiv(commandString);
             } else if (commandString.startsWith("CMP")) {
                 executeCmp(commandString);
-            } else {
+            }
+            else if (commandString.startsWith("MV")){
+                executeMv(commandString);
+            }
+            else {
                 interruptHandler.setPI(PIValues.InvalidOperation);
                 IC.setValue(IC.value() + 1);
             }
