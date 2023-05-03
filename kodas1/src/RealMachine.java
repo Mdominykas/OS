@@ -234,7 +234,6 @@ public class RealMachine {
                         continueFor = -1;
                     }
                 }
-//                TODO: cia patestuoti
             } else if ((parts.length == 4) && (parts[0].equals("setword"))) {
                 int address = parseDebugNumber(parts[2]);
                 if ((address != -1) && (parts[3].length() == 6)) {

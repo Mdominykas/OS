@@ -224,7 +224,9 @@ public class VirtualMachine {
             }
             else if (commandString.equals("OUTSIM")){
               interruptHandler.setSI(SIValues.OutputSymbols);
-            } else {
+            } else if (commandString.startsWith("HALT")){
+                interruptHandler.setSI(SIValues.Halt);
+            }else {
                 interruptHandler.setPI(PIValues.InvalidOperation);
                 IC.setValue(IC.value() + 1);
             }
