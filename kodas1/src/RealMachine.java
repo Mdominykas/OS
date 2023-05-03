@@ -17,6 +17,7 @@ public class RealMachine {
     FileSystem fileSystem;
 
     RealMachine() {
+
         R1 = new Register(6);
         R2 = new Register(6);
         R3 = new Register(6);
@@ -27,6 +28,7 @@ public class RealMachine {
         FLAGS = new Register(1);
         PTR = new Register(2);
         PI = new Register(1);
+        Register.PI = PI;
         SI = new Register(1);
         TI = new Register(1);
         machineMemory = new MachineMemory();
@@ -63,9 +65,6 @@ public class RealMachine {
     }
 
     public void load(String programName) throws OSException {
-        IC.setValue(0x10);
-        CS.setValue(0x10);
-        DS.setValue(0x80);
         if (!pagingMechanism.createVirtualMachinePages()) {
             throw new NotEnoughFreePagesException("");
         }
@@ -109,6 +108,13 @@ public class RealMachine {
             throw new IncorrectProgramSizeException("");
         }
         loadVirtualMachineFromSuperVisorMemory(wroteBlocks, wordsInLastBlock);
+        IC.setValue(0x10);
+        CS.setValue(0x10);
+        DS.setValue(0x80);
+        R1.setValue(0);
+        R2.setValue(0);
+        R3.setValue(0);
+        FLAGS.setValue(0);
         this.vm = new VirtualMachine(R1, R2, R3, FLAGS, IC, CS, DS, interruptHandler, pagingMechanism);
     }
 
@@ -154,7 +160,7 @@ public class RealMachine {
                     System.out.println("FLAGS = " + FLAGS.toString() + ", PTR = " + PTR.toString());
                 } else if ((parts[1].equals("commands")) && (parts.length == 2)) {
                     int startVal = Math.max(0, IC.value() - 2);
-                    int endVal = Math.min(IC.value() + 2, IC.maxValue() - 1);
+                    int endVal = Math.min(IC.value() + 2, IC.range() - 1);
                     for (int i = startVal; i <= endVal; i++) {
                         String hexNum = Conversion.characterArrayToString(Conversion.ConvertIntToHexCharacterArray(i));
                         System.out.println(hexNum + ": " + Conversion.characterArrayToString(pagingMechanism.getWord(i)));
@@ -165,7 +171,7 @@ public class RealMachine {
                     final int halfOfDisplayLength = 4;
                     if (num != -1) {
                         int startVal = Math.max(0, num - halfOfDisplayLength);
-                        int endVal = Math.min(num + halfOfDisplayLength, IC.maxValue() - 1);
+                        int endVal = Math.min(num + halfOfDisplayLength, IC.range() - 1);
                         for (int i = startVal; i <= endVal; i++) {
                             String hexNum = Conversion.characterArrayToString(Conversion.ConvertIntToHexCharacterArray(i));
                             System.out.println(hexNum + ": " + Conversion.characterArrayToString(pagingMechanism.getWord(i)));
@@ -249,7 +255,34 @@ public class RealMachine {
         return continueFor;
     }
 
+    private int interruptHandling(){
+        if(interruptHandler.test()) {
+            if(PI.value() != PIValues.Nothing){
+                if(PI.value() == PIValues.InvalidOperation){
+                    System.out.println("Invalid operation");
+                    return 1;
+                }
+            }
+            if(SI.value() != SIValues.Nothing){
+                System.out.println("SI interrupt happened" + SI.value());
+                TI.setValue(Math.max(0, TI.value() - 4));
+                if (SI.value() == SIValues.Halt) {
+                    return 1;
+                }
+            }
+            if(TI.value() == 0){
+                System.out.println("Timer interrupt happened");
+                TI.setValue(10);
+            }
+        }
+        return 0;
+    }
+
     public void debug(BufferedReader br) {
+        SI.setValue(SIValues.Nothing);
+        PI.setValue(PIValues.Nothing);
+        TI.setValue(10);
+
         int continueFor = 0;
         while (true) {
             while (continueFor <= 0) {
@@ -261,10 +294,11 @@ public class RealMachine {
             continueFor--;
             MODE = true;
             vm.execute();
-            if (SI.value() == SIValues.Halt) {
+            MODE = false;
+            TI.setValue(TI.value() - 1);
+            if(interruptHandling() == 1) {
                 break;
             }
-            MODE = false;
         }
         pagingMechanism.freeVirtualMachinePages();
         this.vm = null;
@@ -280,26 +314,8 @@ public class RealMachine {
             vm.execute();
             MODE = false;
             TI.setValue(TI.value() - 1);
-            if(interruptHandler.test()) {
-                if(PI.value() != PIValues.Nothing){
-                    if(PI.value() == PIValues.InvalidOperation){
-                        System.out.println("Invalid operation");
-                        break;
-                    }
-                }
-                if(SI.value() != SIValues.Nothing){
-                    System.out.println("SI interrupt happened" + SI.value());
-                    TI.setValue(Math.max(0, TI.value() - 4));
-                    if (SI.value() == SIValues.Halt) {
-                        break;
-                    }
-                }
-                if(TI.value() == 0){
-                    System.out.println("Timer interrupt happened");
-                    TI.setValue(10);
-                }
-
-            }
+            if(interruptHandling() == 1)
+                break;
         }
         pagingMechanism.freeVirtualMachinePages();
         this.vm = null;

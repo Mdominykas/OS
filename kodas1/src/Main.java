@@ -22,7 +22,7 @@ public class Main {
                 String[] parts = command.split("\\s+");
                 if ((parts.length == 1) && (Objects.equals(parts[0], "shutdown"))) {
                     break;
-                } else if ((parts.length == 2) && (Objects.equals(parts[0], "load"))) {
+                } else if ((parts.length == 2) && (parts[0].equals("load"))) {
                     try{
                         rm.load(parts[1]);
                         rm.exec();
@@ -40,7 +40,7 @@ public class Main {
                         System.out.println("OS exception");
                     }
                 }
-                else if ((parts.length == 2) && ("debug".equals(parts[0]))){
+                else if ((parts.length == 2) && (parts[0].equals("debug"))){
                     try{
                         rm.load(parts[1]);
                         rm.debug(br);

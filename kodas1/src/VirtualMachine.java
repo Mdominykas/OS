@@ -96,14 +96,86 @@ public class VirtualMachine {
         }
     }
 
+    private Register arithmeticParseRegister(Character number) {
+        if (number == '1') {
+            return R1;
+        } else if (number == '2') {
+            return R2;
+        } else if (number == '3') {
+            return R3;
+        } else {
+            interruptHandler.setPI(PIValues.InvalidOperation);
+            return R1;
+        }
+    }
+
+    int parseSecondArithmeticOperand(String command) {
+        int otherValue;
+        if (command.charAt(3) == 'r')
+            otherValue = arithmeticParseRegister(command.charAt(5)).value();
+        else if (command.charAt(3) == 'c')
+            otherValue = Conversion.ConvertHexStringToInt(command.substring(5, 6));
+        else {
+            interruptHandler.setPI(PIValues.InvalidOperation);
+            return 0;
+        }
+        return otherValue;
+    }
+
+    void executeAdd(String command) {
+        Register Rx = arithmeticParseRegister(command.charAt(4));
+        int otherValue = parseSecondArithmeticOperand(command);
+        Rx.add(otherValue, FLAGS);
+    }
+
+    void executeSub(String command) {
+        Register Rx = arithmeticParseRegister(command.charAt(4));
+        int otherValue = parseSecondArithmeticOperand(command);
+        Rx.subtract(otherValue, FLAGS);
+    }
+
+    void executeMul(String command) {
+        Register Rx = arithmeticParseRegister(command.charAt(4));
+        int otherValue = parseSecondArithmeticOperand(command);
+        Rx.multiply(otherValue, FLAGS);
+    }
+
+    void executeDiv(String command) {
+        Register Rx = arithmeticParseRegister(command.charAt(4));
+        int otherValue = parseSecondArithmeticOperand(command);
+        Rx.divide(otherValue, FLAGS);
+    }
+
+    void executeCmp(String command) {
+        Register Rx = arithmeticParseRegister(command.charAt(4));
+        int otherValue = parseSecondArithmeticOperand(command);
+        Rx.cmp(otherValue, FLAGS);
+    }
+
     public void execute() {
         Character[] command = pagingMechanism.getWord(IC.value());
         System.out.println("IC value is: " + IC.value());
         System.out.println("command is:" + Conversion.characterArrayToString(command));
-        if (Conversion.characterArrayToString(command).startsWith("J")) {
+        String commandString = Conversion.characterArrayToString(command);
+        if (commandString.startsWith("J")) {
             executeJump(command);
-        } else {
-            interruptHandler.setPI(PIValues.InvalidOperation);
+        }
+        else
+        {
+            if (commandString.startsWith("ADD")) {
+                executeAdd(commandString);
+            } else if (commandString.startsWith("SUB")) {
+                executeSub(commandString);
+            } else if (commandString.startsWith("MUL")) {
+                executeMul(commandString);
+            } else if (commandString.startsWith("DIV")) {
+                executeDiv(commandString);
+            } else if (commandString.startsWith("CMP")) {
+                executeCmp(commandString);
+            } else {
+                interruptHandler.setPI(PIValues.InvalidOperation);
+                IC.setValue(IC.value() + 1);
+            }
             IC.setValue(IC.value() + 1);
         }
     }
