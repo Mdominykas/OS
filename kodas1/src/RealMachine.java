@@ -255,32 +255,62 @@ public class RealMachine {
         return continueFor;
     }
 
-    private int interruptHandling(){
-        if(interruptHandler.test()) {
-            if(PI.value() != PIValues.Nothing){
-                if(PI.value() == PIValues.InvalidOperation){
+    private int interruptHandling() {
+        if (interruptHandler.test()) {
+            if (PI.value() != PIValues.Nothing) {
+                if (PI.value() == PIValues.InvalidOperation) {
                     System.out.println("Invalid operation");
                     return 1;
                 }
             }
-            if(SI.value() != SIValues.Nothing){
-                System.out.println("SI interrupt happened" + SI.value());
+            if (SI.value() != SIValues.Nothing) {
+//                System.out.println("SI interrupt happened" + SI.value());
                 TI.setValue(Math.max(0, TI.value() - 4));
                 if (SI.value() == SIValues.Halt) {
                     return 1;
+                } else if (SI.value() == SIValues.OutputNumber) {
+                    int numberLen = Conversion.ConvertIntToHexCharacterArray(R1.value()).length;
+                    Character[] temp = machineMemory.getWord(0);
+                    machineMemory.writeNumber(0, R1.value());
+                    channelMechanism.SB.setValue(0);
+                    channelMechanism.SW.setValue(Constants.WordLengthInBytes - numberLen);
+                    channelMechanism.ST.setValue(STValues.SupervisorMemory);
+                    channelMechanism.DT.setValue(DTValues.Screen);
+                    channelMechanism.BC.setValue(numberLen);
+                    channelMechanism.exchange();
+                    machineMemory.setWord(0, temp);
+
+                } else if (SI.value() == SIValues.OutputSymbols) {
+                    int symbolsToOutput = R3.value();
+                    int virtualAddress = R1.value();
+                    while(symbolsToOutput > 0){
+                        int virtualBlock = virtualAddress / (Constants.blockLengthInWords * Constants.WordLengthInBytes);
+                        int offset = virtualAddress % (Constants.blockLengthInWords * Constants.WordLengthInBytes);
+                        int length = Math.min(symbolsToOutput, Constants.blockLengthInWords * Constants.WordLengthInBytes - offset);
+
+                        channelMechanism.SB.setValue(pagingMechanism.getRealBlockNumber(virtualBlock));
+                        channelMechanism.SW.setValue(offset);
+                        channelMechanism.ST.setValue(STValues.UserMemory);
+                        channelMechanism.DT.setValue(DTValues.Screen);
+                        channelMechanism.BC.setValue(length);
+                        channelMechanism.exchange();
+
+                        symbolsToOutput -= length;
+                        virtualAddress += length;
+                    }
                 }
             }
-            if(TI.value() == 0){
+            if (TI.value() == 0) {
                 System.out.println("Timer interrupt happened");
                 TI.setValue(10);
             }
         }
+        interruptHandler.clearSIAndPI();
         return 0;
     }
 
     public void debug(BufferedReader br) {
-        SI.setValue(SIValues.Nothing);
-        PI.setValue(PIValues.Nothing);
+        interruptHandler.clearSIAndPI();
         TI.setValue(10);
 
         int continueFor = 0;
@@ -296,7 +326,7 @@ public class RealMachine {
             vm.execute();
             MODE = false;
             TI.setValue(TI.value() - 1);
-            if(interruptHandling() == 1) {
+            if (interruptHandling() == 1) {
                 break;
             }
         }
@@ -305,8 +335,7 @@ public class RealMachine {
     }
 
     public void exec() {
-        SI.setValue(SIValues.Nothing);
-        PI.setValue(PIValues.Nothing);
+        interruptHandler.clearSIAndPI();
         TI.setValue(10);
 
         while (true) {
@@ -314,8 +343,9 @@ public class RealMachine {
             vm.execute();
             MODE = false;
             TI.setValue(TI.value() - 1);
-            if(interruptHandling() == 1)
+            if (interruptHandling() == 1) {
                 break;
+            }
         }
         pagingMechanism.freeVirtualMachinePages();
         this.vm = null;

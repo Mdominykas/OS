@@ -1,3 +1,6 @@
+import Constants.PIValues;
+import Constants.SIValues;
+
 public class InterruptHandler {
     Register SI, PI, TI;
     InterruptHandler(Register PI, Register SI, Register TI)
@@ -17,6 +20,11 @@ public class InterruptHandler {
 
     public void setPI(int value){
         PI.setValue(value);
+    }
+
+    public void clearSIAndPI(){
+        PI.setValue(PIValues.Nothing);
+        SI.setValue(SIValues.Nothing);
     }
 
     public void handle()

@@ -27,24 +27,44 @@ public class ChannelMechanism {
             int byteNum = SB.value() * Constants.blockLengthInWords * Constants.WordLengthInBytes + SW.value() + readBytes;
             if ((ST.value() == STValues.SupervisorMemory) || (ST.value() == STValues.UserMemory)) { // galima, nes jos abi nuo pradžios numeruojasi
                 temp.add(machineMemory.getByte(byteNum));
-            }
-            else if (ST.value() == STValues.ExternalMemory){
+            } else if (ST.value() == STValues.ExternalMemory) {
 //                optimizuoti
                 temp.add(externalMemory.getByte(byteNum));
             }
             readBytes++;
         }
         int wroteBytes = 0;
-        while(wroteBytes < BC.value())
-        {
+        while (wroteBytes < BC.value()) {
             int byteNum = DB.value() * Constants.blockLengthInWords * Constants.WordLengthInBytes + DW.value() + wroteBytes;
-            if((DT.value() == 1) || (DT.value() == 2))
-            {
+            if ((DT.value() == DTValues.SupervisorMemory) || (DT.value() == DTValues.UserMemory)) {
                 machineMemory.setByte(byteNum, temp.get(wroteBytes));
-            }
-            else if (DT.value() == 3)
+            } else if (DT.value() == DTValues.ExternalMemory){
                 externalMemory.setByte(byteNum, temp.get(wroteBytes));
+            }
             wroteBytes++;
+        }
+        if(DT.value() == DTValues.Screen){
+            wroteBytes = 0;
+            boolean hasSlash = false;
+            while(wroteBytes < BC.value()){
+                if(hasSlash){
+                    if(temp.get(wroteBytes) == 'n')
+                    {
+                        System.out.print('\n');
+                    }
+                    else{
+                        System.out.print('\\');
+                    }
+                    hasSlash = false;
+                }
+                if(temp.get(wroteBytes) == '\\'){
+                    hasSlash = true;
+                }
+                else {
+                    System.out.print(temp.get(wroteBytes));
+                }
+                wroteBytes++;
+            }
         }
     }
 

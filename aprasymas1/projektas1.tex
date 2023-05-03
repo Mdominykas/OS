@@ -258,7 +258,6 @@ Norint tinkamai naudotis perėjimais, prieš juos reikia panaudoti CMP operacij�
 Po valdymo komandų registro FLAGS reikšmė nėra keičiama.
 
 \subsubsection{Darbas su failais}
-Darbo su failais metu yra naudojamos simbolių eilutės. Tai baitų seka, kurios pabaigoje yra nulinis baitas.
 
 Visos šios operacijos iškviečia sisteminius pertraukimus. Procesorius informaciją apie pertraukimo tipą gauna iš SI reikšmės.
 \begin{itemize}
@@ -278,7 +277,7 @@ Jeigu WRITEF nepavyko parašyti visų simbolių, tai yra nustatomas CF = 1, o pr
 \subsubsection{Įvedimas ir išvedimas}
 Įvedimo ir išvedimo komandos, kaip ir darbo su failais, iškviečia sisteminį pertraukimą. 
 \begin{itemize}
-	\item OUTSIM - išveda baitus nuo R1 nurodyto adreso iki kol sutinka nulinį baitą arba parašo tiek simbolių, kokia reikšmė dabar yra registre R3.
+	\item OUTSIM - išveda baitus nuo R1 baitais nurodyto adreso ir parašo tiek simbolių, kokia reikšmė dabar yra registre R3.
 	\item OUTNUM - išveda baitą, kuris nurodytas R1 kaip skaičių.
 	\item INPONE - perskaito simbolį iš įvedimo srauto bei reikšmę patalpina į R1. Iki kol simbolis yra įvedamas, programa užsiblokuoja. Jeigu nuskaityti nepavyko, tai gauname reikšmė R1=0.
 	\item INPBLK - perskaito 16 simbolių (vieną takelį) iš įvedimo srauto ir patalpina į atmintį, nuo adreso, nurodyto registre R1. Kol takelis nėra gaunamas, programa užsiblokuoja.
