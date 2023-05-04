@@ -15,6 +15,7 @@ public class RealMachine {
     ExternalMemory externalMemory;
     ChannelMechanism channelMechanism;
     FileSystem fileSystem;
+    UserInput userInput;
 
     RealMachine() {
 
@@ -35,7 +36,8 @@ public class RealMachine {
         interruptHandler = new InterruptHandler(PI, SI, TI);
         pagingMechanism = new PagingMechanism(PTR, machineMemory);
         externalMemory = new ExternalMemory();
-        channelMechanism = new ChannelMechanism(machineMemory, externalMemory);
+        userInput = new UserInput();
+        channelMechanism = new ChannelMechanism(machineMemory, externalMemory, userInput);
         fileSystem = new FileSystem(externalMemory);
     }
 
@@ -44,8 +46,8 @@ public class RealMachine {
         int lengthInSupervisor = (numberOfBlocks - 1) * Constants.blockLengthInWords + wordsInLastBlock;
         for (int i = 0; i < lengthInSupervisor; i++) {
             String curWord = Conversion.characterArrayToString(machineMemory.getWord(i));
-            if (curWord.startsWith("$$$") && curWord.endsWith("$$")) {
-                virtualBlock = Conversion.convertHexCharacterToDigit(curWord.charAt(3));
+            if (curWord.startsWith("$$") && curWord.endsWith("$$$")) {
+                virtualBlock = Conversion.convertHexCharacterToDigit(curWord.charAt(2));
                 virtualWord = 0;
             } else if (curWord.equals(".CODES")) {
                 virtualBlock = 1;
@@ -143,8 +145,8 @@ public class RealMachine {
             if ((parts.length == 1) && (parts[0].equals("help"))) {
                 System.out.println("list of commands: \nhelp\ncontinue\ncontinue {num}\nprint registers\nprint commands");
                 System.out.println("print commands {num}\nshow virtual memory {wordNum}\nshow external memory {wordNum}");
-                System.out.println("show real memory {wordNum}\ndisplay channeling\nchange register {name} {newVal}");
-                System.out.println("changereg real {num} {newVal}\nsetword virtual {num} {newVal}");
+                System.out.println("show real memory {wordNum}\ndisplay channeling\nchangereg {name} {newVal}");
+                System.out.println("setword real {num} {newVal}\nsetword virtual {num} {newVal}");
                 continueFor = 0;
             } else if (parts[0].equals("continue")) {
                 if (parts.length == 1) {
@@ -268,11 +270,12 @@ public class RealMachine {
                 if (SI.value() == SIValues.Halt) {
                     return 1;
                 } else if (SI.value() == SIValues.OutputNumber) {
-                    int numberLen = Conversion.ConvertIntToHexCharacterArray(R1.value()).length;
+                    Character[] converted = Conversion.convertIntToDecCharacterArray(R1.value());
+                    int numberLen = converted.length;
                     Character[] temp = machineMemory.getWord(0);
-                    machineMemory.writeNumber(0, R1.value());
+                    machineMemory.setArr(0, converted);
                     channelMechanism.SB.setValue(0);
-                    channelMechanism.SW.setValue(Constants.WordLengthInBytes - numberLen);
+                    channelMechanism.SW.setValue(0);
                     channelMechanism.ST.setValue(STValues.SupervisorMemory);
                     channelMechanism.DT.setValue(DTValues.Screen);
                     channelMechanism.BC.setValue(numberLen);
@@ -297,6 +300,33 @@ public class RealMachine {
                         symbolsToOutput -= length;
                         virtualAddress += length;
                     }
+                }
+                else if (SI.value() == SIValues.InputLine){
+                    if(userInput.bufferLength() == 0){
+                        userInput.readUserLine();
+                    }
+                    int symbolsToGet = Math.min(R3.value(), userInput.bufferLength());
+                    int virtualAddress = R1.value();
+                    while(symbolsToGet > 0){
+                        int virtualBlock = virtualAddress / (Constants.blockLengthInWords * Constants.WordLengthInBytes);
+                        int offset = virtualAddress % (Constants.blockLengthInWords * Constants.WordLengthInBytes);
+                        int length = Math.min(symbolsToGet, Constants.blockLengthInWords * Constants.WordLengthInBytes - offset);
+
+                        channelMechanism.ST.setValue(STValues.Keyboard);
+                        channelMechanism.DB.setValue(pagingMechanism.getRealBlockNumber(virtualBlock));
+                        channelMechanism.DW.setValue(offset);
+                        channelMechanism.DT.setValue(DTValues.UserMemory);
+                        channelMechanism.BC.setValue(length);
+                        channelMechanism.exchange();
+
+                        symbolsToGet -= length;
+                        virtualAddress += length;
+                    }
+                    if(symbolsToGet == 0)
+                        R3.setValue(0);
+                }
+                else if (SI.value() == SIValues.InputNumber){
+                    R1.setValue(userInput.readNumber());
                 }
             }
             if (TI.value() == 0) {

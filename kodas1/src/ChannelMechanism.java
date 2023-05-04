@@ -1,14 +1,16 @@
 import Constants.Constants;
 import Constants.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class ChannelMechanism {
     Register SB, SW, DB, DW, BC, ST, DT;
     MachineMemory machineMemory;
     ExternalMemory externalMemory;
-
-    ChannelMechanism(MachineMemory machineMemory, ExternalMemory externalMemory) {
+    UserInput userInput;
+    ChannelMechanism(MachineMemory machineMemory, ExternalMemory externalMemory, UserInput userInput) {
         SB = new Register(2);
         SW = new Register(2);
         DB = new Register(2);
@@ -32,6 +34,14 @@ public class ChannelMechanism {
                 temp.add(externalMemory.getByte(byteNum));
             }
             readBytes++;
+        }
+        Scanner scanner = new Scanner(System.in);
+
+        if(ST.value() == STValues.Keyboard){
+            boolean reachedEnd = userInput.readUntilEndOfLineButNotMoreThanN(BC.value(), temp);
+            while(temp.size() < BC.value()){
+                temp.add('$');
+            }
         }
         int wroteBytes = 0;
         while (wroteBytes < BC.value()) {

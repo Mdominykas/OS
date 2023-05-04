@@ -87,4 +87,19 @@ public class Conversion {
         return ans;
     }
 
+    public static Character[] convertIntToDecCharacterArray(int number){
+        ArrayList<Character> chars = new ArrayList<>();
+        while(number != 0){
+            chars.add((char) ('0' + (number % 10)));
+            number /= 10;
+        }
+        if(chars.size() == 0)
+            chars.add('0');
+        Collections.reverse(chars);
+        Character[] ans = new Character[chars.size()];
+        for(int i = 0; i < chars.size(); i++)
+            ans[i] = chars.get(i);
+        return ans;
+    }
+
 }

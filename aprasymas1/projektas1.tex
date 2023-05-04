@@ -279,8 +279,8 @@ Jeigu WRITEF nepavyko parašyti visų simbolių, tai yra nustatomas CF = 1, o pr
 \begin{itemize}
 	\item OUTSIM - išveda baitus nuo R1 baitais nurodyto adreso ir parašo tiek simbolių, kokia reikšmė dabar yra registre R3.
 	\item OUTNUM - išveda baitą, kuris nurodytas R1 kaip skaičių.
-	\item INPONE - perskaito simbolį iš įvedimo srauto bei reikšmę patalpina į R1. Iki kol simbolis yra įvedamas, programa užsiblokuoja. Jeigu nuskaityti nepavyko, tai gauname reikšmė R1=0.
-	\item INPBLK - perskaito 16 simbolių (vieną takelį) iš įvedimo srauto ir patalpina į atmintį, nuo adreso, nurodyto registre R1. Kol takelis nėra gaunamas, programa užsiblokuoja.
+	\item INPLIN - perskaito vieną eilutę iš įvedimo srauto ir patalpina į atmintį, nuo adreso, nurodyto registre R1, tačiau nedaugiau simbolių nei nurodyta registre R3. Kol eilutė nėra gaunama, programa užsiblokuoja.
+	\item INPNUM - perskaito skaičių iš įvedimo srauto ir patalpine registre R1.
 \end{itemize}
 
 \subsubsection{Programos pabaigos}

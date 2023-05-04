@@ -201,8 +201,8 @@ public class VirtualMachine {
 
     public void execute() {
         Character[] command = pagingMechanism.getWord(IC.value());
-//        System.out.println("IC value is: " + IC.value());
-//        System.out.println("command is:" + Conversion.characterArrayToString(command));
+        System.out.println("IC value is: " + IC.value());
+        System.out.println("command is:" + Conversion.characterArrayToString(command));
         String commandString = Conversion.characterArrayToString(command);
         if (commandString.startsWith("J")) {
             executeJump(command);
@@ -224,7 +224,14 @@ public class VirtualMachine {
             }
             else if (commandString.equals("OUTSIM")){
               interruptHandler.setSI(SIValues.OutputSymbols);
-            } else if (commandString.startsWith("HALT")){
+            }
+            else if (commandString.equals("INPLIN")){
+                interruptHandler.setSI(SIValues.InputLine);
+            }
+            else if (commandString.equals("INPNUM")){
+                interruptHandler.setSI(SIValues.InputNumber);
+            }
+            else if (commandString.startsWith("HALT")){
                 interruptHandler.setSI(SIValues.Halt);
             }else {
                 interruptHandler.setPI(PIValues.InvalidOperation);

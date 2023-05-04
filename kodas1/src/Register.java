@@ -37,7 +37,7 @@ public class Register {
     public void add(int otherValue, Register flags){
         assert(otherValue >= 0);
         int unfixedValue = value() + otherValue;
-        setFlags(value(), otherValue, unfixedValue, flags);
+        setFlags(value(), otherValue,  '+',unfixedValue, flags);
         this.setValue(fixValue(unfixedValue));
     }
 
@@ -49,7 +49,7 @@ public class Register {
     public void subtract(int otherValue, Register flags){
         assert(otherValue >= 0);
         int unfixedValue = value() - otherValue;
-        setFlags(value(), otherValue, unfixedValue, flags);
+        setFlags(value(), otherValue,  '-', unfixedValue, flags);
         this.setValue(fixValue(unfixedValue));
     }
     public void subtract(Register r, Register flags) {
@@ -60,7 +60,7 @@ public class Register {
     public void multiply(int otherValue, Register flags){
         assert(otherValue >= 0);
         int unfixedValue = value() * otherValue;
-        setFlags(value(), otherValue, unfixedValue, flags);
+        setFlags(value(), otherValue,  '*', unfixedValue, flags);
         this.setValue(fixValue(unfixedValue));
     }
     public void multiply(Register r, Register flags) {
@@ -74,7 +74,7 @@ public class Register {
             PI.setValue(PIValues.DivisionByZero);
         }
         int unfixedValue = value() / otherValue;
-        setFlags(value(), otherValue, unfixedValue, flags);
+        setFlags(value(), otherValue, '/', unfixedValue, flags);
         this.setValue(fixValue(unfixedValue));
 
     }
@@ -85,7 +85,7 @@ public class Register {
 
     public void cmp(int otherValue, Register flags){
         int unfixedValue = value() - otherValue;
-        setFlags(value(), otherValue, unfixedValue, flags);
+        setFlags(value(), otherValue,  '-', unfixedValue, flags);
     }
     public void cmp(Register r, Register flags) {
         assert (numberOfBytes == r.numberOfBytes);
@@ -123,17 +123,21 @@ public class Register {
         }
     }
 
-    private void setOverflowFlag(int operand1, int operand2, int fixedValue, Register flags){
-        if((sign(operand1) == sign(operand2)) && (sign(operand1) != sign(fixedValue)))
+//    neveikia su sub 1, 2 (turetu nebuti pasetintas)
+    private void setOverflowFlag(int operand1, int operand2, char op, int fixedValue, Register flags){
+        if((op == '+') && ((sign(operand1) == sign(operand2)) && (sign(operand1) != sign(fixedValue))))
             flags.setValue(flags.value() + Constants.OF);
+        else if ((op == '-') && (sign(operand1) != sign(operand2)) && (sign(operand1) != sign(fixedValue))){
+            flags.setValue(flags.value() + Constants.OF);
+        }
     }
 
-    private void setFlags(int operand1, int operand2, int unfixedValue, Register flags) {
+    private void setFlags(int operand1, int operand2, char op, int unfixedValue, Register flags) {
         clearFlags(flags);
         setCarryFlag(unfixedValue, flags);
         int fixedValue = fixValue(unfixedValue);
         setSignAndZeroFlags(fixedValue, flags);
-        setOverflowFlag(operand1, operand2, fixedValue, flags);
+        setOverflowFlag(operand1, operand2, op, fixedValue, flags);
     }
 
     public String toString() {

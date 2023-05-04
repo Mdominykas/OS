@@ -22,6 +22,11 @@ public class MachineMemory {
         System.arraycopy(newWord, 0, this.memory, Constants.WordLengthInBytes * num, Constants.WordLengthInBytes);
     }
 
+    void setArr(int num, Character[] newChars){
+        assert (num < this.memory.length);
+        System.arraycopy(newChars, 0, this.memory, Constants.WordLengthInBytes * num, newChars.length);
+    }
+
     void writeNumber(int wordPoz, int num) {
         setWord(wordPoz, Conversion.convertToWordLengthCharacterArray(num));
     }
