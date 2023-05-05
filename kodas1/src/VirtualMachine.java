@@ -201,8 +201,8 @@ public class VirtualMachine {
 
     public void execute() {
         Character[] command = pagingMechanism.getWord(IC.value());
-        System.out.println("IC value is: " + IC.value());
-        System.out.println("command is:" + Conversion.characterArrayToString(command));
+//        System.out.println("IC value is: " + IC.value());
+//        System.out.println("command is:" + Conversion.characterArrayToString(command));
         String commandString = Conversion.characterArrayToString(command);
         if (commandString.startsWith("J")) {
             executeJump(command);

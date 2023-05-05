@@ -368,9 +368,9 @@ public class RealMachine {
         TI.setValue(10);
 
         while (true) {
-            MODE = true;
-            vm.execute();
             MODE = false;
+            vm.execute();
+            MODE = true;
             TI.setValue(TI.value() - 1);
             if (interruptHandling() == 1) {
                 break;

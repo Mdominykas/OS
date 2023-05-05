@@ -67,7 +67,7 @@ public class ChannelMechanism {
                     }
                     hasSlash = false;
                 }
-                if(temp.get(wroteBytes) == '\\'){
+                else if(temp.get(wroteBytes) == '\\'){
                     hasSlash = true;
                 }
                 else {
