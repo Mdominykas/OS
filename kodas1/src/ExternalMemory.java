@@ -161,7 +161,7 @@ public class ExternalMemory {
                 } else if (i == poz) {
                     continue;
                 } else {
-                    writer.write(lines[i - 1]);
+                    writer.write(lines[i]);
                 }
                 writer.newLine();
             }
