@@ -7,9 +7,9 @@ import java.io.IOException;
 public class RealMachine {
     Register R1, R2, R3, IC, FLAGS, PTR, CS, DS;
     Register PI, SI, TI;
-    boolean MODE;
     MachineMemory machineMemory;
     VirtualMachine vm = null;
+    boolean MODE;
     InterruptHandler interruptHandler;
     PagingMechanism pagingMechanism;
     ExternalMemory externalMemory;
@@ -285,7 +285,7 @@ public class RealMachine {
                 } else if (SI.value() == SIValues.OutputSymbols) {
                     int symbolsToOutput = R3.value();
                     int virtualAddress = R1.value();
-                    while(symbolsToOutput > 0){
+                    while (symbolsToOutput > 0) {
                         int virtualBlock = virtualAddress / (Constants.blockLengthInWords * Constants.WordLengthInBytes);
                         int offset = virtualAddress % (Constants.blockLengthInWords * Constants.WordLengthInBytes);
                         int length = Math.min(symbolsToOutput, Constants.blockLengthInWords * Constants.WordLengthInBytes - offset);
@@ -300,14 +300,13 @@ public class RealMachine {
                         symbolsToOutput -= length;
                         virtualAddress += length;
                     }
-                }
-                else if (SI.value() == SIValues.InputLine){
-                    if(userInput.bufferLength() == 0){
+                } else if (SI.value() == SIValues.InputLine) {
+                    if (userInput.bufferLength() == 0) {
                         userInput.readUserLine();
                     }
                     int symbolsToGet = Math.min(R3.value(), userInput.bufferLength());
                     int virtualAddress = R1.value();
-                    while(symbolsToGet > 0){
+                    while (symbolsToGet > 0) {
                         int virtualBlock = virtualAddress / (Constants.blockLengthInWords * Constants.WordLengthInBytes);
                         int offset = virtualAddress % (Constants.blockLengthInWords * Constants.WordLengthInBytes);
                         int length = Math.min(symbolsToGet, Constants.blockLengthInWords * Constants.WordLengthInBytes - offset);
@@ -322,11 +321,111 @@ public class RealMachine {
                         symbolsToGet -= length;
                         virtualAddress += length;
                     }
-                    if(symbolsToGet == 0)
+                    if (symbolsToGet == 0)
                         R3.setValue(0);
-                }
-                else if (SI.value() == SIValues.InputNumber){
+                } else if (SI.value() == SIValues.InputNumber) {
                     R1.setValue(userInput.readNumber());
+                } else if (SI.value() == SIValues.OpenFile) {
+                    Character[] name = pagingMechanism.getWord(R1.value());
+                    StringBuilder nameBuilder = new StringBuilder();
+                    for (char ch : name) {
+                        nameBuilder.append(ch);
+                    }
+                    String filename = nameBuilder.toString();
+
+                    FileHandler handler = fileSystem.openFile(filename);
+                    if (handler == null) {
+                        fileSystem.createFile(filename);
+                        handler = fileSystem.openFile(filename);
+                    }
+                    R2.setValue(handler.fileNumber);
+                } else if (SI.value() == SIValues.CloseFile) {
+                    int fileNumber = R2.value();
+                    if (fileSystem.closeFile(fileNumber)) {
+                        R1.setValue(0);
+                    } else {
+                        R1.setValue(fileNumber);
+                    }
+                } else if (SI.value() == SIValues.WriteFile) {
+                    int symbolsToOutput = R3.value();
+                    int virtualAddress = R1.value();
+                    FileHandler handler = fileSystem.fileHandlerByNumber(R2.value());
+                    while (symbolsToOutput > 0) {
+                        int virtualBlock = virtualAddress / (Constants.blockLengthInWords * Constants.WordLengthInBytes);
+                        int offset = virtualAddress % (Constants.blockLengthInWords * Constants.WordLengthInBytes);
+                        int length = Math.min(symbolsToOutput, Constants.blockLengthInWords * Constants.WordLengthInBytes - offset);
+
+                        int fileBlock = handler.wordPoz / Constants.blockLengthInWords;
+                        int fileOffset = (handler.wordPoz % Constants.blockLengthInWords) * Constants.WordLengthInBytes + handler.bytePoz;
+
+                        channelMechanism.SB.setValue(pagingMechanism.getRealBlockNumber(virtualBlock));
+                        channelMechanism.SW.setValue(offset);
+                        channelMechanism.ST.setValue(STValues.UserMemory);
+
+                        channelMechanism.DT.setValue(DTValues.ExternalMemory);
+                        channelMechanism.DW.setValue(fileBlock);
+                        channelMechanism.BC.setValue(fileOffset);
+
+                        int prevWord = handler.wordPoz;
+                        handler.addBytes(length);
+                        int wordDiff = handler.wordPoz - prevWord; // ar visada veikia
+                        for(int i = 0; i < wordDiff; i++){
+                            externalMemory.setWordAndShift(prevWord + 1, Conversion.stringToCharacterArray("      "));
+                        }
+                        channelMechanism.exchange();
+
+                        symbolsToOutput -= length;
+                        virtualAddress += length;
+                    }
+
+                } else if (SI.value() == SIValues.ReadFile) {
+                    int fileNumber = R2.value();
+                    FileHandler handler = fileSystem.fileHandlerByNumber(fileNumber);
+
+                    int symbolsToRead = R3.value();
+                    int virtualAddress = R1.value();
+                    int fileEnd = fileSystem.findFileEndWord(handler.wordPoz);
+                    int bytesToFileEnd = (fileEnd - handler.wordPoz + 1) * Constants.WordLengthInBytes + (Constants.WordLengthInBytes - handler.bytePoz);
+                    if (symbolsToRead > bytesToFileEnd) {
+                        symbolsToRead = bytesToFileEnd;
+                        R3.setValue(bytesToFileEnd);
+                    }
+                    while (symbolsToRead > 0) {
+
+                        int sourceBytePoz = handler.wordPoz * Constants.WordLengthInBytes + handler.bytePoz;
+                        int sourceBlockPoz = sourceBytePoz / (Constants.blockLengthInWords * Constants.WordLengthInBytes);
+                        int sourceOffset = sourceBytePoz % (Constants.blockLengthInWords * Constants.WordLengthInBytes);
+
+                        int virtualBlock = virtualAddress / (Constants.blockLengthInWords * Constants.WordLengthInBytes);
+                        int offset = virtualAddress % (Constants.blockLengthInWords * Constants.WordLengthInBytes);
+                        int length = Math.min(symbolsToRead, Constants.blockLengthInWords * Constants.WordLengthInBytes - offset);
+
+                        channelMechanism.SB.setValue(sourceBlockPoz);
+                        channelMechanism.SW.setValue(sourceOffset);
+                        channelMechanism.ST.setValue(STValues.ExternalMemory);
+
+                        channelMechanism.DB.setValue(pagingMechanism.getRealBlockNumber(virtualBlock));
+                        channelMechanism.SW.setValue(offset);
+                        channelMechanism.DT.setValue(DTValues.UserMemory);
+
+                        channelMechanism.BC.setValue(length);
+                        channelMechanism.exchange();
+
+                        symbolsToRead -= length;
+                        virtualAddress += length;
+                        handler.addBytes(length);
+                    }
+                } else if (SI.value() == SIValues.DeleteFile) {
+                    int fileNumber = R2.value();
+                    FileHandler handler = fileSystem.fileHandlerByNumber(fileNumber);
+
+                    int fileStartWord = handler.fileStartPoz();
+                    int fileEndWord = fileSystem.findFileEndWord(fileStartWord);
+                    int lengthInWords = fileEndWord - fileStartWord + 1;
+                    while (lengthInWords > 0) {
+                        fileSystem.removeWordAndShift(fileStartWord);
+                        lengthInWords--;
+                    }
                 }
             }
             if (TI.value() == 0) {

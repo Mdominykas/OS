@@ -261,7 +261,7 @@ Po valdymo komandų registro FLAGS reikšmė nėra keičiama.
 
 Visos šios operacijos iškviečia sisteminius pertraukimus. Procesorius informaciją apie pertraukimo tipą gauna iš SI reikšmės.
 \begin{itemize}
-	\item OPENF* - atidaro failą, kurio pavadinimas yra simbolių eilutė, kurios pradžios adresas yra R1 reikšmė. Operacijos pabaigoje į R2 yra įrašomas failo numeris. Jeigu failas yra nerandamas - sukuria naują failą tokiu pavadinimu.
+	\item OPENF* - atidaro failą, kurio pavadinimas yra žodis, įrašytas adresu esančiuyra R1 reikšmėje. Operacijos pabaigoje į R2 yra įrašomas failo numeris. Jeigu failas yra nerandamas - sukuria naują failą tokiu pavadinimu.
 	\item CLOSEF - uždaro failą, kurio numeris yra įrašytas  R2. Jeigu norimas failas nėra rastas, ar jau buvo uždarytas yra nustatoma R1 = 0, kitu atveju R1 bus uždaryto failo numeris.
 	\item WRITEF - rašo simbolius į failą, kurio numeris nurodytas R2. Rašoma nuo adreso, kuris nurodytas R1 iki tol, kol parašo R3 baitų arba sutinkamas nulinis baitas.
 	\item READF* - skaito simbolius iš failo, kurio numeris yra nurodytas R2. Rašymas į atmintį pradedamas nuo vietos, kurią nurodo R1 reikšmė. Perskaitomi baitai iki failo galo, bet nedaugiau negu buvo nurodyta reikšmėje R3. Jeigu buvo perskaityta mažiau, negu buvo nurodyta R3 reikšmėje, tai ji atitinkamai pakeičiama.

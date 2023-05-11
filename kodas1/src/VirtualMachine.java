@@ -221,19 +221,25 @@ public class VirtualMachine {
                 executeMv(commandString);
             } else if (commandString.equals("OUTNUM")) {
                 interruptHandler.setSI(SIValues.OutputNumber);
-            }
-            else if (commandString.equals("OUTSIM")){
-              interruptHandler.setSI(SIValues.OutputSymbols);
-            }
-            else if (commandString.equals("INPLIN")){
+            } else if (commandString.equals("OUTSIM")) {
+                interruptHandler.setSI(SIValues.OutputSymbols);
+            } else if (commandString.equals("INPLIN")) {
                 interruptHandler.setSI(SIValues.InputLine);
-            }
-            else if (commandString.equals("INPNUM")){
+            } else if (commandString.equals("INPNUM")) {
                 interruptHandler.setSI(SIValues.InputNumber);
-            }
-            else if (commandString.startsWith("HALT")){
+            } else if (commandString.startsWith("HALT")) {
                 interruptHandler.setSI(SIValues.Halt);
-            }else {
+            } else if (commandString.startsWith("OPENF")) {
+                interruptHandler.setSI(SIValues.OpenFile);
+            } else if (commandString.startsWith("CLOSEF")) {
+                interruptHandler.setSI(SIValues.CloseFile);
+            } else if (commandString.startsWith("WRITEF")) {
+                interruptHandler.setSI(SIValues.WriteFile);
+            } else if (commandString.startsWith("READF")) {
+                interruptHandler.setSI(SIValues.ReadFile);
+            } else if (commandString.startsWith("DELETF")) {
+                interruptHandler.setSI(SIValues.DeleteFile);
+            } else {
                 interruptHandler.setPI(PIValues.InvalidOperation);
                 IC.setValue(IC.value() + 1);
             }

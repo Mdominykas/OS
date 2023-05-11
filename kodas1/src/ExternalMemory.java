@@ -5,7 +5,12 @@ import java.io.*;
 public class ExternalMemory {
     final static String fileName = "hdd.txt";
 
-    private void createFile() {
+    ExternalMemory() {
+        createHddFile();
+        fixFileSystem();
+    }
+
+    private void createHddFile() {
         File file = new File(fileName);
         if (!file.exists()) {
             try {
@@ -31,6 +36,9 @@ public class ExternalMemory {
             String[] lines = new String[Constants.externalMemoryLengthInWords];
             for (int i = 0; i < Constants.externalMemoryLengthInWords; i++) {
                 lines[i] = br.readLine();
+                if(lines[i] == null){
+                    lines[i] = "000000";
+                }
             }
             br.close();
 
@@ -59,10 +67,6 @@ public class ExternalMemory {
 
     }
 
-    ExternalMemory() {
-        createFile();
-        fixFileSystem();
-    }
 
     Character getByte(int num) {
         char ch = '\0';
@@ -91,7 +95,7 @@ public class ExternalMemory {
                 num--;
             }
             String line = br.readLine();
-            assert (line.length() < Constants.WordLengthInBytes);
+            assert (line.length() == Constants.WordLengthInBytes);
             for (int i = 0; i < line.length(); i++) {
                 characters[i] = line.charAt(i);
             }
@@ -105,6 +109,69 @@ public class ExternalMemory {
         return characters;
     }
 
+    String[] readAllLines() {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(fileName));
+            String[] lines = new String[Constants.externalMemoryLengthInWords];
+
+            for (int i = 0; i < Constants.externalMemoryLengthInWords; i++) {
+                lines[i] = br.readLine();
+                assert (lines[i] != null);
+            }
+            br.close();
+            return lines;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    void setWordAndShift(int poz, Character[] word) {
+        assert((poz >=0 ) &&(poz < Constants.externalMemoryLengthInWords));
+        assert(word.length == Constants.WordLengthInBytes);
+        try {
+            String[] lines = readAllLines();
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+            for (int i = 0; i < Constants.externalMemoryLengthInWords; i++) {
+                if (i < poz) {
+                    writer.write(lines[i]);
+                } else if (i == poz) {
+                    writer.write(Conversion.characterArrayToString(word));
+                } else {
+                    writer.write(lines[i - 1]);
+                }
+                writer.newLine();
+            }
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    void removeWordAndShift(int poz) {
+        assert (poz < Constants.externalMemoryLengthInWords);
+        try {
+            String[] lines = readAllLines();
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+            for (int i = 0; i < Constants.externalMemoryLengthInWords; i++) {
+                if (i < poz) {
+                    writer.write(lines[i]);
+                } else if (i == poz) {
+                    continue;
+                } else {
+                    writer.write(lines[i - 1]);
+                }
+                writer.newLine();
+            }
+            writer.write("000000");
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
     void setByte(int num, Character value) {
         String line;
@@ -142,7 +209,7 @@ public class ExternalMemory {
     }
 
     void setWord(int num, Character[] word) {
-        assert(false); // not implemented
+        assert (false); // not implemented
     }
 
 
