@@ -363,14 +363,17 @@ public class RealMachine {
                         channelMechanism.ST.setValue(STValues.UserMemory);
 
                         channelMechanism.DT.setValue(DTValues.ExternalMemory);
-                        channelMechanism.DW.setValue(fileBlock);
-                        channelMechanism.BC.setValue(fileOffset);
+                        channelMechanism.DB.setValue(fileBlock);
+                        channelMechanism.DW.setValue(fileOffset);
+                        channelMechanism.BC.setValue(length);
 
                         int prevWord = handler.wordPoz;
+                        int prevByte = handler.bytePoz;
                         handler.addBytes(length);
-                        int wordDiff = handler.wordPoz - prevWord; // ar visada veikia
+                        int wordDiff = handler.wordPoz - prevWord;
+                        int startedOffset = (prevByte == 0) ? 0 : 1;
                         for(int i = 0; i < wordDiff; i++){
-                            externalMemory.setWordAndShift(prevWord + 1, Conversion.stringToCharacterArray("      "));
+                            externalMemory.setWordAndShift(prevWord + startedOffset, Conversion.stringToCharacterArray("      "));
                         }
                         channelMechanism.exchange();
 
@@ -405,7 +408,7 @@ public class RealMachine {
                         channelMechanism.ST.setValue(STValues.ExternalMemory);
 
                         channelMechanism.DB.setValue(pagingMechanism.getRealBlockNumber(virtualBlock));
-                        channelMechanism.SW.setValue(offset);
+                        channelMechanism.DW.setValue(offset);
                         channelMechanism.DT.setValue(DTValues.UserMemory);
 
                         channelMechanism.BC.setValue(length);
