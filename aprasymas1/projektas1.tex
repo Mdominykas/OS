@@ -263,8 +263,8 @@ Visos šios operacijos iškviečia sisteminius pertraukimus. Procesorius informa
 \begin{itemize}
 	\item OPENF* - atidaro failą, kurio pavadinimas yra žodis, įrašytas adresu esančiu R1 reikšmėje. Operacijos pabaigoje į R2 yra įrašomas failo numeris. Jeigu failas yra nerandamas - sukuria naują failą tokiu pavadinimu.
 	\item CLOSEF - uždaro failą, kurio numeris yra įrašytas  R2. Jeigu norimas failas nėra rastas, ar jau buvo uždarytas yra nustatoma R1 = 0, kitu atveju R1 bus uždaryto failo numeris.
-	\item WRITEF - rašo simbolius į failą, kurio numeris nurodytas R2. Rašoma nuo adreso, kuris nurodytas R1 iki tol, kol parašo R3 baitų arba sutinkamas nulinis baitas.
-	\item READF* - skaito simbolius iš failo, kurio numeris yra nurodytas R2. Rašymas į atmintį pradedamas nuo vietos, kurią nurodo R1 reikšmė. Perskaitomi baitai iki failo galo, bet nedaugiau negu buvo nurodyta reikšmėje R3. Jeigu buvo perskaityta mažiau, negu buvo nurodyta R3 reikšmėje, tai ji atitinkamai pakeičiama.
+	\item WRITEF - rašo simbolius į failą, kurio numeris nurodytas R2. Rašoma nuo baito, kuris nurodytas R1 iki tol, kol parašo R3 baitų arba sutinkamas nulinis baitas.
+	\item READF* - skaito simbolius iš failo, kurio numeris yra nurodytas R2. Rašymas į atmintį pradedamas nuo to baito, kurį nurodo R1 reikšmė. Perskaitomi baitai iki failo galo, bet nedaugiau negu buvo nurodyta reikšmėje R3. Jeigu buvo perskaityta mažiau, negu buvo nurodyta R3 reikšmėje, tai ji atitinkamai pakeičiama.
 	\item DELETF - sunaikiną failą, kurio numeris nurodomas R2 reikmšmėje. Jeigu norimas failas nebeegzistuoja arba nepavyksta jo sunaikinti - operacijos pabaigoje įrašo į R2 reikšmę 0, kitu atveju nekeičia R2 reikšmės. Sunaikinus failą jo nereikia uždarinėti.
 \end{itemize}
 
