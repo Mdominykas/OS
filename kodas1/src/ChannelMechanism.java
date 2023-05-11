@@ -20,6 +20,7 @@ public class ChannelMechanism {
         DT = new Register(1);
         this.machineMemory = machineMemory;
         this.externalMemory = externalMemory;
+        this.userInput = userInput;
     }
 
     void exchange() {

@@ -418,14 +418,20 @@ public class RealMachine {
                 } else if (SI.value() == SIValues.DeleteFile) {
                     int fileNumber = R2.value();
                     FileHandler handler = fileSystem.fileHandlerByNumber(fileNumber);
-
-                    int fileStartWord = handler.fileStartPoz();
-                    int fileEndWord = fileSystem.findFileEndWord(fileStartWord);
-                    int lengthInWords = fileEndWord - fileStartWord + 1;
-                    while (lengthInWords > 0) {
-                        fileSystem.removeWordAndShift(fileStartWord);
-                        lengthInWords--;
+                    if(handler != null){
+                        int fileStartWord = handler.fileStartPoz();
+                        int fileEndWord = fileSystem.findFileEndWord(fileStartWord);
+                        int lengthInWords = fileEndWord - fileStartWord + 1;
+                        while (lengthInWords > 0) {
+                            fileSystem.removeWordAndShift(fileStartWord);
+                            lengthInWords--;
+                        }
+                        fileSystem.closeFile(fileNumber);
                     }
+                    else{
+                        R2.setValue(0);
+                    }
+
                 }
             }
             if (TI.value() == 0) {

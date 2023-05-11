@@ -192,7 +192,7 @@ public class VirtualMachine {
                     interruptHandler.setPI(PIValues.InvalidOperation);
                     return;
                 }
-                r.setValue((r.value() / 256) * 256 + value);
+                r.setValue(value);
             } else {
                 interruptHandler.setPI(PIValues.InvalidOperation);
             }
