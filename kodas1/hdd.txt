@@ -70,7 +70,7 @@ READF*
 MVi2C0
 WRITEF
 CMPc30
-JE**1C
+JNE*1C
 MVi2C1
 CLOSEF
 MVi2C0
@@ -133,6 +133,10 @@ OUTSIM
 HALT**
 .DATAS
 $FINS$
+$FILE$
+sujung
+------
+$FINS$
 000000
 000000
 000000
@@ -3696,10 +3700,17 @@ $FINS$
 000000
 000000
 000000
-000000
-000000
-000000
-000000
+00lo p
+avadin
+ima\n 
+  $$A$
+$$suju
+ngtas 
+  $FIL
+E$pirm
+as----
+--pirm
+oj0000
 000000
 000000
 000000

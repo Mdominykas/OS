@@ -174,33 +174,20 @@ public class ExternalMemory {
     }
 
     void setByte(int num, Character value) {
-        String line;
-        StringBuilder stringBuilder = new StringBuilder();
+        String[] lines = readAllLines();
         try {
-            BufferedReader br = new BufferedReader(new FileReader(fileName));
-            while (num >= Constants.WordLengthInBytes) {
-                line = br.readLine();
-                num -= Constants.WordLengthInBytes;
-                stringBuilder.append(line);
-                stringBuilder.append(System.lineSeparator());
-            }
-            line = br.readLine();
-            for (int i = 0; i < num; i++)
-                stringBuilder.append(line.charAt(i));
-            stringBuilder.append(value);
-            for (int i = num + 1; i < Constants.WordLengthInBytes; i++)
-                stringBuilder.append(line.charAt(i));
-            stringBuilder.append(System.lineSeparator());
-            while ((line = br.readLine()) != null) {
-                stringBuilder.append(line);
-                stringBuilder.append(System.lineSeparator());
-            }
-            br.close();
+            int wordNum = num / Constants.WordLengthInBytes;
+            int byteNum = num % Constants.WordLengthInBytes;
+            StringBuilder sb= new StringBuilder(lines[wordNum]);
+            sb.setCharAt(byteNum, value);
+            lines[wordNum] = sb.toString();
 
             BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
-//            seems totally wrong, so for now I will use assert
-            assert (false);
-            writer.write(stringBuilder.toString());
+
+            for(String line : lines){
+                writer.write(line);
+                writer.newLine();
+            }
             writer.close();
 
         } catch (IOException e) {
