@@ -44,7 +44,7 @@ $PROG$
 jungti
 ------
 .CODES
-MVc101
+MVc102
 MVo1C2
 MVc1A0
 OPENF*
@@ -76,8 +76,8 @@ CLOSEF
 MVi1C2
 SUBc11
 MVo1C2
-CMPr10
-JNE*11
+CMPc10
+JNE*17
 MVi2C0
 CLOSEF
 HALT**
@@ -143,6 +143,15 @@ $FINS$
 $FILE$
 sujung
 ------
+pirmoj
+o fail
+o eilu
+tes, k
+urios 
+reikal
+ingos 
+jungim
+ui.   
 pirmoj
 o fail
 o eilu
@@ -3727,21 +3736,6 @@ E$pirm
 as----
 --pirm
 oj0000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
 000000
 000000
 000000
