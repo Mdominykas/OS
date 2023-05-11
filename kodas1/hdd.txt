@@ -84,6 +84,7 @@ a\n
 $$A$$$
 sujung
 tas   
+$FINS$
 $FILE$
 pirmas
 ------

@@ -385,7 +385,7 @@ public class RealMachine {
                     int symbolsToRead = R3.value();
                     int virtualAddress = R1.value();
                     int fileEnd = fileSystem.findFileEndWord(handler.wordPoz);
-                    int bytesToFileEnd = (fileEnd - handler.wordPoz + 1) * Constants.WordLengthInBytes + (Constants.WordLengthInBytes - handler.bytePoz);
+                    int bytesToFileEnd = (fileEnd - handler.wordPoz - 1) * Constants.WordLengthInBytes + (Constants.WordLengthInBytes - handler.bytePoz);
                     if (symbolsToRead > bytesToFileEnd) {
                         symbolsToRead = bytesToFileEnd;
                         R3.setValue(bytesToFileEnd);

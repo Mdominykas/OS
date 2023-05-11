@@ -36,7 +36,6 @@ public class ChannelMechanism {
             }
             readBytes++;
         }
-        Scanner scanner = new Scanner(System.in);
 
         if(ST.value() == STValues.Keyboard){
             boolean reachedEnd = userInput.readUntilEndOfLineButNotMoreThanN(BC.value(), temp);
