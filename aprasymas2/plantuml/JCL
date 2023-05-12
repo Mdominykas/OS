@@ -4,13 +4,15 @@ repeat
   :2. Imamas blokas iš supervizorinės atminties;
   if (3. blokas prasideda $PROG$) is (Ne) then
     :4. Atlaisvinti resursą "Eilutė atmintyje" su pranešimu apie $PROG$ bloko trūkumą;
+    :5 Atlaisvinti resursą "supervizorinė atmintis";
   else (Taip)
-    if (5. Ar programos pavadinimas ir atskyrimas nuo turinio yra teisingi) is (Ne) then
-       :6 Atlaisvinti resursą "Eilutė atmintyje" su pranešimu apie nekorektišką pirmą bloka;
+    if (6. Ar programos pavadinimas ir atskyrimas nuo turinio yra teisingi) is (Ne) then
+       :7 Atlaisvinti resursą "Eilutė atmintyje" su pranešimu apie nekorektišką pirmą bloka;
+       :8 Atlaisvinti resursą "supervizorinė atmintis";
    else (Taip)
       repeat
-         :7. Imamamas blokas iš supervizorinės atminties;
-         if (8. Jame yra žymė $FINS$) is (Taip) then
-           : 9. Atlaisvinti resursą "Užduotis būgne";
+         :9. Imamamas blokas iš supervizorinės atminties;
+         if (10. Jame yra žymė $FINS$) is (Taip) then
+           : 11. Atlaisvinti resursą "Užduotis supervizorinėje atmintyje";
            break
 @enduml

@@ -43,25 +43,66 @@ Procesai - vykdomosios programos su esamomis registrų reikšmėmis ir savo kint
 \begin{itemize}
 	\item Vykdomas - turi procesorių.
 	\item Pasiruošęs - vienintelis trūkstamas resursas yra procesorius.
-	\item Blokuotas - prašo resųrso (išskyrus procesorių).
+	\item Blokuotas - prašo resurso (išskyrus procesorių).
 	\item Pasiruošęs sustabdytas
 	\item Blokuotas sustabdytas
 \end{itemize}
 
+\subsection{Procesų būsenų kitimas}
+
+\begin{figure}[H]
+	\centering	
+	\includegraphics[scale=0.6]{img/busenu-kitimas}
+	\caption{Proceso būsenų kitimo diagrama}   % Antraštė įterpiama po paveikslėlio
+	\label{img:busenu-kitimas}
+\end{figure}
+
+\begin{enumerate}
+	\item Vykdomas procesas blokuojasi jam prašant ir negavus resurso.
+	\item Vykdomas procesas tampa pasiruošusiu atėmus iš jo procesorių dėl kokios
+	nors priežasties (išskyrus resurso negavimą).
+	\item Blokuotas procesas tampa pasiruošusiu, kai yra suteikiamas reikalingas
+	resursas.
+	\item Pasiruošę procesai varžosi dėl procesoriaus. Gavęs procesorių procesas tampa
+	vykdomu.
+	\item Procesas gali tapti sustabdytu blokuotu, jei einamasis procesas jį sustabdo, kai
+	jis jau ir taip yra blokuotas.
+	\item Procesas tampa blokuotu iš blokuoto sustabdyto, jei einamasis procesas nuima
+	būseną sustabdytas.
+	\item Procesas gali tapti pasiruošusiu sustabdytu, jei einamasis procesas jį sustabdo,
+	kai jis yra pasiruošęs.
+	\item Procesas tampa pasiruošusiu iš pasiruošusio sustabdyto, jei einamasis procesas
+	nuima būseną sustabdytas
+	\item Procesas tampa pasiruošusiu sustabdytu iš blokuoto sustabdyto, jei procesui
+	yra suteikiamas jam reikalingas resursas.
+\end{enumerate}
+
+
 \subsection{Planuotojas}
 
-Planuotojo paskirtis - atimti procesorių iš procceso, peržvelgti pasiruošųsių procesų sąrašą ir paduoti procesorių tinkamiausiam iš jų.
+Planuotojo paskirtis - atimti procesorių iš procceso, peržvelgti pasiruošųsių procesų sąrašą ir tinkamiausiam iš jų perduoti procesorių.
+
+\begin{figure}[H]
+	\centering	
+	\includegraphics[scale=0.65]{img/scheduler}
+	\caption{Planuotojo diagrama}   % Antraštė įterpiama po paveikslėlio
+	\label{img:scheduler}
+\end{figure}
 
 \subsubsection{Prioritetai}
 
 Visi procesai turi prioritetus nuo 0 iki 20, kuo didesnis prioritetas, tuo didesnė tikimybė, kad procesas bus vykdomas.
 
+\subsection{Resursų paskirstytojas}
+
+Resursų paskirstytojo paskirtis - suteikti paprašytą resurso elementų kiekį procesui.
+
 \subsection{Procesų primityvai}
 
 \begin{itemize}
-	\item Kurti procesą - perduodama nuoroda į tėvą, p
-	\item Naikinti procesą
-	\item Stabdyti procesą
+	\item Kurti procesą - perduodama nuoroda į tėvinį procesą ir kūrimo parametrai.
+	\item Naikinti procesą - perduodama naikinama proceso nuoroda. Taip yra sunaikinami visi šio proceso vaikiniai procesai.
+	\item Stabdyti procesą - perduodama stabdomo proceso nuoroda.
 \end{itemize}
 
 \subsection{Procesų kūrimo ir trynimo lentelė}
@@ -112,8 +153,8 @@ Paskirtis - gavus informaciją iš įvedimo srauto atlikti pirminį jos apdoroji
 
 \begin{figure}[H]
 	\centering	
-	\includegraphics[scale=0.65]{img/ReadFromInterface}
-	\caption{Proceso StartStop diagrama}   % Antraštė įterpiama po paveikslėlio
+	\includegraphics[scale=0.40]{img/ReadFromInterface}
+	\caption{Proceso ReadFromInterface diagrama}   % Antraštė įterpiama po paveikslėlio
 	\label{img:ReadFromInterface}
 \end{figure}
 
@@ -141,7 +182,7 @@ MainProc paskirtis - kurti ir naikinti procesus JobGovernor.
 
 \subsection{Loader}
 
-Loader paskirtis - perkelti blokus iš išorinės atminties į vartotojo atmintį.
+Loader paskirtis - perkelti blokus iš supervizorinės atminties į vartotojo atmintį.
 
 \begin{figure}[H]
 	\centering	
@@ -196,10 +237,6 @@ Proceso PrintLine paskirtis - į išvedimo srautą pasiųsti pranešimą.
 
 \subsection{FileSystem}
 
-(darbus su failais turėtų nurodyti informaciją)
-
-?Kaip virtualiai mašinai nustato registrus?
-
 Proceso paskirtis - aptarnauti veiksmus, susijusius su failų sistema.
 
 \begin{figure}[H]
@@ -211,7 +248,7 @@ Proceso paskirtis - aptarnauti veiksmus, susijusius su failų sistema.
 
 \subsection{Idle}
 
-Proceso Idle paskirtis - būti vykdomam, kai nėra kitų pasiruošusių procesų.
+Proceso Idle paskirtis - būti vykdomam, kai nėra kitų pasiruošusių procesų. Šis procesas visada turi žemiausią įmanomą prioritetą.
 
 \begin{figure}[H]
 	\centering	
@@ -222,6 +259,8 @@ Proceso Idle paskirtis - būti vykdomam, kai nėra kitų pasiruošusių procesų
 
 
 \section{Resursai}
+
+Resursai yra tai, dėl ko varžosi procesai. Dėl resursų trūkumo procesai blokuojasi, gavę reikiamą resursą, procesai tampa pasiruošusiais.
 
 \subsection{Resursų lentelė}
 
@@ -234,47 +273,106 @@ Proceso Idle paskirtis - būti vykdomam, kai nėra kitų pasiruošusių procesų
 		\hline
 		Resurso pavadinimas & Resursą kuria & Resursą atlaisvina & Dėl resurso blokuojasi \\
 		\hline
-		\multicolumn{4}{c}{SISTEMINIAI}\\
+		\multicolumn{4}{c}{Sisteminiai}\\
 		\hline
-		Kanalų įrenginys & ------- & Loader, PrintLine & Loader, PrintLine\\
+		Kanalų įrenginys & StartStop & Loader, PrintLine & Loader, PrintLine\\
 		\hline
-		Supervizorinė atmintis & ------- & & ReadFromInterface \\
+		Supervizorinė atmintis & StartStop & JobGovernor, JCL & ReadFromInterface \\
 		\hline
-		Vartotojo atmintis & ------- & & JobGovernor\\
+		Vartotojo atmintis & StartStop & JobGovernor & JobGovernor\\
 		\hline
-		Išorinė atmintis & ------- & JobGovernor & JobGovernor \\
+		Išorinė atmintis & StartStop & JobGovernor & JobGovernor \\
 		\hline
-		\multicolumn{4}{c}{PROGRAMINIAI}\\
+		\multicolumn{4}{c}{Programiniai}\\
 		\hline
-		Užduotis būgne & & JCL & MainProc \\
+		MOS pabaiga & StartStop & ReadFromInterface & StartStop \\
 		\hline
-		MOS pabaiga & & & StartStop \\
+		Iš vartotojo sąsajos & StartStop & & ReadFromInterface \\
 		\hline
-		Iš vartotojo sąsajos &  & & ReadFromInterface \\
+		Užduotis supervizorinėje atmintyje & StartStop & ReadFromInterface & JCL \\
 		\hline
-		Užduotis supervizorinėje atmintyje & & ReadFromInterface & JCL \\
+		Užduoties programa supervizorinėje atmintyje & StartStop & JCL & MainProc \\
 		\hline
-		Užduotis būgne & & JCL & MainProc \\
+		Pakrovimo paketas & StartStop & JobGovernor & Loader \\
 		\hline
-		Pakrovimo paketas & & JobGovernor & Loader \\
+		Iš Loader & StartStop & Loader & JobGovernor \\
 		\hline
-		Iš Loader & & Loader & JobGovernor \\
+		Eilutė atmintyje & StartStop & JCL, JobGovernor & PrintLine\\
 		\hline
-		Eilutė atmintyje & & JCL & PrintLine\\
+		Iš Interrupt & StartStop & Interrupt & JobGovernor\\
 		\hline
-		Iš Interrupt & & Interrupt & JobGovernor\\
-		\hline
-		Vartotojo įvedimas & & & JobGovernor \\
+		Vartotojo įvedimas & StartStop & ReadFromInterface & JobGovernor \\
 		\hline 
-		Pertraukimas & & VirtualMachine & Interrupt\\
+		Pertraukimas & StartStop & VirtualMachine & Interrupt\\
 		\hline 
 		Darbas su failais & StartStop & JobGovernor & FileSystem \\
 		\hline
+		Darbo su failais pabaiga & StartStop & FileSystem & JobGovernor \\
+		\hline 
 		Neegzistuojantis & StartStop & ------- & JobGovernor \\
 		\hline
 	\end{tabular}
 	\label{tab:resursu_lentele}
 \end{table}
+
+\section{Procesų klasių aprašai}
+
+\subsection{Proceso klasės aprašas}
+
+Proceso klasė TProcess susideda iš šių dalių:
+
+\begin{itemize}
+	\item FList: TProcessList (sąrašo, kuriams jis priklauso)
+	\item FID: Integer (unikalus objekto id)
+	\item FSavedRegisters: TSavedReisters (išsaugota registrų būsena)
+	\item FCreatedRes: TResourceList (sukurtų resursų sąrašas)
+	\item FState: TProcessState (kuriame žingsnyje yra procesas)
+	\item FPriority: Integer
+	\item FParent: TProcess (tėvinio proceso nuoroda)
+	\item FChildren: TProcessList
+\end{itemize}
+
+\subsection{Resurso klasės aprašas}
+
+Resurso klasė TResource susideda iš šių dalių:
+
+\begin{itemize}
+	\item FID: Integer (unikalus objekto id)
+	\item FCreator: TProcess (nuoroda į procesą, sukūrusį šį resursą)
+	\item FList: TElementList (nuoroda į resurso elementų sąrašą)
+	\item FWaitingProc : TProcessList (nuoroda į šio resurso laukiančių procesų sąrašą)
+	\item FWaitingCount: TIntegerList (nuoroda į šio resurso laukiančių procesų paprašytų
+	resurso kiekių sąrašą).
+	\item FResourceList: TResourceList (nuoroda į visų resursų sąrašą)
+\end{itemize}
+
+\subsection{Pagalbinės klasės}
+
+Registrų būsena TSavedRegisters susidaro iš šių dalių:
+
+\begin{itemize}
+	\item R1: TWord
+	\item R2: TWord
+	\item R3: TWord
+	\item CS: TDByte
+	\item DS: TDByte
+	\item IC: TDByte
+	\item PI: TPIReg
+	\item SI: TSIReg
+	\item PTR: TDByte
+	\item Mode: TByte
+\end{itemize}
+
+TPIReg ir TSIReg - aprašo ar dabar yra išauktas atitinkamas pertraukimas ir jei taip - koks jo tipas.
+
+Resurso elemento klasė TResElement susideda iš šių dalių:
+
+\begin{itemize}
+	\item FElementList: TElementList (nuoroda į resurso elementų sąrašą, kuriame yra šis resurso elementas)
+	\item FReceiver: TProcess (procesas, kuris turi gauti šį resurso elementą. Jei šio lauko
+reikšmė lygi nil, tai laikoma, kad šį elementą gali gauti bet kuris procesas)
+	\item FSender: TProcess (procesas, atlaisvinęs šį resurso elementą)
+\end{itemize}
 
 \printbibliography[heading=bibintoc] % Literatūros šaltiniai aprašomi
 \appendix  % Priedai

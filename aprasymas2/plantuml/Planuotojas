@@ -1,0 +1,9 @@
+@startuml
+repeat
+  if (Einamasis procesas blokuotas?) is (Ne) then
+   : Einamasis procesas įtraukiamas į blokuotų proc. sąrašą;
+  endif
+  : Imamas aukščiausio prioriteto pasiruošęs procesas;
+  : Šis procesas tampa einamuoju;
+  : Vykdomas procesas;
+@enduml

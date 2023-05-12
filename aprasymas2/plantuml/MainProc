@@ -1,6 +1,6 @@
 @startuml
 repeat
-  :1. Blokavimasis laukiant “Užduotis būgne” resurso;
+  :1. Blokavimasis laukiant “Užduoties programa supervizorinėje atmintyje” resurso;
   if (2. Vykdymo laikas ne 0) is (Taip) then
     :3. Kuriamas procesas JobGovernor, suteikiam "Užduotis būgne" kaip pradinį resursą;
   else (Ne)

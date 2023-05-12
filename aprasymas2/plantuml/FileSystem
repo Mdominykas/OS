@@ -17,4 +17,5 @@ repeat
   endswitch
   :9. Atlaisvinti resursą "Kanalų įrenginys";
   :10. Atlaisvinti resursą "Išorinė atmintis";
+  :11. Atlaisvinti resursą "Darbo su failų sistema pabaiga";
 @enduml

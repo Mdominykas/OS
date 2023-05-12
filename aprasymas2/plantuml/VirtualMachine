@@ -1,6 +1,5 @@
 @startuml
-repeat
-  :1. Procesorius perjungiamas į vartotojo rėžimą;
+  :1. Procesorius perjungiamas į vartotojo režimą;
   :2. Vykdoma vartotojo programa;
   :3. Atlaisvinamas resursas "Pertraukimas";
 

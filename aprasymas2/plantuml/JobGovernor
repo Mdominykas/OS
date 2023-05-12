@@ -1,10 +1,10 @@
 @startuml
 repeat
   :1. Blokavimasis laukiant resurso “Vartotojo atmintis”;
-  :2. Atlaisvinamas resursas "Pakrovimo paketas";
-  :3. Blokavimasis laukiant "Iš Loader" resurso;
-  :4. Atlaisvinamas resursas "Išorinė atmintis";
-  :5. Blokavimasis laukiant resurso "Vartotojo atmintis" (puslapių lentelei);
+  :2. Sukuriama puslapių lentelė;
+  :3. Atlaisvinamas resursas "Pakrovimo paketas";
+  :4. Blokavimasis laukiant "Iš Loader" resurso;
+  :5. Atlaisvinamas resursas "supervizorinė atmintis";
   :6. Proceso "Virtuali mašina" kūrimas;
   repeat
     :7. Blokavimasis laukiant resurso "Iš Interrupt";
@@ -12,18 +12,19 @@ repeat
     if (9 Įvedimo - išvedimo ar darbas su failais?) is (Taip) then
       if (10. Skaitymas iš failų) is (Taip) then
          :11. Atlaisvinti resursą "Darbas su failais";
+         :12. Blokavimasis laukiant resurso "Darbo su failais pabaiga";
       else (Ne)
-        if (12. Įvedimas?) is (Taip) then
-          :13. Išvesti nurodytą vartotojui;
+        if (13. Įvedimas?) is (Taip) then
+          :14. Išvesti nurodytą vartotojui;
         else (Ne)
-          :14. Blokavimasis laukiant "Vartotojo įvedimas" resurso, skirto šiam JobGovernor;
+          :15. Blokavimasis laukiant "Vartotojo įvedimas" resurso, skirto šiam JobGovernor;
         endif
       endif
-      :15. Proceso "Virtuali mašina" aktyvavimas;
+      :16. Proceso "Virtuali mašina" aktyvavimas;
     else (Ne)
-      :16. Naikinti procesą "Virtuali mašina";
-      :17. Atlaisvinti resursą "Vartotojo atmintis";
-      :18. Blokavimasis laukiant "Neegzistuojantis" resurso;
+      :17. Naikinti procesą "Virtuali mašina";
+      :18. Atlaisvinti resursą "Vartotojo atmintis";
+      :19. Blokavimasis laukiant "Neegzistuojantis" resurso;
       kill
     endif
 @enduml
