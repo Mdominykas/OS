@@ -1,2 +1,4 @@
-package Processes;public class JobGovernor {
+package Processes;
+
+public class JobGovernor extends Process{
 }

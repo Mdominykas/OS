@@ -1,2 +1,4 @@
-package Processes;public class MainProc {
+package Processes;
+
+public class MainProc extends Process{
 }

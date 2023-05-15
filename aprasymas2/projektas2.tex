@@ -132,6 +132,9 @@ Resursų paskirstytojo paskirtis - suteikti paprašytą resurso elementų kiekį
 		\hline
 		PrintLine & StartStop & StartStop \\
 		\hline
+		FileSystem & StartStop & StartStop \\
+		\hline
+		Idle & StartStop & StartStop \\
 	\end{tabular}
 	\label{tab:duomenys}
 \end{table}
@@ -317,12 +320,25 @@ Resursai yra tai, dėl ko varžosi procesai. Dėl resursų trūkumo procesai blo
 
 \section{Procesų klasių aprašai}
 
+\subsection{Kernelio aprašas}
+
+TKernel - klasė realizuojanti OS branduolį. Čia laikomi procesų, resursų sąrašai, planuotojas bei kitos reikalingos klasės.
+
+TKernel susideda iš šių dalių:
+
+\begin{itemize}
+	\item FProcesses: TProcessList (bendras visų, esančių sistemoje, procesų sąrašas)
+	\item FResources: TresourceList (bendras visų, sistemoje esančių, resursų sąrašas)
+	\item FReadyProc: TProcessList (pasiruošusių procesų sąrašas)
+	\item ActiveProcess: TProcess (dabar veikiantis procesas)
+	\item FRealMachine: TRealMachine (nuoroda į realią mašiną)
+\end{itemize} 
+
 \subsection{Proceso klasės aprašas}
 
 Proceso klasė TProcess susideda iš šių dalių:
 
 \begin{itemize}
-	\item FList: TProcessList (sąrašo, kuriams jis priklauso)
 	\item FID: Integer (unikalus objekto id)
 	\item FSavedRegisters: TSavedReisters (išsaugota registrų būsena)
 	\item FCreatedRes: TResourceList (sukurtų resursų sąrašas)
@@ -338,9 +354,8 @@ Resurso klasė TResource susideda iš šių dalių:
 
 \begin{itemize}
 	\item FID: Integer (unikalus objekto id)
-	\item FCreator: TProcess (nuoroda į procesą, sukūrusį šį resursą)
 	\item FList: TElementList (nuoroda į resurso elementų sąrašą)
-	\item FWaitingProc : TProcessList (nuoroda į šio resurso laukiančių procesų sąrašą)
+	\item FWaitingProcesses : TProcessList (nuoroda į šio resurso laukiančių procesų sąrašą)
 	\item FWaitingCount: TIntegerList (nuoroda į šio resurso laukiančių procesų paprašytų
 	resurso kiekių sąrašą).
 	\item FResourceList: TResourceList (nuoroda į visų resursų sąrašą)

@@ -1,2 +1,4 @@
-package Processes;public class PrintLine {
+package Processes;
+
+public class PrintLine extends Process{
 }

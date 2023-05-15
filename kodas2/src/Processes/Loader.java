@@ -1,2 +1,4 @@
-package Processes;public class Loader {
+package Processes;
+
+public class Loader extends Process{
 }

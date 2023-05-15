@@ -1,2 +1,4 @@
-package Processes;public class ReadFromInterface {
+package Processes;
+
+public class ReadFromInterface extends Process{
 }

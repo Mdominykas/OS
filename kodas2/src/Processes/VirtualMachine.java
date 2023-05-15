@@ -1,2 +1,4 @@
-package Processes;public class VirtualMachine {
+package Processes;
+
+public class VirtualMachine extends Process{
 }

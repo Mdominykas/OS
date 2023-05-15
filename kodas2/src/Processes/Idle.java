@@ -1,2 +1,4 @@
-package Processes;public class Idle {
+package Processes;
+
+public class Idle extends Process{
 }

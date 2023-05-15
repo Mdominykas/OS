@@ -1,2 +1,4 @@
-package Processes;public class JCL {
+package Processes;
+
+public class JCL extends Process{
 }

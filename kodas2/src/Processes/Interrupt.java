@@ -1,2 +1,4 @@
-package Processes;public class Interrupt {
+package Processes;
+
+public class Interrupt extends Process{
 }
