@@ -1,4 +1,7 @@
+package Utils;
+
 import Processes.Process;
+import RealMachineComponents.RealMachine;
 import Resources.Resource;
 
 import java.util.ArrayList;
@@ -10,12 +13,15 @@ public class Kernel {
     Process activeProcess;
     List<Resource> resources;
 
+    int newFid;
+
     public Kernel(RealMachine realMachine) {
         this.realMachine = realMachine;
         readyProcesses = new ArrayList<>();
         blockedProcess = new ArrayList<>();
         activeProcess = null;
         resources = new ArrayList<>();
+        newFid = 0;
     }
 
     public void createProcess(Process newProcess) {
@@ -46,5 +52,10 @@ public class Kernel {
         }
         activeProcess = readyProcesses.get(highestPriorityNum);
         readyProcesses.remove(activeProcess);
+    }
+
+    public int getNewFid()
+    {
+        return newFid++;
     }
 }

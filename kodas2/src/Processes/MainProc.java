@@ -1,4 +1,13 @@
 package Processes;
 
-public class MainProc extends Process{
+import Utils.Kernel;
+
+public class MainProc extends Process {
+    MainProc(Kernel kernel) {
+        super(kernel);
+    }
+
+    public void run() {
+
+    }
 }

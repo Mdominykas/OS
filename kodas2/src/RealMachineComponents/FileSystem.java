@@ -1,4 +1,8 @@
+package RealMachineComponents;
+
 import Constants.Constants;
+import RealMachineComponents.ExternalMemory;
+import Utils.Conversion;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,5 +1,8 @@
+package RealMachineComponents;
+
 import Constants.*;
 import OSException.*;
+import Utils.Conversion;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,7 +20,7 @@ public class RealMachine {
     FileSystem fileSystem;
     UserInput userInput;
 
-    RealMachine() {
+    public RealMachine() {
 
         R1 = new Register(6);
         R2 = new Register(6);

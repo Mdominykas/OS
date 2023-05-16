@@ -1,9 +1,12 @@
+package RealMachineComponents;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+
 
 public class UserInput {
     Deque<Character> buffer;

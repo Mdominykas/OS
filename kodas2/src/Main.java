@@ -1,15 +1,7 @@
-import Constants.Constants;
-import OSException.IncorrectProgramSizeException;
-import OSException.NotEnoughFreePagesException;
-import OSException.OSException;
-import OSException.ProgramNotFoundException;
+import RealMachineComponents.RealMachine;
 
 import java.io.BufferedReader;
-import java.io.Console;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Objects;
-import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
@@ -17,6 +9,7 @@ public class Main {
         RealMachine rm = new RealMachine();
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
+//        assert(false);
 //        try {
 //            while (true) {
 //                System.out.print(">");

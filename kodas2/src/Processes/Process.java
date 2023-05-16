@@ -1,15 +1,24 @@
 package Processes;
 
 import Resources.Resource;
+import Utils.Kernel;
 
 import java.util.List;
 
 public abstract class Process {
-    int FId;
+    protected int fId;
     //savedRegisters
-    List<Resource> createdResources;
-    int state;
+    protected List<Resource> createdResources;
+    protected int state;
     public int priority;
-    Process parentProcess;
-    List<Process> childrenProcess;
+    protected Process parentProcess;
+    protected List<Process> childrenProcess;
+
+    Process(Kernel kernel)
+    {
+        this.fId = kernel.getNewFid();
+        state = 1;
+    }
+
+    abstract public void run();
 }

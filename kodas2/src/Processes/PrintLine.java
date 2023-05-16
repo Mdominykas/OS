@@ -1,4 +1,13 @@
 package Processes;
 
-public class PrintLine extends Process{
+import Utils.Kernel;
+
+public class PrintLine extends Process {
+    PrintLine(Kernel kernel) {
+        super(kernel);
+    }
+
+    public void run() {
+
+    }
 }

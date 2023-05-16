@@ -1,4 +1,13 @@
 package Processes;
 
-public class FileSystem extends Process{
+import Utils.Kernel;
+
+public class FileSystem extends Process {
+    FileSystem(Kernel kernel) {
+        super(kernel);
+    }
+
+    public void run() {
+
+    }
 }

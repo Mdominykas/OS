@@ -1,4 +1,7 @@
+package RealMachineComponents;
+
 import Constants.*;
+import Utils.Conversion;
 
 public class VirtualMachine {
     private final PagingMechanism pagingMechanism;
@@ -23,7 +26,6 @@ public class VirtualMachine {
         locationCom[1] = command[5];
         int location = Conversion.ConvertHexStringToInt(locationCom);
         String commandString = Conversion.characterArrayToString(command);
-        boolean incorrectCommand = false;
         boolean sf = (FLAGS.value() & Constants.SF) != 0, zf = (FLAGS.value() & Constants.ZF) != 0;
         boolean cf = (FLAGS.value() & Constants.CF) != 0, of = (FLAGS.value() & Constants.OF) != 0;
         if (commandString.startsWith("JMP")) {
@@ -202,7 +204,7 @@ public class VirtualMachine {
     public void execute() {
         Character[] command = pagingMechanism.getWord(IC.value());
 //        System.out.println("IC value is: " + IC.value());
-//        System.out.println("command is:" + Conversion.characterArrayToString(command));
+//        System.out.println("command is:" + Utils.Conversion.characterArrayToString(command));
         String commandString = Conversion.characterArrayToString(command);
         if (commandString.startsWith("J")) {
             executeJump(command);
