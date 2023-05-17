@@ -1,4 +1,5 @@
 import RealMachineComponents.RealMachine;
+import Utils.Kernel;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -8,7 +9,8 @@ public class Main {
         System.out.println("Hello to this OS");
         RealMachine rm = new RealMachine();
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
+        Kernel kernel = new Kernel(rm);
+        kernel.run();
 //        assert(false);
 //        try {
 //            while (true) {

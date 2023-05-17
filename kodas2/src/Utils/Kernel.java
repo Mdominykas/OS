@@ -1,6 +1,7 @@
 package Utils;
 
 import Processes.Process;
+import Processes.StartStop;
 import RealMachineComponents.RealMachine;
 import Resources.Resource;
 
@@ -19,16 +20,34 @@ public class Kernel {
         this.realMachine = realMachine;
         readyProcesses = new ArrayList<>();
         blockedProcess = new ArrayList<>();
-        activeProcess = null;
+        activeProcess = new StartStop(this);
         resources = new ArrayList<>();
         newFid = 0;
     }
 
-    public void createProcess(Process newProcess) {
+    public void run()
+    {
+        while(true)
+        {
+            if(activeProcess == null)
+                break;
+            activeProcess.run();
+        }
+    }
+
+    public void createProcess(Process parent, Process newProcess) {
+        parent.childrenProcess.add(newProcess);
         readyProcesses.add(newProcess);
     }
 
     public void deleteProcess(Process process) {
+        for (Process child : process.childrenProcess) {
+            deleteProcess(child);
+        }
+        for(Resource res : process.createdResources){
+            deleteResource(res);
+        }
+//        here should be deletion of resources
         if (activeProcess == process) {
             activeProcess = null;
             runScheduler();
@@ -43,7 +62,10 @@ public class Kernel {
             readyProcesses.add(activeProcess);
             activeProcess = null;
         }
-        assert (readyProcesses.size() > 0);
+        if(readyProcesses.size() == 0)
+        {
+            System.exit(0);
+        }
         int highestPriorityNum = 0;
         for (int i = 0; i < readyProcesses.size(); i++) {
             if (readyProcesses.get(i).priority > readyProcesses.get(highestPriorityNum).priority) {
@@ -54,8 +76,47 @@ public class Kernel {
         readyProcesses.remove(activeProcess);
     }
 
-    public int getNewFid()
+    public void createResource(Process creator, int name, List<Object> elements) {
+        Resource resource = new Resource(name, this, elements);
+        resources.add(resource);
+        creator.createdResources.add(resource);
+    }
+
+    public void deleteResource(Resource resource)
     {
+        resources.remove(resource);
+    }
+
+    private Resource selectResource(int resourceName) {
+        Resource selectedResource = null;
+        for (Resource resource : resources) {
+            if (resource.name == resourceName) {
+                selectedResource = resource;
+            }
+        }
+        return selectedResource;
+    }
+
+    public void waitResource(int resourceName) {
+        Resource selectedResource = selectResource(resourceName);
+        assert (selectedResource != null);
+        boolean hasEnough = selectedResource.ask();
+        if (!hasEnough) {
+            blockedProcess.add(activeProcess);
+            activeProcess = null;
+        }
+    }
+
+    public void releaseResource(int resourceName) {
+        Resource selectedResource = selectResource(resourceName);
+        assert (selectedResource != null);
+        Process released = selectedResource.release();
+        assert (blockedProcess.contains(released));
+        blockedProcess.remove(released);
+        readyProcesses.add(released);
+    }
+
+    public int getNewFid() {
         return newFid++;
     }
 }

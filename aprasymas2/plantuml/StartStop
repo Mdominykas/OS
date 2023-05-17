@@ -2,6 +2,5 @@
 :1. Sisteminių resursų inicializacija;
 :2. Sistemiinių procesų initializacija;
 :3. Blokavimasis laukiant "MOS pabaiga" resurso;
-:4. Sisteminių procesų naikinimas;
-:5. Sisteminių resursų naikinimas;
+:4. Sisteminių resursų ir procesų naikinimas;
 @enduml	

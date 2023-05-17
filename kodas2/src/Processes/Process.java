@@ -3,20 +3,24 @@ package Processes;
 import Resources.Resource;
 import Utils.Kernel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Process {
     protected int fId;
     //savedRegisters
-    protected List<Resource> createdResources;
+    public List<Resource> createdResources;
     protected int state;
     public int priority;
-    protected Process parentProcess;
-    protected List<Process> childrenProcess;
+    public List<Process> childrenProcess;
+    protected Kernel kernel;
 
     Process(Kernel kernel)
     {
         this.fId = kernel.getNewFid();
+        this.kernel = kernel;
+        this.createdResources = new ArrayList<>();
+        this.childrenProcess = new ArrayList<>();
         state = 1;
     }
 
