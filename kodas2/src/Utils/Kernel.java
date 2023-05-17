@@ -36,10 +36,11 @@ public class Kernel {
         }
     }
 
-    public void createProcess(Process parent, Process newProcess) {
+    public void createProcess(Process parent, Process newProcess, int priority) {
         Logging.logCreatedProcess(newProcess);
         parent.childrenProcess.add(newProcess);
         newProcess.giveResourceReferences(realMachine.containerOfRegisters());
+        newProcess.priority = priority;
         readyProcesses.add(newProcess);
     }
 

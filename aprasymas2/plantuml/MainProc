@@ -2,9 +2,7 @@
 repeat
   :1. Blokavimasis laukiant “Užduoties programa supervizorinėje atmintyje” resurso;
   if (2. Vykdymo laikas ne 0) is (Taip) then
-    :3. Kuriamas procesas JobGovernor, suteikiam "Užduotis būgne" kaip pradinį resursą;
+    :3. Kuriamas procesas JobGovernor;
   else (Ne)
-    :4. Naikinamas procesas JobGovernor, sukūręs gautąjį resursą; 
-
-
+    :4. Naikinamas procesas JobGovernor, sukūręs gautąjį resursą;
 @enduml
