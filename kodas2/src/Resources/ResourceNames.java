@@ -19,6 +19,46 @@ public class ResourceNames {
     public static final int WorkWithFilesEnd = 16;
     public static final int NonExistent = 17;
 
-
+    public static String nameToString(Resource resource)
+    {
+        switch (resource.name) {
+            case ChannelMechanism:
+                return "ChannelMechanism";
+            case SupervisorMemory:
+                return "SupervisorMemory";
+            case UserMemory:
+                return "UserMemory";
+            case ExternalMemory:
+                return "ExternalMemory";
+            case MosEnd:
+                return "MosEnd";
+            case FromUserInterface:
+                return "FromUserInterface";
+            case TaskInSupervisorMemory:
+                return "TaskInSupervisorMemory";
+            case TaskProgramInSupervisorMemory:
+                return "TaskProgramInSupervisorMemory";
+            case LoaderPacket:
+                return "LoaderPacket";
+            case FromLoader:
+                return "FromLoader";
+            case LineInMemory:
+                return "LineInMemory";
+            case FromInterrupt:
+                return "FromInterrupt";
+            case UserInput:
+                return "UserInput";
+            case Interrupt:
+                return "Interrupt";
+            case WorkWithFiles:
+                return "WorkWithFiles";
+            case WorkWithFilesEnd:
+                return "WorkWithFilesEnd";
+            case NonExistent:
+                return "NonExistent";
+            default:
+                return "Unknown Property";
+        }
+    }
 
 }

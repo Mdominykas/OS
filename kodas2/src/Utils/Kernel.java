@@ -37,6 +37,7 @@ public class Kernel {
     }
 
     public void createProcess(Process parent, Process newProcess) {
+        Logging.logCreatedProcess(newProcess);
         parent.childrenProcess.add(newProcess);
         newProcess.giveResourceReferences(realMachine.containerOfRegisters());
         readyProcesses.add(newProcess);
@@ -49,6 +50,7 @@ public class Kernel {
         for(Resource res : process.createdResources){
             deleteResource(res);
         }
+        Logging.logDeletedProcess(process);
         if (activeProcess == process) {
             activeProcess = null;
             runScheduler();
@@ -104,6 +106,7 @@ public class Kernel {
     public void waitResource(int resourceName) {
         Resource selectedResource = selectResource(resourceName);
         assert (selectedResource != null);
+        Logging.logProcessWaitsResource(activeProcess, selectedResource);
         boolean hasEnough = selectedResource.ask();
         if (!hasEnough) {
             activeProcess.saveRegisters();
@@ -116,10 +119,14 @@ public class Kernel {
     public void releaseResource(int resourceName) {
         Resource selectedResource = selectResource(resourceName);
         assert (selectedResource != null);
+        Logging.logProcessReleaseResource(activeProcess, selectedResource);
         Process released = selectedResource.release();
-        assert (blockedProcess.contains(released));
-        blockedProcess.remove(released);
-        readyProcesses.add(released);
+        if(released != null)
+        {
+            assert (blockedProcess.contains(released));
+            blockedProcess.remove(released);
+            readyProcesses.add(released);
+        }
     }
 
     public int getNewFid() {
