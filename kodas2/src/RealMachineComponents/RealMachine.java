@@ -3,6 +3,7 @@ package RealMachineComponents;
 import Constants.*;
 import OSException.*;
 import Utils.Conversion;
+import Utils.RegisterContainer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,6 +43,11 @@ public class RealMachine {
         userInput = new UserInput();
         channelMechanism = new ChannelMechanism(machineMemory, externalMemory, userInput);
         fileSystem = new FileSystem(externalMemory);
+    }
+
+    public RegisterContainer containerOfRegisters()
+    {
+        return new RegisterContainer(R1, R2, R3, FLAGS, IC, CS, DS, SI, PI);
     }
 
     private void loadVirtualMachineFromSuperVisorMemory(int numberOfBlocks, int wordsInLastBlock) {

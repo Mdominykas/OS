@@ -21,6 +21,7 @@ public class Kernel {
         readyProcesses = new ArrayList<>();
         blockedProcess = new ArrayList<>();
         activeProcess = new StartStop(this);
+        activeProcess.giveResourceReferences(realMachine.containerOfRegisters());
         resources = new ArrayList<>();
         newFid = 0;
     }
@@ -37,6 +38,7 @@ public class Kernel {
 
     public void createProcess(Process parent, Process newProcess) {
         parent.childrenProcess.add(newProcess);
+        newProcess.giveResourceReferences(realMachine.containerOfRegisters());
         readyProcesses.add(newProcess);
     }
 
@@ -47,7 +49,6 @@ public class Kernel {
         for(Resource res : process.createdResources){
             deleteResource(res);
         }
-//        here should be deletion of resources
         if (activeProcess == process) {
             activeProcess = null;
             runScheduler();
@@ -59,6 +60,7 @@ public class Kernel {
 
     private void runScheduler() {
         if (activeProcess != null) {
+            activeProcess.saveRegisters();
             readyProcesses.add(activeProcess);
             activeProcess = null;
         }
@@ -73,6 +75,7 @@ public class Kernel {
             }
         }
         activeProcess = readyProcesses.get(highestPriorityNum);
+        activeProcess.loadRegisters();
         readyProcesses.remove(activeProcess);
     }
 
@@ -84,6 +87,7 @@ public class Kernel {
 
     public void deleteResource(Resource resource)
     {
+//        galimai cia reikia is proceso pasalinti
         resources.remove(resource);
     }
 
@@ -102,6 +106,7 @@ public class Kernel {
         assert (selectedResource != null);
         boolean hasEnough = selectedResource.ask();
         if (!hasEnough) {
+            activeProcess.saveRegisters();
             blockedProcess.add(activeProcess);
             activeProcess = null;
             runScheduler();

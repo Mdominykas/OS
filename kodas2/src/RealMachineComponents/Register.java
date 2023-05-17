@@ -23,11 +23,11 @@ public class Register {
         setValue(value);
     }
 
-    int value() {
+    public int value() {
         return Conversion.ConvertHexStringToInt(hexData);
     }
 
-    void setValue(int v) {
+    public void setValue(int v) {
         v %= range();
         Character[] newHexData = Conversion.ConvertIntToHexCharacterArray(v);
         assert (newHexData.length <= hexData.length);
