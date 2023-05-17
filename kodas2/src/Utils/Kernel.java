@@ -104,6 +104,7 @@ public class Kernel {
         if (!hasEnough) {
             blockedProcess.add(activeProcess);
             activeProcess = null;
+            runScheduler();
         }
     }
 

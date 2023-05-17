@@ -8,6 +8,12 @@ public class Idle extends Process {
     }
 
     public void run() {
-
+        switch(state)
+        {
+            case 1:
+                ;
+            default:
+                assert(false);
+        }
     }
 }
