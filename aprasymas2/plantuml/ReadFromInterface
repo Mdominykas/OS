@@ -1,16 +1,19 @@
 @startuml
 repeat
-    :1. Blokavimasis laukiant “Iš vartotojo sąsajos” resurso;
-    if (2. Yra procesų laukiančių resurso "Vartotojo įvedimas") is (Taip) then
-     :3. atlaisvinti resursą "Vartotojo įvedimas";
-   else (Ne)
-    switch (Įvedimo tipas?)
-    case (shutdown)
-      :4. Atlaisvinti resursą "MOS pabaiga";
-    case (load prog)
-      :5. Blokavimasis laukiant resurso "supervizorinė atmintis";
-      :6. Blokų kopijavimas į supervizorinę atmintį;
-      :7. Atlaisvinamas resursas “Užduotis supervizorinėje atmintyje”;
-    endswitch
+  :1. Blokavimasis laukiant “Iš vartotojo sąsajos” resurso;
+  if (2. Yra procesų laukiančių resurso "Vartotojo įvedimas") is (Taip) then
+    :3. atlaisvinti resursą "Vartotojo įvedimas";
+  else (Ne)
+    if (4. Įvedimo tipas yra shutdown) is (Taip) then
+      :5. Atlaisvinti resursą "MOS pabaiga";
+    else (Ne)
+      if (6. Įvedimo tipas yra load prog) is (Taip) then
+        :7. Blokavimasis laukiant resurso "supervizorinė atmintis";
+        :8. Blokų kopijavimas į supervizorinę atmintį;
+        :9. Atlaisvinamas resursas “Užduotis supervizorinėje atmintyje”;
+      else (Ne)
+        :10. Atlaisvinti resursą "Eilutė atmintyje" su pranešimu apie netinkamą komandą;
+      endif
     endif
+  endif
 @enduml

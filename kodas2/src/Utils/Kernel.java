@@ -3,13 +3,15 @@ package Utils;
 import Processes.Process;
 import Processes.StartStop;
 import RealMachineComponents.RealMachine;
+import RealMachineComponents.UserInput;
 import Resources.Resource;
+import Resources.ResourceNames;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Kernel {
-    RealMachine realMachine;
+    public RealMachine realMachine;
     List<Process> readyProcesses, blockedProcess;
     Process activeProcess;
     List<Resource> resources;
@@ -26,13 +28,24 @@ public class Kernel {
         newFid = 0;
     }
 
-    public void run()
-    {
-        while(true)
-        {
-            if(activeProcess == null)
+    public void run() {
+        final int timeReset = 10;
+        int timeLimit = timeReset;
+        while (true) {
+            if (activeProcess == null)
                 break;
             activeProcess.run();
+
+            if (realMachine.userInput.simulateReading()) {
+                releaseResource(ResourceNames.FromUserInterface);
+            }
+            if(timeLimit == 0)
+            {
+                runScheduler();
+                timeLimit = timeReset;
+            }
+            else
+                timeLimit--;
         }
     }
 
@@ -48,7 +61,7 @@ public class Kernel {
         for (Process child : process.childrenProcess) {
             deleteProcess(child);
         }
-        for(Resource res : process.createdResources){
+        for (Resource res : process.createdResources) {
             deleteResource(res);
         }
         Logging.logDeletedProcess(process);
@@ -67,8 +80,7 @@ public class Kernel {
             readyProcesses.add(activeProcess);
             activeProcess = null;
         }
-        if(readyProcesses.size() == 0)
-        {
+        if (readyProcesses.size() == 0) {
             System.exit(0);
         }
         int highestPriorityNum = 0;
@@ -88,8 +100,7 @@ public class Kernel {
         creator.createdResources.add(resource);
     }
 
-    public void deleteResource(Resource resource)
-    {
+    public void deleteResource(Resource resource) {
 //        galimai cia reikia is proceso pasalinti
         resources.remove(resource);
     }
@@ -108,7 +119,7 @@ public class Kernel {
         Resource selectedResource = selectResource(resourceName);
         assert (selectedResource != null);
         Logging.logProcessWaitsResource(activeProcess, selectedResource);
-        boolean hasEnough = selectedResource.ask();
+        boolean hasEnough = selectedResource.waitResource(activeProcess);
         if (!hasEnough) {
             activeProcess.saveRegisters();
             blockedProcess.add(activeProcess);
@@ -122,13 +133,22 @@ public class Kernel {
         assert (selectedResource != null);
         Logging.logProcessReleaseResource(activeProcess, selectedResource);
         Process released = selectedResource.release();
-        if(released != null)
-        {
+        if (released != null) {
             assert (blockedProcess.contains(released));
             blockedProcess.remove(released);
             readyProcesses.add(released);
         }
     }
+
+    public boolean someoneWaitsResource(int resourceName) {
+        Resource resource = selectResource(resourceName);
+        return resource.someOneWaits();
+    }
+
+    public Resource getResource(int resourceName) {
+        return selectResource(resourceName);
+    }
+
 
     public int getNewFid() {
         return newFid++;

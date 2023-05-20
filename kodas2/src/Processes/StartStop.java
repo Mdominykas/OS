@@ -11,10 +11,12 @@ import java.util.List;
 public class StartStop extends Process {
     public StartStop(Kernel kernel) {
         super(kernel);
+        this.priority = ProcessesPriority.StartStop;
     }
 
     private void createResources() {
         kernel.createResource(this, ResourceNames.ChannelMechanism, new ArrayList<>());
+        kernel.releaseResource(ResourceNames.ChannelMechanism);
         List<Object> supervisorMemoryPages = new LinkedList<>();
         for (int pageNum = 0; pageNum < Constants.numberOfSupervisorBLocks; pageNum++)
             supervisorMemoryPages.add(pageNum);
@@ -54,22 +56,18 @@ public class StartStop extends Process {
     public void run() {
         switch (state) {
             case 1:
-                System.out.println("kursiu resursus");
                 createResources();
                 state++;
                 break;
             case 2:
-                System.out.println("kursiu procesus");
                 createProcesses();
                 state++;
                 break;
             case 3:
-                System.out.println("lauksiu resurso");
                 kernel.waitResource(ResourceNames.MosEnd);
                 state++;
                 break;
             case 4:
-                System.out.println("baigiu");
                 kernel.deleteProcess(this);
                 state++;
                 break;

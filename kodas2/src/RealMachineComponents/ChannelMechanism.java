@@ -2,18 +2,15 @@ package RealMachineComponents;
 
 import Constants.Constants;
 import Constants.*;
-import Utils.Conversion;
 
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class ChannelMechanism {
-    Register SB, SW, DB, DW, BC, ST, DT;
-    MachineMemory machineMemory;
-    ExternalMemory externalMemory;
-    UserInput userInput;
+    public Register SB, SW, DB, DW, BC, ST, DT;
+    private final MachineMemory machineMemory;
+    private final ExternalMemory externalMemory;
+    private final UserInput userInput;
     ChannelMechanism(MachineMemory machineMemory, ExternalMemory externalMemory, UserInput userInput) {
         SB = new Register(2);
         SW = new Register(2);
@@ -27,7 +24,7 @@ public class ChannelMechanism {
         this.userInput = userInput;
     }
 
-    void exchange() {
+    public void exchange() {
         ArrayList<Character> temp = new ArrayList<>();
         int readBytes = 0;
         while (readBytes < BC.value()) {

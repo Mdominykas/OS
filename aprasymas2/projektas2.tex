@@ -157,7 +157,7 @@ Paskirtis - gavus informaciją iš įvedimo srauto atlikti pirminį jos apdoroji
 
 \begin{figure}[H]
 	\centering	
-	\includegraphics[scale=0.40]{img/ReadFromInterface}
+	\includegraphics[scale=0.30]{img/ReadFromInterface}
 	\caption{Proceso ReadFromInterface diagrama}   % Antraštė įterpiama po paveikslėlio
 	\label{img:ReadFromInterface}
 \end{figure}
@@ -301,7 +301,7 @@ Resursai yra tai, dėl ko varžosi procesai. Dėl resursų trūkumo procesai blo
 		\hline
 		Iš Loader & StartStop & Loader & JobGovernor \\
 		\hline
-		Eilutė atmintyje & StartStop & JCL, JobGovernor & PrintLine\\
+		Eilutė atmintyje & StartStop &     \begin{tabular}{@{}c@{}}ReadFromInterface, JCL,\\ JobGovernor \end{tabular}& PrintLine\\
 		\hline
 		Iš Interrupt & StartStop & Interrupt & JobGovernor\\
 		\hline

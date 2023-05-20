@@ -57,7 +57,8 @@ public class ResourceNames {
             case NonExistent:
                 return "NonExistent";
             default:
-                return "Unknown Property";
+                assert(false);
+                return "UnknownResource";
         }
     }
 

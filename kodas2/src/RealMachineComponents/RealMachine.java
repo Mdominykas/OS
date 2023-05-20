@@ -17,9 +17,9 @@ public class RealMachine {
     InterruptHandler interruptHandler;
     PagingMechanism pagingMechanism;
     ExternalMemory externalMemory;
-    ChannelMechanism channelMechanism;
+    public ChannelMechanism channelMechanism;
     FileSystem fileSystem;
-    UserInput userInput;
+    public UserInput userInput;
 
     public RealMachine() {
 
@@ -73,6 +73,11 @@ public class RealMachine {
                 }
             }
         }
+    }
+
+    public void copyProgramToSupervisorMemory(String programName)
+    {
+
     }
 
     public void load(String programName) throws OSException {

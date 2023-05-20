@@ -12,6 +12,7 @@ public class Idle extends Process {
         {
             case 1:
                 ;
+                break;
             default:
                 assert(false);
         }
