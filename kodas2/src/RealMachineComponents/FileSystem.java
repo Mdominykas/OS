@@ -138,5 +138,19 @@ public class FileSystem {
         return findFirstFileContentWord("$PROG$", programName);
     }
 
+    public int findFirstFileHeaderWord(String programName) {
+        for (int i = 0; i + 1 < Constants.externalMemoryLengthInWords; i++) {
+            Character[] characters = externalMemory.getWord(i);
+            if (Arrays.equals(characters, Conversion.stringToCharacterArray("$PROG$"))) {
+                Character[] nextCharacters = externalMemory.getWord(i + 1);
+                if (Conversion.characterArrayToString(nextCharacters).equals(programName)) {
+                    return i;
+                } else {
+                    i++;
+                }
+            }
+        }
+        return -1;
+    }
 
 }

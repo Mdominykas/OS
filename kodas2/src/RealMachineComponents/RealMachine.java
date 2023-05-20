@@ -45,8 +45,7 @@ public class RealMachine {
         fileSystem = new FileSystem(externalMemory);
     }
 
-    public RegisterContainer containerOfRegisters()
-    {
+    public RegisterContainer containerOfRegisters() {
         return new RegisterContainer(R1, R2, R3, FLAGS, IC, CS, DS, SI, PI);
     }
 
@@ -75,11 +74,14 @@ public class RealMachine {
         }
     }
 
-    public void copyProgramToSupervisorMemory(String programName) throws OSException
-    {
-        int startInExternal = fileSystem.findProgramStartWordNumber(programName);
+    public boolean isProgramHeaderCorrect() {
+        return Conversion.characterArrayToString(machineMemory.getWord(0)).equals("$PROG$") &&
+                Conversion.characterArrayToString(machineMemory.getWord(2)).equals("------");
+    }
+
+    public void copyProgramToSupervisorMemory(String programName) throws OSException {
+        int startInExternal = fileSystem.findFirstFileHeaderWord(programName); // 3 are subtracted for "------", programName, "$PROG$"
         if (startInExternal == -1) {
-            pagingMechanism.freeVirtualMachinePages();
             throw new ProgramNotFoundException("");
         }
         int fileStartBlock = startInExternal / Constants.blockLengthInWords;
@@ -111,6 +113,17 @@ public class RealMachine {
                 break;
             }
         }
+    }
+
+    public boolean checkForFins(int blockNum) {
+        int firstWord = blockNum * Constants.blockLengthInWords;
+        int lastWord = (blockNum + 1) * Constants.blockLengthInWords - 1;
+        for (int i = firstWord; i <= lastWord; i++) {
+            if (Conversion.characterArrayToString(machineMemory.getWord(i)).equals("$FINS$")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void load(String programName) throws OSException {
@@ -418,7 +431,7 @@ public class RealMachine {
                     handler.addBytes(length);
                     int wordDiff = handler.wordPoz - prevWord;
                     int startedOffset = (prevByte == 0) ? 0 : 1;
-                    for(int i = 0; i < wordDiff; i++){
+                    for (int i = 0; i < wordDiff; i++) {
                         externalMemory.setWordAndShift(prevWord + startedOffset, Conversion.stringToCharacterArray("      "));
                     }
                     channelMechanism.exchange();
@@ -467,7 +480,7 @@ public class RealMachine {
             } else if (SI.value() == SIValues.DeleteFile) {
                 int fileNumber = R2.value();
                 FileHandler handler = fileSystem.fileHandlerByNumber(fileNumber);
-                if(handler != null){
+                if (handler != null) {
                     int fileStartWord = handler.fileStartPoz();
                     int fileEndWord = fileSystem.findFileEndWord(fileStartWord);
                     int lengthInWords = fileEndWord - fileStartWord + 1;
@@ -476,8 +489,7 @@ public class RealMachine {
                         lengthInWords--;
                     }
                     fileSystem.closeFile(fileNumber);
-                }
-                else{
+                } else {
                     R2.setValue(0);
                 }
 
@@ -524,14 +536,13 @@ public class RealMachine {
         while (true) {
             vm.execute();
             TI.setValue(TI.value() - 1);
-            if (interruptHandler.test())
-                {
-                    MODE = true;
-                    if (interruptHandling() == 1) {
-                        break;
-                    }
-                    MODE = false;
+            if (interruptHandler.test()) {
+                MODE = true;
+                if (interruptHandling() == 1) {
+                    break;
                 }
+                MODE = false;
+            }
         }
         pagingMechanism.freeVirtualMachinePages();
         this.vm = null;

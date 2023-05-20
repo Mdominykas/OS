@@ -116,10 +116,15 @@ public class Kernel {
     }
 
     public void waitResource(int resourceName) {
+        waitResource(resourceName, 1);
+    }
+
+    public void waitResource(int resourceName, int count)
+    {
         Resource selectedResource = selectResource(resourceName);
         assert (selectedResource != null);
         Logging.logProcessWaitsResource(activeProcess, selectedResource);
-        boolean hasEnough = selectedResource.waitResource(activeProcess);
+        boolean hasEnough = selectedResource.waitResource(activeProcess, count);
         if (!hasEnough) {
             activeProcess.saveRegisters();
             blockedProcess.add(activeProcess);
@@ -139,6 +144,8 @@ public class Kernel {
             readyProcesses.add(released);
         }
     }
+
+
 
     public boolean someoneWaitsResource(int resourceName) {
         Resource resource = selectResource(resourceName);

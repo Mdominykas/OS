@@ -1,5 +1,6 @@
 package Processes;
 
+import Constants.Constants;
 import RealMachineComponents.UserInput;
 import Resources.Resource;
 import Resources.ResourceNames;
