@@ -7,14 +7,15 @@ repeat
     :4 Atlaisvinti resursą "supervizorinė atmintis";
   else (Taip)
     repeat 
-      if (5. Dabartiniame bloke yra žymė $FINS$) is (Ne) then
+      if (5. Dabartiniame bloke yra žymė $FINS$) is (Taip) then
         :6. Atlaisvinti resursą "Užduoties programa \n supervizorinėje atmintyje";
         break;
-      else (Taip)
+      else (Ne)
         if (7. Ar tai buvo paskutinis supervizorinės \n atminties blokas?) is (Taip) then
           :8. Atlaisvinti resursą "Eilutė atmintyje" su \n pranešimu apie $FINS$ bloko trūkumą;
           :9 Atlaisvinti resursą "supervizorinė atmintis";
-          break;
+          break
+          goto pabaiga;
         else (Ne)
           :10. Imamamas tolesnis blokas iš \n supervizorinės atminties;
         endif

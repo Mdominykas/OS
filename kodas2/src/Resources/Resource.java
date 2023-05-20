@@ -20,7 +20,7 @@ public class Resource {
         this.elements = elements;
         waitingCount = new ArrayList<>();
         waitingProcesses = new ArrayList<>();
-        availableElements = elements.size();
+        availableElements = 0;
     }
 
     private boolean ask()

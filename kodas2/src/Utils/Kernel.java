@@ -74,6 +74,25 @@ public class Kernel {
         }
     }
 
+    public void deleteProcess(int fid)
+    {
+        Process selected = null;
+        for (Process process : readyProcesses)
+        {
+            if(process.getFId() == fid)
+                selected = process;
+        }
+        for (Process process : blockedProcess)
+        {
+            if(process.getFId() == fid)
+                selected = process;
+        }
+        if(activeProcess.getFId() == fid)
+            selected = activeProcess;
+        assert(selected != null);
+        deleteProcess(selected);
+    }
+
     private void runScheduler() {
         if (activeProcess != null) {
             activeProcess.saveRegisters();

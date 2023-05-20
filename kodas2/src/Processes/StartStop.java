@@ -21,11 +21,14 @@ public class StartStop extends Process {
         for (int pageNum = 0; pageNum < Constants.numberOfSupervisorBLocks; pageNum++)
             supervisorMemoryPages.add(pageNum);
         kernel.createResource(this, ResourceNames.SupervisorMemory, supervisorMemoryPages);
+        kernel.releaseResource(ResourceNames.SupervisorMemory);
         List<Object> userMemoryPages = new LinkedList<>();
         for (int pageNum = Constants.numberOfSupervisorBLocks; pageNum < Constants.realMachineLengthInBlocks; pageNum++)
             userMemoryPages.add(pageNum);
         kernel.createResource(this, ResourceNames.UserMemory, userMemoryPages);
         kernel.createResource(this, ResourceNames.ExternalMemory, new ArrayList<>());
+        kernel.releaseResource(ResourceNames.ExternalMemory);
+
         kernel.createResource(this, ResourceNames.MosEnd, new ArrayList<>());
         kernel.createResource(this, ResourceNames.FromUserInterface, new ArrayList<>());
         kernel.createResource(this, ResourceNames.TaskInSupervisorMemory, new ArrayList<>());

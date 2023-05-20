@@ -42,4 +42,9 @@ public abstract class Process {
     {
         this.savedRegisters.load(registerContainer);
     }
+
+    public int getFId()
+    {
+        return fId;
+    }
 }

@@ -1,8 +1,8 @@
 @startuml
 repeat
   :1. Blokavimasis laukiant “Užduoties programa supervizorinėje atmintyje” resurso;
-  if (2. Vykdymo laikas ne 0) is (Taip) then
+  if (2. su resursu duotas numeris yra 0) is (Taip) then
     :3. Kuriamas procesas JobGovernor;
   else (Ne)
-    :4. Naikinamas procesas JobGovernor, sukūręs gautąjį resursą;
+    :4. Naikinamas procesas JobGovernor su tokiu numeriu \n (sukūręs procesą);
 @enduml

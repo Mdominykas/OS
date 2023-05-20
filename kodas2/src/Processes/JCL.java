@@ -46,6 +46,8 @@ public class JCL extends Process {
                 }
                 break;
             case 6:
+                Resource resource = kernel.getResource(ResourceNames.TaskProgramInSupervisorMemory);
+                resource.addElement(0);
                 kernel.releaseResource(ResourceNames.TaskProgramInSupervisorMemory);
                 state = 1;
                 break;
