@@ -75,9 +75,42 @@ public class RealMachine {
         }
     }
 
-    public void copyProgramToSupervisorMemory(String programName)
+    public void copyProgramToSupervisorMemory(String programName) throws OSException
     {
+        int startInExternal = fileSystem.findProgramStartWordNumber(programName);
+        if (startInExternal == -1) {
+            pagingMechanism.freeVirtualMachinePages();
+            throw new ProgramNotFoundException("");
+        }
+        int fileStartBlock = startInExternal / Constants.blockLengthInWords;
+        int fileStartByte = (startInExternal % Constants.blockLengthInWords) * Constants.WordLengthInBytes;
+        int wroteBlocks = 0, wordsInLastBlock = -1;
+        boolean hadFileEnding = false;
+        for (int block = 0; block < 16; block++) {
+            wroteBlocks++;
+            channelMechanism.SB.setValue(fileStartBlock + block);
+            channelMechanism.SW.setValue(fileStartByte);
+            channelMechanism.ST.setValue(STValues.ExternalMemory);
 
+            channelMechanism.DB.setValue(block);
+            channelMechanism.DW.setValue(0);
+            channelMechanism.DT.setValue(DTValues.SupervisorMemory);
+
+            channelMechanism.BC.setValue(Constants.blockLengthInWords * Constants.WordLengthInBytes);
+            channelMechanism.exchange();
+            int endFile = -1;
+            for (int i = 0; i < Constants.blockLengthInWords; i++) {
+                if (Conversion.characterArrayToString(machineMemory.getWord(block * Constants.blockLengthInWords + i)).equals("$FINS$")) {
+                    endFile = i;
+                    break;
+                }
+            }
+            if (endFile != -1) {
+                hadFileEnding = true;
+                wordsInLastBlock = endFile + 1;
+                break;
+            }
+        }
     }
 
     public void load(String programName) throws OSException {

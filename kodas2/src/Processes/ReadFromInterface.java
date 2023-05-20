@@ -61,13 +61,10 @@ public class ReadFromInterface extends Process {
                 break;
             case 8:
                 String fileName = commandString().substring(5);
-                try
-                {
-                    kernel.realMachine.load(fileName);
-                }
-                catch(Exception ignored)
-                {
-                    assert(false); // not implemented
+                try {
+                    kernel.realMachine.copyProgramToSupervisorMemory(fileName);
+                } catch (Exception ignored) {
+                    assert (false); // not implemented case when file is not found
                 }
                 state = 9;
                 break;
@@ -76,12 +73,12 @@ public class ReadFromInterface extends Process {
                 state = 1;
                 break;
             case 10:
-               Resource lineInMemory = kernel.getResource(ResourceNames.LineInMemory);
-               String line = "incorrect command";
-               lineInMemory.addElement(line);
-               kernel.releaseResource(ResourceNames.LineInMemory);
-               state = 1;
-               break;
+                Resource lineInMemory = kernel.getResource(ResourceNames.LineInMemory);
+                String line = "incorrect command";
+                lineInMemory.addElement(line);
+                kernel.releaseResource(ResourceNames.LineInMemory);
+                state = 1;
+                break;
         }
     }
 
