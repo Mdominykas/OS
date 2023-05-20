@@ -48,7 +48,6 @@ public class StartStop extends Process {
         kernel.createProcess(this, new ReadFromInterface(kernel), ProcessesPriority.ReadFromInterface);
         kernel.createProcess(this, new JCL(kernel), ProcessesPriority.JCL);
         kernel.createProcess(this, new MainProc(kernel), ProcessesPriority.MainProc);
-        kernel.createProcess(this, new Loader(kernel), ProcessesPriority.Loader);
         kernel.createProcess(this, new Interrupt(kernel), ProcessesPriority.Interrupt);
         kernel.createProcess(this, new PrintLine(kernel), ProcessesPriority.PrintLine);
         kernel.createProcess(this, new FileSystem(kernel), ProcessesPriority.FileSystem);

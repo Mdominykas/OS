@@ -5,7 +5,6 @@ public class ProcessesPriority {
     public static int ReadFromInterface = 20;
     public static int JCL = 20;
     public static int MainProc = 20;
-    public static int Loader = 20;
     public static int JobGovernor = 20;
     public static int FileSystem = 20;
     public static int PrintLine = 20;

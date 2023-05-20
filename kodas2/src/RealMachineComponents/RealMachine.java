@@ -46,7 +46,7 @@ public class RealMachine {
     }
 
     public RegisterContainer containerOfRegisters() {
-        return new RegisterContainer(R1, R2, R3, FLAGS, IC, CS, DS, SI, PI);
+        return new RegisterContainer(R1, R2, R3, FLAGS, IC, CS, DS, SI, PI, PTR);
     }
 
     private void loadVirtualMachineFromSuperVisorMemory(int numberOfBlocks, int wordsInLastBlock) {

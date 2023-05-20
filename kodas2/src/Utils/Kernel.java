@@ -39,12 +39,10 @@ public class Kernel {
             if (realMachine.userInput.simulateReading()) {
                 releaseResource(ResourceNames.FromUserInterface);
             }
-            if(timeLimit == 0)
-            {
+            if (timeLimit == 0) {
                 runScheduler();
                 timeLimit = timeReset;
-            }
-            else
+            } else
                 timeLimit--;
         }
     }
@@ -74,22 +72,19 @@ public class Kernel {
         }
     }
 
-    public void deleteProcess(int fid)
-    {
+    public void deleteProcess(int fid) {
         Process selected = null;
-        for (Process process : readyProcesses)
-        {
-            if(process.getFId() == fid)
+        for (Process process : readyProcesses) {
+            if (process.getFId() == fid)
                 selected = process;
         }
-        for (Process process : blockedProcess)
-        {
-            if(process.getFId() == fid)
+        for (Process process : blockedProcess) {
+            if (process.getFId() == fid)
                 selected = process;
         }
-        if(activeProcess.getFId() == fid)
+        if (activeProcess.getFId() == fid)
             selected = activeProcess;
-        assert(selected != null);
+        assert (selected != null);
         deleteProcess(selected);
     }
 
@@ -138,8 +133,7 @@ public class Kernel {
         waitResource(resourceName, 1);
     }
 
-    public void waitResource(int resourceName, int count)
-    {
+    public void waitResource(int resourceName, int count) {
         Resource selectedResource = selectResource(resourceName);
         assert (selectedResource != null);
         Logging.logProcessWaitsResource(activeProcess, selectedResource);
@@ -163,7 +157,6 @@ public class Kernel {
             readyProcesses.add(released);
         }
     }
-
 
 
     public boolean someoneWaitsResource(int resourceName) {

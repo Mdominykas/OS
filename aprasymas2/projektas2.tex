@@ -122,8 +122,6 @@ Resursų paskirstytojo paskirtis - suteikti paprašytą resurso elementų kiekį
 		\hline
 		MainProc & StartStop & StartStop \\
 		\hline
-		Loader & StartStop & StartStop \\
-		\hline
 		JobGovernor & MainProc & MainProc \\
 		\hline
 		VirtualMachine & JobGovernor & JobGovernor \\
@@ -182,17 +180,6 @@ MainProc paskirtis - kurti ir naikinti procesus JobGovernor.
 	\includegraphics[scale=0.40]{img/MainProc}
 	\caption{Proceso MainProc diagrama}   % Antraštė įterpiama po paveikslėlio
 	\label{img:MainProc}
-\end{figure}
-
-\subsection{Loader}
-
-Loader paskirtis - perkelti blokus iš supervizorinės atminties į vartotojo atmintį.
-
-\begin{figure}[H]
-	\centering	
-	\includegraphics[scale=0.65]{img/Loader}
-	\caption{Proceso Loader diagrama}   % Antraštė įterpiama po paveikslėlio
-	\label{img:Loader}
 \end{figure}
 
 \subsection{JobGovernor}
@@ -279,7 +266,7 @@ Resursai yra tai, dėl ko varžosi procesai. Dėl resursų trūkumo procesai blo
 		\hline
 		\multicolumn{4}{c}{Sisteminiai}\\
 		\hline
-		Kanalų įrenginys & StartStop & Loader, PrintLine & Loader, PrintLine\\
+		Kanalų įrenginys & StartStop & PrintLine & PrintLine\\
 		\hline
 		Supervizorinė atmintis & StartStop & JobGovernor, JCL & ReadFromInterface \\
 		\hline
@@ -296,10 +283,6 @@ Resursai yra tai, dėl ko varžosi procesai. Dėl resursų trūkumo procesai blo
 		Užduotis supervizorinėje atmintyje & StartStop & ReadFromInterface & JCL \\
 		\hline
 		Užduoties programa supervizorinėje atmintyje & StartStop & JCL & MainProc \\
-		\hline
-		Pakrovimo paketas & StartStop & JobGovernor & Loader \\
-		\hline
-		Iš Loader & StartStop & Loader & JobGovernor \\
 		\hline
 		Eilutė atmintyje & StartStop &     \begin{tabular}{@{}c@{}}ReadFromInterface, JCL,\\ JobGovernor \end{tabular}& PrintLine\\
 		\hline

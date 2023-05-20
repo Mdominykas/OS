@@ -6,6 +6,7 @@ import Utils.Kernel;
 
 public class MainProc extends Process {
     int fid;
+
     MainProc(Kernel kernel) {
         super(kernel);
     }

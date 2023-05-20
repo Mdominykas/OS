@@ -3,7 +3,7 @@ package Resources;
 import Utils.RegisterContainer;
 
 public class SavedRegisters {
-    int R1, R2, R3, FLAGS, IC, CS, DS, SI, PI;
+    int R1, R2, R3, FLAGS, IC, CS, DS, SI, PI, PTR;
     public void save(RegisterContainer registerContainer)
     {
         this.R1 = registerContainer.R1.value();
@@ -15,6 +15,7 @@ public class SavedRegisters {
         this.DS = registerContainer.DS.value();
         this.SI = registerContainer.SI.value();
         this.PI = registerContainer.PI.value();
+        this.PTR = registerContainer.PTR.value();
     }
 
     public void load(RegisterContainer registerContainer)
@@ -28,6 +29,6 @@ public class SavedRegisters {
         registerContainer.DS.setValue(DS);
         registerContainer.SI.setValue(SI);
         registerContainer.PI.setValue(PI);
-
+        registerContainer.PTR.setValue(PTR);
     }
 }
