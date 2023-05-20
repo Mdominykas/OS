@@ -3,7 +3,6 @@ package Utils;
 import Processes.Process;
 import Processes.StartStop;
 import RealMachineComponents.RealMachine;
-import RealMachineComponents.UserInput;
 import Resources.Resource;
 import Resources.ResourceNames;
 
@@ -12,7 +11,8 @@ import java.util.List;
 
 public class Kernel {
     public RealMachine realMachine;
-    List<Process> readyProcesses, blockedProcess;
+    List<Process> readyProcesses, blockedProcesses;
+    List<Process> readyStoppedProcesses, blockedStoppedProcesses;
     Process activeProcess;
     List<Resource> resources;
 
@@ -21,7 +21,9 @@ public class Kernel {
     public Kernel(RealMachine realMachine) {
         this.realMachine = realMachine;
         readyProcesses = new ArrayList<>();
-        blockedProcess = new ArrayList<>();
+        blockedProcesses = new ArrayList<>();
+        readyStoppedProcesses = new ArrayList<>();
+        blockedStoppedProcesses = new ArrayList<>();
         activeProcess = new StartStop(this);
         activeProcess.giveResourceReferences(realMachine.containerOfRegisters());
         resources = new ArrayList<>();
@@ -68,7 +70,9 @@ public class Kernel {
             runScheduler();
         } else {
             readyProcesses.remove(process);
-            blockedProcess.remove(process);
+            blockedProcesses.remove(process);
+            readyStoppedProcesses.remove(process);
+            blockedStoppedProcesses.remove(process);
         }
     }
 
@@ -78,14 +82,50 @@ public class Kernel {
             if (process.getFId() == fid)
                 selected = process;
         }
-        for (Process process : blockedProcess) {
+        for (Process process : blockedProcesses) {
             if (process.getFId() == fid)
                 selected = process;
         }
+        for (Process process : readyStoppedProcesses) {
+            if (process.getFId() == fid)
+                selected = process;
+        }
+        for (Process process : blockedStoppedProcesses) {
+            if (process.getFId() == fid)
+                selected = process;
+        }
+
         if (activeProcess.getFId() == fid)
             selected = activeProcess;
         assert (selected != null);
         deleteProcess(selected);
+    }
+
+    void stopProcess(Process process) {
+        process.onStop();
+        if (blockedProcesses.contains(process)) {
+            blockedProcesses.remove(process);
+            blockedStoppedProcesses.add(process);
+        } else if (readyProcesses.contains(process)) {
+            readyProcesses.remove(process);
+            readyStoppedProcesses.add(process);
+        } else {
+            assert (false);
+        }
+    }
+
+    void continueProcess(Process process) {
+        process.onContinue();
+        if (blockedStoppedProcesses.contains(process)) {
+            blockedStoppedProcesses.remove(process);
+            blockedProcesses.add(process);
+        } else if (readyStoppedProcesses.contains(process)) {
+            readyStoppedProcesses.remove(process);
+            readyProcesses.add(process);
+        }
+        else{
+            assert(false);
+        }
     }
 
     private void runScheduler() {
@@ -140,7 +180,7 @@ public class Kernel {
         boolean hasEnough = selectedResource.waitResource(activeProcess, count);
         if (!hasEnough) {
             activeProcess.saveRegisters();
-            blockedProcess.add(activeProcess);
+            blockedProcesses.add(activeProcess);
             activeProcess = null;
             runScheduler();
         }
@@ -152,9 +192,15 @@ public class Kernel {
         Logging.logProcessReleaseResource(activeProcess, selectedResource);
         Process released = selectedResource.release();
         if (released != null) {
-            assert (blockedProcess.contains(released));
-            blockedProcess.remove(released);
-            readyProcesses.add(released);
+            if (blockedProcesses.contains(released)) {
+                blockedProcesses.remove(released);
+                readyProcesses.add(released);
+            } else if (blockedStoppedProcesses.contains(released)) {
+                blockedStoppedProcesses.remove(released);
+                readyStoppedProcesses.add(released);
+            } else {
+                assert (false);
+            }
         }
     }
 

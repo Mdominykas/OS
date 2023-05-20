@@ -19,8 +19,8 @@ public abstract class Process {
     protected Kernel kernel;
     RegisterContainer registerContainer;
     SavedRegisters savedRegisters;
-    Process(Kernel kernel)
-    {
+
+    Process(Kernel kernel) {
         this.fId = kernel.getNewFid();
         this.kernel = kernel;
         this.createdResources = new ArrayList<>();
@@ -30,21 +30,29 @@ public abstract class Process {
     }
 
     abstract public void run();
-    public void giveResourceReferences(RegisterContainer registerContainer)
-    {
+
+    public void giveResourceReferences(RegisterContainer registerContainer) {
         this.registerContainer = registerContainer;
     }
-    public void saveRegisters()
-    {
+
+    public void saveRegisters() {
         this.savedRegisters.save(registerContainer);
     }
-    public void loadRegisters()
-    {
+
+    public void loadRegisters() {
         this.savedRegisters.load(registerContainer);
     }
 
-    public int getFId()
-    {
+    public int getFId() {
         return fId;
     }
+
+    public void onStop() {
+
+    }
+
+    public void onContinue() {
+
+    }
+
 }
