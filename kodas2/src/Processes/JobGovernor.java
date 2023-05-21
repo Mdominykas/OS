@@ -112,10 +112,11 @@ public class JobGovernor extends Process {
                 virtualMachineProcess.saveRegisters();
                 loadRegisters();
 //                kernel.releaseResource(ResourceNames.LineInMemory);
+                state = 18;
                 break;
             case 18:
                 kernel.continueProcess(virtualMachineProcess);
-                state = 1;
+                state = 5;
                 break;
             case 19:
                 kernel.deleteProcess(virtualMachineProcess);
