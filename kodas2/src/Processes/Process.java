@@ -33,6 +33,7 @@ public abstract class Process {
 
     public void giveResourceReferences(RegisterContainer registerContainer) {
         this.registerContainer = registerContainer;
+        saveRegisters();
     }
 
     public void saveRegisters() {

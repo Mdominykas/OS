@@ -23,10 +23,10 @@ public class Resource {
         availableElements = 0;
     }
 
-    private boolean ask()
-    {
+    private boolean ask() {
         return ask(1);
     }
+
     private boolean ask(int count) {
         if (availableElements >= count) {
             availableElements -= count;
@@ -45,12 +45,23 @@ public class Resource {
         return waitingProcesses.remove(0);
     }
 
+    public Process releaseFor(int fid) {
+        int id = -1;
+        for (int i = 0; i < waitingProcesses.size(); i++) {
+            if (waitingProcesses.get(i).getFId() == fid) {
+                id = i;
+            }
+        }
+        assert (id != -1);
+        waitingCount.remove(id);
+        return waitingProcesses.remove(id);
+    }
+
     public boolean waitResource(Process process) {
         return waitResource(process, 1);
     }
 
-    public boolean waitResource(Process process, int count)
-    {
+    public boolean waitResource(Process process, int count) {
         boolean ret = ask(count);
         if (!ret) {
             waitingProcesses.add(process);

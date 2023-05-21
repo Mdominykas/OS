@@ -101,7 +101,7 @@ public class Kernel {
         deleteProcess(selected);
     }
 
-    void stopProcess(Process process) {
+    public void stopProcess(Process process) {
         process.onStop();
         if (blockedProcesses.contains(process)) {
             blockedProcesses.remove(process);
@@ -114,7 +114,7 @@ public class Kernel {
         }
     }
 
-    void continueProcess(Process process) {
+    public  void continueProcess(Process process) {
         process.onContinue();
         if (blockedStoppedProcesses.contains(process)) {
             blockedStoppedProcesses.remove(process);
@@ -122,9 +122,8 @@ public class Kernel {
         } else if (readyStoppedProcesses.contains(process)) {
             readyStoppedProcesses.remove(process);
             readyProcesses.add(process);
-        }
-        else{
-            assert(false);
+        } else {
+            assert (false);
         }
     }
 
@@ -191,6 +190,31 @@ public class Kernel {
         assert (selectedResource != null);
         Logging.logProcessReleaseResource(activeProcess, selectedResource);
         Process released = selectedResource.release();
+        if (released != null) {
+            if (blockedProcesses.contains(released)) {
+                blockedProcesses.remove(released);
+                readyProcesses.add(released);
+            } else if (blockedStoppedProcesses.contains(released)) {
+                blockedStoppedProcesses.remove(released);
+                readyStoppedProcesses.add(released);
+            } else {
+                assert (false);
+            }
+        }
+    }
+
+    public void releaseResource(int resourceName, int count) {
+        for (int i = 0; i < count; i++) {
+            releaseResource(resourceName);
+        }
+    }
+
+    public void releaseResourceFor(int resourceName, int targetFid)
+    {
+        Resource selectedResource = selectResource(resourceName);
+        assert (selectedResource != null);
+        Logging.logProcessReleaseResource(activeProcess, selectedResource);
+        Process released = selectedResource.releaseFor(targetFid);
         if (released != null) {
             if (blockedProcesses.contains(released)) {
                 blockedProcesses.remove(released);

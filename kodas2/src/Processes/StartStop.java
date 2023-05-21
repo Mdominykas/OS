@@ -5,8 +5,6 @@ import Resources.ResourceNames;
 import Utils.Kernel;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 public class StartStop extends Process {
     public StartStop(Kernel kernel) {
@@ -17,15 +15,10 @@ public class StartStop extends Process {
     private void createResources() {
         kernel.createResource(this, ResourceNames.ChannelMechanism, new ArrayList<>());
         kernel.releaseResource(ResourceNames.ChannelMechanism);
-        List<Object> supervisorMemoryPages = new LinkedList<>();
-        for (int pageNum = 0; pageNum < Constants.numberOfSupervisorBLocks; pageNum++)
-            supervisorMemoryPages.add(pageNum);
-        kernel.createResource(this, ResourceNames.SupervisorMemory, supervisorMemoryPages);
+        kernel.createResource(this, ResourceNames.SupervisorMemory, new ArrayList<>());
         kernel.releaseResource(ResourceNames.SupervisorMemory);
-        List<Object> userMemoryPages = new LinkedList<>();
-        for (int pageNum = Constants.numberOfSupervisorBLocks; pageNum < Constants.realMachineLengthInBlocks; pageNum++)
-            userMemoryPages.add(pageNum);
-        kernel.createResource(this, ResourceNames.UserMemory, userMemoryPages);
+        kernel.createResource(this, ResourceNames.UserMemory, new ArrayList<>());
+        kernel.releaseResource(ResourceNames.UserMemory, Constants.realMachineLengthInBlocks - Constants.numberOfSupervisorBLocks);
         kernel.createResource(this, ResourceNames.ExternalMemory, new ArrayList<>());
         kernel.releaseResource(ResourceNames.ExternalMemory);
 
@@ -50,7 +43,7 @@ public class StartStop extends Process {
         kernel.createProcess(this, new MainProc(kernel), ProcessesPriority.MainProc);
         kernel.createProcess(this, new Interrupt(kernel), ProcessesPriority.Interrupt);
         kernel.createProcess(this, new PrintLine(kernel), ProcessesPriority.PrintLine);
-        kernel.createProcess(this, new FileSystem(kernel), ProcessesPriority.FileSystem);
+        kernel.createProcess(this, new FileSystemProcess(kernel), ProcessesPriority.FileSystem);
         kernel.createProcess(this, new Idle(kernel), ProcessesPriority.Idle);
     }
 

@@ -2,8 +2,8 @@ package Processes;
 
 import Utils.Kernel;
 
-public class FileSystem extends Process {
-    FileSystem(Kernel kernel) {
+public class FileSystemProcess extends Process {
+    FileSystemProcess(Kernel kernel) {
         super(kernel);
     }
 

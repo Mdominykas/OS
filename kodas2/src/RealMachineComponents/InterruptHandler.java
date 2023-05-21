@@ -16,6 +16,11 @@ public class InterruptHandler {
         return (SI.value() + PI.value() > 0) || (TI.value() == 0);
     }
 
+    public boolean testSIAndPI()
+    {
+        return (SI.value() + PI.value() > 0);
+    }
+
     public void setSI(int value){
         SI.setValue(value);
     }
