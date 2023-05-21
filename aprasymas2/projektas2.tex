@@ -266,13 +266,13 @@ Resursai yra tai, dėl ko varžosi procesai. Dėl resursų trūkumo procesai blo
 		\hline
 		\multicolumn{4}{c}{Sisteminiai}\\
 		\hline
-		Kanalų įrenginys & StartStop & PrintLine & PrintLine\\
+		Kanalų įrenginys & StartStop & \begin{tabular}{@{}c@{}}PrintLine, JobGovernor,\\ FileSystem \end{tabular} & \begin{tabular}{@{}c@{}}PrintLine, JobGovernor,\\ FileSystem \end{tabular}\\
 		\hline
 		Supervizorinė atmintis & StartStop & JobGovernor, JCL & ReadFromInterface \\
 		\hline
 		Vartotojo atmintis & StartStop & JobGovernor & JobGovernor\\
 		\hline
-		Išorinė atmintis & StartStop & JobGovernor & JobGovernor \\
+		Išorinė atmintis & StartStop & FileSystem & FileSystem \\
 		\hline
 		\multicolumn{4}{c}{Programiniai}\\
 		\hline
@@ -284,7 +284,7 @@ Resursai yra tai, dėl ko varžosi procesai. Dėl resursų trūkumo procesai blo
 		\hline
 		Užduoties programa supervizorinėje atmintyje & StartStop & JCL & MainProc \\
 		\hline
-		Eilutė atmintyje & StartStop &     \begin{tabular}{@{}c@{}}ReadFromInterface, JCL,\\ JobGovernor \end{tabular}& PrintLine\\
+		Eilutė atmintyje & StartStop &     \begin{tabular}{@{}c@{}}ReadFromInterface, JCL,\\ JobGovernor \end{tabular} & PrintLine\\
 		\hline
 		Iš Interrupt & StartStop & Interrupt & JobGovernor\\
 		\hline

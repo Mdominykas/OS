@@ -2,29 +2,30 @@
 repeat
   :1. Blokavimasis laukiant resurso “Vartotojo atmintis”;
   :2. Sukuriama puslapių lentelė;
-  :3. Atlaisvinamas resursas "Pakrovimo paketas";
-  :4. Blokavimasis laukiant "Iš Loader" resurso;
-  :5. Atlaisvinamas resursas "supervizorinė atmintis";
-  :6. Proceso "Virtuali mašina" kūrimas;
+  :3. Proceso "Virtuali mašina" kūrimas;
+  :4. Atlaisvinamas resursas "Supervizorinė atmintis";
   repeat
-    :7. Blokavimasis laukiant resurso "Iš Interrupt";
-    :8. Proceso "Virtuali mašina" stabdymas;
-    if (9 Įvedimo - išvedimo ar darbas su failais?) is (Taip) then
-      if (10. Skaitymas iš failų) is (Taip) then
-         :11. Atlaisvinti resursą "Darbas su failais";
-         :12. Blokavimasis laukiant resurso "Darbo su failais pabaiga";
+    :5. Blokavimasis laukiant resurso "Iš Interrupt";
+    :6. Proceso "Virtuali mašina" stabdymas;
+    if (7 Įvedimas - išvedimas ar darbas su failais?) is (Taip) then
+      if (8. Darbas su failais) is (Taip) then
+         :9. Atlaisvinti resursą "Darbas su failais";
+         :10. Blokavimasis laukiant resurso \n "Darbo su failais pabaiga";
       else (Ne)
-        if (13. Įvedimas?) is (Taip) then
-          :14. Išvesti nurodytą vartotojui;
-        else (Ne)
-          :15. Blokavimasis laukiant "Vartotojo įvedimas" resurso, skirto šiam JobGovernor;
+        if (11. Įvedimas?) is (Taip) then
+          :12. Blokavimasis laukiant "Vartotojo įvedimas" \n resurso, skirto šiam JobGovernor;
+          :13. Blokavimasis laukiant "Kanalų įrenginys" resurso;
+          :14. Nustatyti kanalų įrenginio registrus ir \n įvykdyti komandą EXCHGE;
+          :15. Atlaisvinti resursą "Kanalų įrenginys";
+        else (Ne (Išvedimas))
+          :16. Atlaisvinti resursą "Eilutė atmintyje";
         endif
       endif
-      :16. Proceso "Virtuali mašina" aktyvavimas;
+      :17. Proceso "Virtuali mašina" aktyvavimas;
     else (Ne)
-      :17. Naikinti procesą "Virtuali mašina";
-      :18. Atlaisvinti resursą "Vartotojo atmintis";
-      :19. Blokavimasis laukiant "Neegzistuojantis" resurso;
+      :18. Naikinti procesą "Virtuali mašina";
+      :19. Atlaisvinti resursą "Vartotojo atmintis";
+      :20. Blokavimasis laukiant "Neegzistuojantis" resurso;
       kill
     endif
 @enduml
