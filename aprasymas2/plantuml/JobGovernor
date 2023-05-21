@@ -1,32 +1,31 @@
 @startuml
+:1. Blokavimasis laukiant resurso “Vartotojo atmintis”;
+:2. Sukuriama puslapių lentelė;
+:3. Proceso "Virtuali mašina" kūrimas;
+:4. Atlaisvinamas resursas "Supervizorinė atmintis";
 repeat
-  :1. Blokavimasis laukiant resurso “Vartotojo atmintis”;
-  :2. Sukuriama puslapių lentelė;
-  :3. Proceso "Virtuali mašina" kūrimas;
-  :4. Atlaisvinamas resursas "Supervizorinė atmintis";
-  repeat
-    :5. Blokavimasis laukiant resurso "Iš Interrupt";
-    :6. Proceso "Virtuali mašina" stabdymas;
-    if (7 Įvedimas - išvedimas ar darbas su failais?) is (Taip) then
-      if (8. Darbas su failais) is (Taip) then
-         :9. Atlaisvinti resursą "Darbas su failais";
-         :10. Blokavimasis laukiant resurso \n "Darbo su failais pabaiga";
-      else (Ne)
-        if (11. Įvedimas?) is (Taip) then
-          :12. Blokavimasis laukiant "Vartotojo įvedimas" \n resurso, skirto šiam JobGovernor;
-          :13. Atlaisvinti resursą "Vartotojo įvedimas gautas";
-          :14. Blokavimasis laukiant "Kanalų įrenginys" resurso;
-          :15. Nustatyti kanalų įrenginio registrus ir \n įvykdyti komandą EXCHGE;
-          :16. Atlaisvinti resursą "Kanalų įrenginys";
-        else (Ne (Išvedimas))
-          :17. Atlaisvinti resursą "Eilutė atmintyje";
-        endif
-      endif
-      :18. Proceso "Virtuali mašina" aktyvavimas;
+  :5. Blokavimasis laukiant resurso "Iš Interrupt";
+  :6. Proceso "Virtuali mašina" stabdymas;
+  if (7 Įvedimas - išvedimas ar darbas su failais?) is (Taip) then
+    if (8. Darbas su failais) is (Taip) then
+      :9. Atlaisvinti resursą "Darbas su failais";
+      :10. Blokavimasis laukiant resurso \n "Darbo su failais pabaiga";
     else (Ne)
-      :19. Naikinti procesą "Virtuali mašina";
-      :20. Atlaisvinti resursą "Vartotojo atmintis";
-      :21. Blokavimasis laukiant "Neegzistuojantis" resurso;
-      kill
+      if (11. Įvedimas?) is (Taip) then
+        :12. Blokavimasis laukiant "Vartotojo įvedimas" \n resurso, skirto šiam JobGovernor;
+        :13. Atlaisvinti resursą "Vartotojo įvedimas gautas";
+        :14. Blokavimasis laukiant "Kanalų įrenginys" resurso;
+        :15. Nustatyti kanalų įrenginio registrus ir \n įvykdyti komandą EXCHGE;
+        :16. Atlaisvinti resursą "Kanalų įrenginys";
+      else (Ne (Išvedimas))
+        :17. Atlaisvinti resursą "Eilutė atmintyje";
+      endif
     endif
+    :18. Proceso "Virtuali mašina" aktyvavimas;
+  else (Ne)
+    :19. Naikinti procesą "Virtuali mašina";
+    :20. Atlaisvinti resursą "Vartotojo atmintis";
+    :21. Blokavimasis laukiant "Neegzistuojantis" resurso;
+    kill
+  endif
 @enduml

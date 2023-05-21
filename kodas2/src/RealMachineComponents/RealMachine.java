@@ -15,7 +15,7 @@ public class RealMachine {
     VirtualMachine vm = null;
     boolean MODE;
     public InterruptHandler interruptHandler;
-    PagingMechanism pagingMechanism;
+    public PagingMechanism pagingMechanism;
     ExternalMemory externalMemory;
     public ChannelMechanism channelMechanism;
     FileSystem fileSystem;
@@ -122,7 +122,7 @@ public class RealMachine {
                 virtualWord = 0;
             } else if (curWord.equals("$FINS$")) {
                 break;
-            }else{
+            } else {
                 pagingMechanism.setWord(virtualBlock * Constants.blockLengthInWords + virtualWord, machineMemory.getWord(wordNum));
                 virtualWord++;
                 if (virtualWord == Constants.blockLengthInWords) {
@@ -281,6 +281,69 @@ public class RealMachine {
         return continueFor;
     }
 
+    public void outputNumber() {
+        Character[] converted = Conversion.convertIntToDecCharacterArray(R1.value());
+        int numberLen = converted.length;
+        Character[] temp = machineMemory.getWord(0);
+        machineMemory.setArr(0, converted);
+        channelMechanism.SB.setValue(0);
+        channelMechanism.SW.setValue(0);
+        channelMechanism.ST.setValue(STValues.SupervisorMemory);
+        channelMechanism.DT.setValue(DTValues.Screen);
+        channelMechanism.BC.setValue(numberLen);
+        channelMechanism.exchange();
+        machineMemory.setWord(0, temp);
+    }
+
+    public void outputSymbols() {
+        int symbolsToOutput = R3.value();
+        int virtualAddress = R1.value();
+        while (symbolsToOutput > 0) {
+            int virtualBlock = virtualAddress / (Constants.blockLengthInWords * Constants.WordLengthInBytes);
+            int offset = virtualAddress % (Constants.blockLengthInWords * Constants.WordLengthInBytes);
+            int length = Math.min(symbolsToOutput, Constants.blockLengthInWords * Constants.WordLengthInBytes - offset);
+
+            channelMechanism.SB.setValue(pagingMechanism.getRealBlockNumber(virtualBlock));
+            channelMechanism.SW.setValue(offset);
+            channelMechanism.ST.setValue(STValues.UserMemory);
+            channelMechanism.DT.setValue(DTValues.Screen);
+            channelMechanism.BC.setValue(length);
+            channelMechanism.exchange();
+
+            symbolsToOutput -= length;
+            virtualAddress += length;
+        }
+    }
+
+    public void inputLine() {
+        if (userInput.bufferLength() == 0) {
+            userInput.readUserLine();
+        }
+        int symbolsToGet = Math.min(R3.value(), userInput.bufferLength());
+        int virtualAddress = R1.value();
+        while (symbolsToGet > 0) {
+            int virtualBlock = virtualAddress / (Constants.blockLengthInWords * Constants.WordLengthInBytes);
+            int offset = virtualAddress % (Constants.blockLengthInWords * Constants.WordLengthInBytes);
+            int length = Math.min(symbolsToGet, Constants.blockLengthInWords * Constants.WordLengthInBytes - offset);
+
+            channelMechanism.ST.setValue(STValues.Keyboard);
+            channelMechanism.DB.setValue(pagingMechanism.getRealBlockNumber(virtualBlock));
+            channelMechanism.DW.setValue(offset);
+            channelMechanism.DT.setValue(DTValues.UserMemory);
+            channelMechanism.BC.setValue(length);
+            channelMechanism.exchange();
+
+            symbolsToGet -= length;
+            virtualAddress += length;
+        }
+        if (symbolsToGet == 0) R3.setValue(0);
+
+    }
+
+    public void inputNumber() {
+        R1.setValue(userInput.readNumber());
+    }
+
     private int interruptHandling() {
         if (PI.value() != PIValues.Nothing) {
             if (PI.value() == PIValues.InvalidOperation) {
@@ -294,60 +357,13 @@ public class RealMachine {
             if (SI.value() == SIValues.Halt) {
                 return 1;
             } else if (SI.value() == SIValues.OutputNumber) {
-                Character[] converted = Conversion.convertIntToDecCharacterArray(R1.value());
-                int numberLen = converted.length;
-                Character[] temp = machineMemory.getWord(0);
-                machineMemory.setArr(0, converted);
-                channelMechanism.SB.setValue(0);
-                channelMechanism.SW.setValue(0);
-                channelMechanism.ST.setValue(STValues.SupervisorMemory);
-                channelMechanism.DT.setValue(DTValues.Screen);
-                channelMechanism.BC.setValue(numberLen);
-                channelMechanism.exchange();
-                machineMemory.setWord(0, temp);
-
+                outputNumber();
             } else if (SI.value() == SIValues.OutputSymbols) {
-                int symbolsToOutput = R3.value();
-                int virtualAddress = R1.value();
-                while (symbolsToOutput > 0) {
-                    int virtualBlock = virtualAddress / (Constants.blockLengthInWords * Constants.WordLengthInBytes);
-                    int offset = virtualAddress % (Constants.blockLengthInWords * Constants.WordLengthInBytes);
-                    int length = Math.min(symbolsToOutput, Constants.blockLengthInWords * Constants.WordLengthInBytes - offset);
-
-                    channelMechanism.SB.setValue(pagingMechanism.getRealBlockNumber(virtualBlock));
-                    channelMechanism.SW.setValue(offset);
-                    channelMechanism.ST.setValue(STValues.UserMemory);
-                    channelMechanism.DT.setValue(DTValues.Screen);
-                    channelMechanism.BC.setValue(length);
-                    channelMechanism.exchange();
-
-                    symbolsToOutput -= length;
-                    virtualAddress += length;
-                }
+                outputSymbols();
             } else if (SI.value() == SIValues.InputLine) {
-                if (userInput.bufferLength() == 0) {
-                    userInput.readUserLine();
-                }
-                int symbolsToGet = Math.min(R3.value(), userInput.bufferLength());
-                int virtualAddress = R1.value();
-                while (symbolsToGet > 0) {
-                    int virtualBlock = virtualAddress / (Constants.blockLengthInWords * Constants.WordLengthInBytes);
-                    int offset = virtualAddress % (Constants.blockLengthInWords * Constants.WordLengthInBytes);
-                    int length = Math.min(symbolsToGet, Constants.blockLengthInWords * Constants.WordLengthInBytes - offset);
-
-                    channelMechanism.ST.setValue(STValues.Keyboard);
-                    channelMechanism.DB.setValue(pagingMechanism.getRealBlockNumber(virtualBlock));
-                    channelMechanism.DW.setValue(offset);
-                    channelMechanism.DT.setValue(DTValues.UserMemory);
-                    channelMechanism.BC.setValue(length);
-                    channelMechanism.exchange();
-
-                    symbolsToGet -= length;
-                    virtualAddress += length;
-                }
-                if (symbolsToGet == 0) R3.setValue(0);
+                inputLine();
             } else if (SI.value() == SIValues.InputNumber) {
-                R1.setValue(userInput.readNumber());
+                inputNumber();
             } else if (SI.value() == SIValues.OpenFile) {
                 Character[] name = pagingMechanism.getWord(R1.value());
                 StringBuilder nameBuilder = new StringBuilder();
@@ -512,8 +528,7 @@ public class RealMachine {
         this.vm = null;
     }
 
-    public void setUserMode()
-    {
+    public void setUserMode() {
         MODE = false;
     }
 }

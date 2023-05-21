@@ -62,10 +62,9 @@ public class JobGovernor extends Process {
                 state = 18;
                 break;
             case 11:
-                if(SIValues.isInput(virtualMachineProcess.savedRegisters.SI)){
+                if (SIValues.isInput(virtualMachineProcess.savedRegisters.SI)) {
                     state = 12;
-                }
-                else{
+                } else {
                     state = 17;
                 }
                 break;
@@ -81,6 +80,59 @@ public class JobGovernor extends Process {
                 kernel.waitResource(ResourceNames.ChannelMechanism);
                 state = 15;
                 break;
+            case 15:
+                saveRegisters();
+                virtualMachineProcess.loadRegisters();
+                if (virtualMachineProcess.savedRegisters.SI == SIValues.InputLine) {
+                    kernel.realMachine.inputLine();
+                } else if (virtualMachineProcess.savedRegisters.SI == SIValues.InputNumber) {
+                    kernel.realMachine.inputNumber();
+                } else {
+                    assert (false);
+                }
+                virtualMachineProcess.saveRegisters();
+                loadRegisters();
+                state = 16;
+                break;
+            case 16:
+                kernel.releaseResource(ResourceNames.ChannelMechanism);
+                state = 18;
+                break;
+            case 17:
+//                should use PrintLine
+                saveRegisters();
+                virtualMachineProcess.loadRegisters();
+                if (virtualMachineProcess.savedRegisters.SI == SIValues.OutputNumber) {
+                    kernel.realMachine.outputNumber();
+                } else if (virtualMachineProcess.savedRegisters.SI == SIValues.OutputSymbols) {
+                    kernel.realMachine.outputSymbols();
+                } else {
+                    assert (false);
+                }
+                virtualMachineProcess.saveRegisters();
+                loadRegisters();
+//                kernel.releaseResource(ResourceNames.LineInMemory);
+                break;
+            case 18:
+                kernel.continueProcess(virtualMachineProcess);
+                state = 1;
+                break;
+            case 19:
+                kernel.deleteProcess(virtualMachineProcess);
+                saveRegisters();
+                virtualMachineProcess.loadRegisters();
+                kernel.realMachine.pagingMechanism.freeVirtualMachinePages();
+                virtualMachineProcess.saveRegisters();
+                loadRegisters();
+                state = 20;
+                break;
+            case 20:
+                kernel.releaseResource(ResourceNames.UserMemory, Constants.virtualMachineLengthInBlocks + 1);
+                state = 21;
+                break;
+            case 21:
+                kernel.waitResource(ResourceNames.NonExistent);
+                state = 22;
         }
     }
 }
