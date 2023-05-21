@@ -3,7 +3,7 @@ package Resources;
 import Utils.RegisterContainer;
 
 public class SavedRegisters {
-    int R1, R2, R3, FLAGS, IC, CS, DS, SI, PI, PTR;
+    public int R1, R2, R3, FLAGS, IC, CS, DS, SI, PI, PTR;
     public void save(RegisterContainer registerContainer)
     {
         this.R1 = registerContainer.R1.value();

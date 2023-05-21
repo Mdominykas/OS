@@ -29,51 +29,70 @@ public class ReadFromInterface extends Process {
                 if (kernel.someoneWaitsResource(ResourceNames.UserInput)) {
                     state = 3;
                 } else {
-                    state = 4;
+                    state = 5;
                 }
                 break;
             case 3:
                 kernel.releaseResource(ResourceNames.UserInput);
-                state = 1;
-//                galimai cia reikia kazko laukti
+                state = 4;
                 break;
             case 4:
-                userInput.readUntilEndOfLineButNotMoreThanN(100, command);
-                if (commandString().equals("shutdown")) {
-                    state = 5;
-                } else {
-                    state = 6;
-                }
+                kernel.waitResource(ResourceNames.UserInputReceived);
+                state = 1;
                 break;
             case 5:
+                userInput.readUntilEndOfLineButNotMoreThanN(100, command);
+                if (commandString().equals("shutdown")) {
+                    state = 6;
+                } else {
+                    state = 7;
+                }
+                break;
+            case 6:
                 kernel.releaseResource(ResourceNames.MosEnd);
                 state = 1;
                 break;
-            case 6:
+            case 7:
                 if (commandString().startsWith("load ")) {
-                    state = 7;
+                    state = 8;
                 } else {
-                    state = 10;
+                    state = 15;
                 }
                 break;
-            case 7:
-                kernel.waitResource(ResourceNames.SupervisorMemory);
-                state = 8;
-                break;
             case 8:
+                kernel.waitResource(ResourceNames.SupervisorMemory);
+                state = 9;
+                break;
+            case 9:
+                kernel.waitResource(ResourceNames.ExternalMemory);
+                state = 10;
+                break;
+            case 10:
+                kernel.waitResource(ResourceNames.ChannelMechanism);
+                state = 11;
+                break;
+            case 11:
                 String fileName = commandString().substring(5);
                 try {
                     kernel.realMachine.copyProgramToSupervisorMemory(fileName);
                 } catch (Exception ignored) {
                     assert (false); // not implemented case when file is not found
                 }
-                state = 9;
+                state = 12;
                 break;
-            case 9:
+            case 12:
+                kernel.releaseResource(ResourceNames.ChannelMechanism);
+                state = 13;
+                break;
+            case 13:
+                kernel.releaseResource(ResourceNames.ExternalMemory);
+                state = 14;
+                break;
+            case 14:
                 kernel.releaseResource(ResourceNames.TaskInSupervisorMemory);
                 state = 1;
                 break;
-            case 10:
+            case 15:
                 Resource lineInMemory = kernel.getResource(ResourceNames.LineInMemory);
                 String line = "incorrect command";
                 lineInMemory.addElement(line);

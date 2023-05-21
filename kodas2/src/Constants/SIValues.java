@@ -12,4 +12,14 @@ public class SIValues {
     public static int OutputNumber = 8;
     public static int InputNumber = 9;
     public static int InputLine = 10;
+
+    public static boolean isWorkWithFiles(int num)
+    {
+        return (num == OpenFile) || (num == CloseFile) || (num == WriteFile) || (num == ReadFile) || (num == DeleteFile);
+    }
+
+    public static boolean isInput(int num)
+    {
+        return (num == InputNumber) || (num == InputLine);
+    }
 }

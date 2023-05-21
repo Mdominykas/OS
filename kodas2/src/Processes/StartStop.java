@@ -31,6 +31,7 @@ public class StartStop extends Process {
         kernel.createResource(this, ResourceNames.LineInMemory, new ArrayList<>());
         kernel.createResource(this, ResourceNames.FromInterrupt, new ArrayList<>());
         kernel.createResource(this, ResourceNames.UserInput, new ArrayList<>());
+        kernel.createResource(this, ResourceNames.UserInputReceived, new ArrayList<>());
         kernel.createResource(this, ResourceNames.Interrupt, new ArrayList<>());
         kernel.createResource(this, ResourceNames.WorkWithFiles, new ArrayList<>());
         kernel.createResource(this, ResourceNames.WorkWithFilesEnd, new ArrayList<>());

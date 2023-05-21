@@ -2,17 +2,22 @@
 repeat
   :1. Blokavimasis laukiant “Iš vartotojo sąsajos” resurso;
   if (2. Yra procesų laukiančių resurso "Vartotojo įvedimas") is (Taip) then
-    :3. atlaisvinti resursą "Vartotojo įvedimas";
+    :3. Atlaisvinti resursą "Vartotojo įvedimas";
+    :4. Laukti resurso "Vartotojo įvedimas gautas";
   else (Ne)
-    if (4. Įvedimo tipas yra shutdown) is (Taip) then
-      :5. Atlaisvinti resursą "MOS pabaiga";
+    if (5. Įvedimo tipas yra shutdown) is (Taip) then
+      :6. Atlaisvinti resursą "MOS pabaiga";
     else (Ne)
-      if (6. Įvedimo tipas yra load prog) is (Taip) then
-        :7. Blokavimasis laukiant resurso "supervizorinė atmintis";
-        :8. Blokų kopijavimas į supervizorinę atmintį;
-        :9. Atlaisvinamas resursas “Užduotis supervizorinėje atmintyje”;
+      if (7. Įvedimo tipas yra load prog) is (Taip) then
+        :8. Blokavimasis laukiant resurso "Supervizorinė atmintis";
+        :9. Laukiama resurso "Išorinė atmintis";
+        :10. Lauiama resurso "Kanalų įrenginys";
+        :11. Blokų kopijavimas į supervizorinę atmintį;
+        :12. Atlaisvinamas resursas "Kanalų įrenginys";
+        :13. Atlaisvinamas resursas "Išorinė atmintis";
+        :14. Atlaisvinamas resursas “Užduotis supervizorinėje atmintyje”;
       else (Ne)
-        :10. Atlaisvinti resursą "Eilutė atmintyje" su pranešimu apie netinkamą komandą;
+        :15. Atlaisvinti resursą "Eilutė atmintyje" su pranešimu apie netinkamą komandą;
       endif
     endif
   endif

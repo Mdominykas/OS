@@ -14,10 +14,11 @@ public class ResourceNames {
     public static final int LineInMemory = 11;
     public static final int FromInterrupt = 12;
     public static final int UserInput = 13;
-    public static final int Interrupt = 14;
-    public static final int WorkWithFiles = 15;
-    public static final int WorkWithFilesEnd = 16;
-    public static final int NonExistent = 17;
+    public static final int UserInputReceived = 14;
+    public static final int Interrupt = 15;
+    public static final int WorkWithFiles = 16;
+    public static final int WorkWithFilesEnd = 17;
+    public static final int NonExistent = 18;
 
     public static String nameToString(Resource resource)
     {
@@ -56,6 +57,8 @@ public class ResourceNames {
                 return "WorkWithFilesEnd";
             case NonExistent:
                 return "NonExistent";
+            case UserInputReceived:
+                return "UserInputReceived";
             default:
                 assert(false);
                 return "UnknownResource";

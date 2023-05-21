@@ -14,18 +14,19 @@ repeat
       else (Ne)
         if (11. Įvedimas?) is (Taip) then
           :12. Blokavimasis laukiant "Vartotojo įvedimas" \n resurso, skirto šiam JobGovernor;
-          :13. Blokavimasis laukiant "Kanalų įrenginys" resurso;
-          :14. Nustatyti kanalų įrenginio registrus ir \n įvykdyti komandą EXCHGE;
-          :15. Atlaisvinti resursą "Kanalų įrenginys";
+          :13. Atlaisvinti resursą "Vartotojo įvedimas gautas";
+          :14. Blokavimasis laukiant "Kanalų įrenginys" resurso;
+          :15. Nustatyti kanalų įrenginio registrus ir \n įvykdyti komandą EXCHGE;
+          :16. Atlaisvinti resursą "Kanalų įrenginys";
         else (Ne (Išvedimas))
-          :16. Atlaisvinti resursą "Eilutė atmintyje";
+          :17. Atlaisvinti resursą "Eilutė atmintyje";
         endif
       endif
-      :17. Proceso "Virtuali mašina" aktyvavimas;
+      :18. Proceso "Virtuali mašina" aktyvavimas;
     else (Ne)
-      :18. Naikinti procesą "Virtuali mašina";
-      :19. Atlaisvinti resursą "Vartotojo atmintis";
-      :20. Blokavimasis laukiant "Neegzistuojantis" resurso;
+      :19. Naikinti procesą "Virtuali mašina";
+      :20. Atlaisvinti resursą "Vartotojo atmintis";
+      :21. Blokavimasis laukiant "Neegzistuojantis" resurso;
       kill
     endif
 @enduml
