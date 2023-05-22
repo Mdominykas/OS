@@ -31,8 +31,7 @@ public class Kernel {
     }
 
     public void run() {
-        final int timeReset = 10;
-        int timeLimit = timeReset;
+        realMachine.resetTimer();
         while (true) {
             if (activeProcess == null)
                 break;
@@ -41,11 +40,11 @@ public class Kernel {
             if (realMachine.userInput.simulateReading()) {
                 releaseResource(ResourceNames.FromUserInterface);
             }
-            if (timeLimit == 0) {
+            realMachine.decreaseTimer();
+            if(realMachine.TIValue() == 0)
+            {
                 runScheduler();
-                timeLimit = timeReset;
-            } else
-                timeLimit--;
+            }
         }
     }
 
@@ -145,6 +144,7 @@ public class Kernel {
         activeProcess = readyProcesses.get(highestPriorityNum);
         activeProcess.loadRegisters();
         readyProcesses.remove(activeProcess);
+        realMachine.resetTimer();
     }
 
     public void createResource(Process creator, int name, List<Object> elements) {

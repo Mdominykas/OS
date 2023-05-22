@@ -26,6 +26,7 @@ public class VirtualMachineProcess extends Process {
                 while(true)
                 {
                     vm.execute();
+                    kernel.realMachine.decreaseTimer();
                     if (kernel.realMachine.interruptHandler.test()) {
                         if (kernel.realMachine.interruptHandler.testSIAndPI()) {
                             state = 3;

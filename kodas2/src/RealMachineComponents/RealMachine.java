@@ -49,6 +49,18 @@ public class RealMachine {
         return new RegisterContainer(R1, R2, R3, FLAGS, IC, CS, DS, SI, PI, PTR);
     }
 
+    public void decreaseTimer() {
+        TI.setValue(Math.max(TI.value() - 1, 0));
+    }
+
+    public void resetTimer() {
+        TI.setValue(10);
+    }
+
+    public int TIValue()
+    {
+        return TI.value();
+    }
 
     public void copyProgramToSupervisorMemory(String programName) throws OSException {
         int startInExternal = fileSystem.findFirstFileHeaderWord(programName); // 3 are subtracted for "------", programName, "$PROG$"
@@ -338,8 +350,8 @@ public class RealMachine {
         }
         if (symbolsToGet == 0) R3.setValue(0);
     }
-    public void openFile()
-    {
+
+    public void openFile() {
         Character[] name = pagingMechanism.getWord(R1.value());
         StringBuilder nameBuilder = new StringBuilder();
         for (char ch : name) {
@@ -355,8 +367,7 @@ public class RealMachine {
         R2.setValue(handler.fileNumber);
     }
 
-    public void closeFile()
-    {
+    public void closeFile() {
         int fileNumber = R2.value();
         if (fileSystem.closeFile(fileNumber)) {
             R1.setValue(0);
@@ -365,8 +376,7 @@ public class RealMachine {
         }
     }
 
-    public void writeFile()
-    {
+    public void writeFile() {
         int symbolsToOutput = R3.value();
         int virtualAddress = R1.value();
         FileHandler handler = fileSystem.fileHandlerByNumber(R2.value());
@@ -402,8 +412,7 @@ public class RealMachine {
         }
     }
 
-    public void readFile()
-    {
+    public void readFile() {
         int fileNumber = R2.value();
         FileHandler handler = fileSystem.fileHandlerByNumber(fileNumber);
 
@@ -442,8 +451,7 @@ public class RealMachine {
         }
     }
 
-    public void deleteFile()
-    {
+    public void deleteFile() {
         int fileNumber = R2.value();
         FileHandler handler = fileSystem.fileHandlerByNumber(fileNumber);
         if (handler != null) {
