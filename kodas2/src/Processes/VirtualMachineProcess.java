@@ -51,4 +51,13 @@ public class VirtualMachineProcess extends Process {
         state = 1;
     }
 
+    public int getSIValue(){
+        return savedRegisters.SI;
+    }
+
+    public int getJobGovernorId()
+    {
+        return jobGovernorId;
+    }
+
 }

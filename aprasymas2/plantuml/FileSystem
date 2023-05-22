@@ -3,19 +3,24 @@ repeat
   :1. Blokavimasis laukiant resurso "Darbas su failais";
   :2. Blokavimasis laukiant resurso "Išorinė atmintis";
   :3. Blokavimasis laukiant resurso "Kanalų įrenginys";
-  switch (Darbo tipas?)
-  case (Failo atidarymas)
-    :4. Atidaryti failą ?kaip su registrais? arba sukurti naują;
-  case (Failo uždarymas)
-    :5. Uždaryti nurodytą failą;
-  case (Failo ištrynimas)
-    :6. Ištrinti nurodytą failą;
-  case (Rašymas į failą)
-    :7. Rašyti į nurodytą failą;
-  case (Skaitymas iš failo)
-    :8. Rašyti į nurodytą failą;
-  endswitch
-  :9. Atlaisvinti resursą "Kanalų įrenginys";
-  :10. Atlaisvinti resursą "Išorinė atmintis";
-  :11. Atlaisvinti resursą "Darbo su failų sistema pabaiga";
+  if (4. Darbo tipas yra failo atidarimas?) is (Taip) then
+    :5. Atidaryti failą arba sukurti naują;
+  else (Ne)
+    if (6. Darbo tipas yra failo uždarymas?) is (Taip) then
+      :7. Uždaryti nurodytą failą;
+    else (Ne)
+      if (8. Darbo tipas yra failo ištrynimas?) is (Taip) then
+        :9. Ištrinti nurodytą failą;
+      else (Ne)
+        if (10. Darbo tipas yra rašymas į failą?) is (Taip) then
+          :11. Rašyti į nurodytą failą;
+        else (Ne)
+          :12. Skaityti iš nurodyto failo;
+        endif
+      endif
+    endif
+  endif
+  :13. Atlaisvinti resursą "Kanalų įrenginys";
+  :14. Atlaisvinti resursą "Išorinė atmintis";
+  :15. Atlaisvinti resursą "Darbo su failų sistema pabaiga";
 @enduml

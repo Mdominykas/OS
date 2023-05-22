@@ -2,6 +2,7 @@ package Processes;
 
 import Constants.*;
 import RealMachineComponents.UserInput;
+import Resources.Resource;
 import Resources.ResourceNames;
 import Utils.Kernel;
 
@@ -55,6 +56,8 @@ public class JobGovernor extends Process {
                 break;
             case 9:
                 kernel.releaseResource(ResourceNames.WorkWithFiles);
+                Resource workWithFiles = kernel.getResource(ResourceNames.WorkWithFiles);
+                workWithFiles.addElement(virtualMachineProcess);
                 state = 10;
                 break;
             case 10:
