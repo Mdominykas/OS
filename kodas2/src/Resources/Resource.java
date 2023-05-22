@@ -11,6 +11,7 @@ public class Resource {
     protected List<Object> elements;
     protected List<Process> waitingProcesses;
     protected List<Integer> waitingCount;
+    protected List<Integer> releasedBeforeWait;
     public int name;
     protected int availableElements; // galimai Resource tera binary semaphore
 
@@ -20,6 +21,7 @@ public class Resource {
         this.elements = elements;
         waitingCount = new ArrayList<>();
         waitingProcesses = new ArrayList<>();
+        releasedBeforeWait = new ArrayList<>();
         availableElements = 0;
     }
 
@@ -52,9 +54,13 @@ public class Resource {
                 id = i;
             }
         }
-        assert (id != -1);
-        waitingCount.remove(id);
-        return waitingProcesses.remove(id);
+        if (id == -1) {
+            releasedBeforeWait.add(fid);
+            return null;
+        } else {
+            waitingCount.remove(id);
+            return waitingProcesses.remove(id);
+        }
     }
 
     public boolean waitResource(Process process) {
@@ -62,13 +68,24 @@ public class Resource {
     }
 
     public boolean waitResource(Process process, int count) {
+        if (releasedBeforeWait.contains(process.getFId())) {
+            int id = -1;
+            for (int i = 0; i < releasedBeforeWait.size(); i++) {
+                if (releasedBeforeWait.get(i) == process.getFId()) {
+                    id = i;
+                }
+            }
+            assert (id != -1);
+            releasedBeforeWait.remove(id);
+            return true;
+        }
+
         boolean ret = ask(count);
         if (!ret) {
             waitingProcesses.add(process);
             waitingCount.add(count);
         }
         return ret;
-
     }
 
     public boolean someOneWaits() {
