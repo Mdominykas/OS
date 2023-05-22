@@ -25,7 +25,8 @@ repeat
   else (Ne)
     :19. Naikinti procesą "Virtuali mašina";
     :20. Atlaisvinti resursą "Vartotojo atmintis";
-    :21. Blokavimasis laukiant "Neegzistuojantis" resurso;
+    :21. Atlaisvinti resursą "Užduotis supervizorinėje atmintyje" \n su savo numeriu;
+    :22. Blokavimasis laukiant "Neegzistuojantis" resurso;
     kill
   endif
 @enduml

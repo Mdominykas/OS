@@ -57,8 +57,7 @@ public class RealMachine {
         TI.setValue(10);
     }
 
-    public int TIValue()
-    {
+    public int TIValue() {
         return TI.value();
     }
 

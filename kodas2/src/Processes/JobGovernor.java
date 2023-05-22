@@ -135,8 +135,14 @@ public class JobGovernor extends Process {
                 state = 21;
                 break;
             case 21:
-                kernel.waitResource(ResourceNames.NonExistent);
+                kernel.getResource(ResourceNames.TaskProgramInSupervisorMemory).addElement(fId);
+                kernel.releaseResource(ResourceNames.TaskProgramInSupervisorMemory);
                 state = 22;
+                break;
+            case 22:
+                kernel.waitResource(ResourceNames.NonExistent);
+                state = 23;
+                break;
         }
     }
 }
