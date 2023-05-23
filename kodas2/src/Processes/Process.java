@@ -11,7 +11,7 @@ import java.util.List;
 
 public abstract class Process {
     protected int fId;
-    //savedRegisters
+    private Process parent;
     public List<Resource> createdResources;
     protected int state;
     public int priority;
@@ -35,6 +35,11 @@ public abstract class Process {
         this.registerContainer = registerContainer;
         saveRegisters();
     }
+
+    public void setParent(Process parentProcess) {
+        this.parent = parentProcess;
+    }
+
 
     public void saveRegisters() {
         this.savedRegisters.save(registerContainer);

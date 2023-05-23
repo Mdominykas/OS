@@ -141,28 +141,6 @@ OUTSIM
 HALT**
 .DATAS
 $FINS$
-$FILE$
-sujung
-------
-pirmoj
-o fail
-o eilu
-tes, k
-urios 
-reikal
-ingos 
-jungim
-ui.   
-antroj
-o fail
-o eilu
-tes, k
-urios 
-reikal
-ingos 
-jungim
-ui.   
-$FINS$
 $PROG$
 countr
 ------
@@ -185,6 +163,54 @@ iveski
 te vie
 na ska
 iciu\n
+$FINS$
+$FILE$
+asdfnt
+------
+$FINS$
+$FILE$
+asdfwe
+------
+$FINS$
+$FILE$
+aaaaaa
+------
+$FINS$
+$FILE$
+pirmaa
+------
+$FINS$
+$FILE$
+antraa
+------
+$FINS$
+$FILE$
+asdfqw
+------
+$FINS$
+$FILE$
+antrar
+------
+$FINS$
+$FILE$
+askdfl
+------
+$FINS$
+$FILE$
+ladsfk
+------
+$FINS$
+$FILE$
+sujung
+------
+$FINS$
+$FILE$
+sldkfs
+------
+$FINS$
+$FILE$
+dslfks
+------
 $FINS$
 000000
 000000
@@ -3758,32 +3784,6 @@ E$pirm
 as----
 --pirm
 oj0000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
-000000
 000000
 000000
 000000

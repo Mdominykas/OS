@@ -41,17 +41,17 @@ public class Kernel {
                 releaseResource(ResourceNames.FromUserInterface);
             }
             realMachine.decreaseTimer();
-            if(realMachine.TIValue() == 0)
-            {
+            if (realMachine.TIValue() == 0) {
                 runScheduler();
             }
         }
     }
 
-    public void createProcess(Process parent, Process newProcess, int priority) {
+    public void createProcess(Process newProcess, int priority) {
         Logging.logCreatedProcess(newProcess);
-        parent.childrenProcess.add(newProcess);
+        activeProcess.childrenProcess.add(newProcess);
         newProcess.giveResourceReferences(realMachine.containerOfRegisters());
+        newProcess.setParent(activeProcess);
         newProcess.priority = priority;
         readyProcesses.add(newProcess);
     }
@@ -113,7 +113,7 @@ public class Kernel {
         }
     }
 
-    public  void continueProcess(Process process) {
+    public void continueProcess(Process process) {
         process.onContinue();
         if (blockedStoppedProcesses.contains(process)) {
             blockedStoppedProcesses.remove(process);
@@ -148,13 +148,13 @@ public class Kernel {
     }
 
     public void createResource(Process creator, int name, List<Object> elements) {
-        Resource resource = new Resource(name, this, elements);
+        Resource resource = new Resource(name, creator, this, elements);
         resources.add(resource);
         creator.createdResources.add(resource);
     }
 
     public void deleteResource(Resource resource) {
-//        galimai cia reikia is proceso pasalinti
+        resource.getCreator().createdResources.remove(resource);
         resources.remove(resource);
     }
 
@@ -209,8 +209,7 @@ public class Kernel {
         }
     }
 
-    public void releaseResourceFor(int resourceName, int targetFid)
-    {
+    public void releaseResourceFor(int resourceName, int targetFid) {
         Resource selectedResource = selectResource(resourceName);
         assert (selectedResource != null);
         Logging.logProcessReleaseResource(activeProcess, selectedResource);

@@ -61,4 +61,10 @@ public class VirtualMachineProcess extends Process {
         return jobGovernorId;
     }
 
+    public void setPTRValue(int value)
+    {
+        this.savedRegisters.PTR = value;
+    }
+
+
 }

@@ -27,7 +27,7 @@ public class MainProc extends Process {
                 }
                 break;
             case 3:
-                kernel.createProcess(this, new JobGovernor(kernel), ProcessesPriority.JobGovernor);
+                kernel.createProcess(new JobGovernor(kernel), ProcessesPriority.JobGovernor);
                 state = 1;
                 break;
             case 4:

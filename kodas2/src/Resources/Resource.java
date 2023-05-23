@@ -8,6 +8,7 @@ import java.util.List;
 
 public class Resource {
     protected int fid;
+    protected Process creator;
     protected List<Object> elements;
     protected List<Process> waitingProcesses;
     protected List<Integer> waitingCount;
@@ -15,8 +16,9 @@ public class Resource {
     public int name;
     protected int availableElements; // galimai Resource tera binary semaphore
 
-    public Resource(int name, Kernel kernel, List<Object> elements) {
+    public Resource(int name, Process creator, Kernel kernel, List<Object> elements) {
         this.name = name;
+        this.creator = creator;
         this.fid = kernel.getNewFid();
         this.elements = elements;
         waitingCount = new ArrayList<>();
@@ -98,5 +100,9 @@ public class Resource {
 
     public Object removeElement() {
         return this.elements.remove(0);
+    }
+
+    public Process getCreator() {
+        return creator;
     }
 }

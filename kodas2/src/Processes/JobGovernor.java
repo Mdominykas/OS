@@ -25,7 +25,8 @@ public class JobGovernor extends Process {
                 break;
             case 3:
                 virtualMachineProcess = new VirtualMachineProcess(kernel, fId, kernel.realMachine.createVirtualMachine());
-                kernel.createProcess(this, virtualMachineProcess, ProcessesPriority.VirtualMachine);
+                virtualMachineProcess.setPTRValue(registerContainer.PTR.value());
+                kernel.createProcess(virtualMachineProcess, ProcessesPriority.VirtualMachine);
                 state = 4;
                 break;
             case 4:
