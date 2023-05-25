@@ -61,7 +61,7 @@ public class RealMachine {
         return TI.value();
     }
 
-    public void copyProgramToSupervisorMemory(String programName) throws OSException {
+    public void copyProgramToSupervisorMemory(String programName) throws ProgramNotFoundException {
         int startInExternal = fileSystem.findFirstFileHeaderWord(programName); // 3 are subtracted for "------", programName, "$PROG$"
         if (startInExternal == -1) {
             throw new ProgramNotFoundException("");

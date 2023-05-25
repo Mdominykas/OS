@@ -1,6 +1,7 @@
 package Processes;
 
 import Constants.Constants;
+import OSException.ProgramNotFoundException;
 import RealMachineComponents.UserInput;
 import Resources.Resource;
 import Resources.ResourceNames;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 public class ReadFromInterface extends Process {
     ArrayList<Character> command;
     UserInput userInput;
+    boolean programNotFound;
 
     ReadFromInterface(Kernel kernel) {
         super(kernel);
@@ -75,8 +77,9 @@ public class ReadFromInterface extends Process {
                 String fileName = commandString().substring(5);
                 try {
                     kernel.realMachine.copyProgramToSupervisorMemory(fileName);
-                } catch (Exception ignored) {
-                    assert (false); // not implemented case when file is not found
+                    programNotFound = false;
+                } catch (ProgramNotFoundException ignored) {
+                    programNotFound = true;
                 }
                 state = 12;
                 break;
@@ -89,7 +92,12 @@ public class ReadFromInterface extends Process {
                 state = 14;
                 break;
             case 14:
-                kernel.releaseResource(ResourceNames.TaskInSupervisorMemory);
+                if(! programNotFound){
+                    kernel.releaseResource(ResourceNames.TaskInSupervisorMemory);
+                }
+                else {
+                    kernel.releaseResource(ResourceNames.SupervisorMemory);
+                }
                 state = 1;
                 break;
             case 15:
