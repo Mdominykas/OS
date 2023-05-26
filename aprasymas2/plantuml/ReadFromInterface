@@ -9,15 +9,20 @@ repeat
       :6. Atlaisvinti resursą "MOS pabaiga";
     else (Ne)
       if (7. Įvedimo tipas yra load prog) is (Taip) then
-        :8. Blokavimasis laukiant resurso "Supervizorinė atmintis";
-        :9. Laukiama resurso "Išorinė atmintis";
-        :10. Lauiama resurso "Kanalų įrenginys";
-        :11. Blokų kopijavimas į supervizorinę atmintį;
-        :12. Atlaisvinamas resursas "Kanalų įrenginys";
-        :13. Atlaisvinamas resursas "Išorinė atmintis";
-        :14. Atlaisvinamas resursas “Užduotis supervizorinėje atmintyje”;
+        if (8. Failas yra kietajame diske?) is (Taip) then
+          :9. Blokavimasis laukiant resurso "Supervizorinė atmintis";
+          :10. Laukiama resurso "Išorinė atmintis";
+          :11. Lauiama resurso "Kanalų įrenginys";
+          :12. Blokų kopijavimas į supervizorinę atmintį;
+          :13. Atlaisvinamas resursas "Kanalų įrenginys";
+          :14. Atlaisvinamas resursas "Išorinė atmintis";
+          :15. Atlaisvinamas resursas “Užduotis supervizorinėje atmintyje”;
+        else (Ne)
+          :16. Atlaisvinti resursą "Eilutė atmintyje" su \n pranešimu apie neegzistuojančią programą;
+          :17. Atlaisvinti resurs1 "Supervizorinė atmintis";
+        endif
       else (Ne)
-        :15. Atlaisvinti resursą "Eilutė atmintyje" su pranešimu apie netinkamą komandą;
+        :18. Atlaisvinti resursą "Eilutė atmintyje" su \n pranešimu apie netinkamą komandą;
       endif
     endif
   endif

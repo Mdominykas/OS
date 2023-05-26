@@ -61,11 +61,16 @@ public class RealMachine {
         return TI.value();
     }
 
-    public void copyProgramToSupervisorMemory(String programName) throws ProgramNotFoundException {
-        int startInExternal = fileSystem.findFirstFileHeaderWord(programName); // 3 are subtracted for "------", programName, "$PROG$"
-        if (startInExternal == -1) {
-            throw new ProgramNotFoundException("");
-        }
+    public boolean fileExists(String programName)
+    {
+        int startInExternal = fileSystem.findFirstFileHeaderWord(programName);
+        return startInExternal != -1;
+
+    }
+
+    public void copyProgramToSupervisorMemory(String programName) {
+        int startInExternal = fileSystem.findFirstFileHeaderWord(programName);
+        assert(startInExternal != -1);
         int fileStartBlock = startInExternal / Constants.blockLengthInWords;
         int fileStartByte = (startInExternal % Constants.blockLengthInWords) * Constants.WordLengthInBytes;
         int wroteBlocks = 0, wordsInLastBlock = -1;

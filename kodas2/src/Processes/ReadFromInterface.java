@@ -25,7 +25,7 @@ public class ReadFromInterface extends Process {
             case 1:
                 command.clear();
                 kernel.waitResource(ResourceNames.FromUserInterface);
-                state++;
+                state = 2;
                 break;
             case 2:
                 if (kernel.someoneWaitsResource(ResourceNames.UserInput)) {
@@ -62,48 +62,57 @@ public class ReadFromInterface extends Process {
                 }
                 break;
             case 8:
-                kernel.waitResource(ResourceNames.SupervisorMemory);
-                state = 9;
+                String filename = commandString().substring(5);
+                if (kernel.realMachine.fileExists(filename)) {
+                    state = 9;
+                } else {
+                    state = 16;
+                }
                 break;
             case 9:
-                kernel.waitResource(ResourceNames.ExternalMemory);
+                kernel.waitResource(ResourceNames.SupervisorMemory);
                 state = 10;
                 break;
             case 10:
-                kernel.waitResource(ResourceNames.ChannelMechanism);
+                kernel.waitResource(ResourceNames.ExternalMemory);
                 state = 11;
                 break;
             case 11:
-                String fileName = commandString().substring(5);
-                try {
-                    kernel.realMachine.copyProgramToSupervisorMemory(fileName);
-                    programNotFound = false;
-                } catch (ProgramNotFoundException ignored) {
-                    programNotFound = true;
-                }
+                kernel.waitResource(ResourceNames.ChannelMechanism);
                 state = 12;
                 break;
             case 12:
-                kernel.releaseResource(ResourceNames.ChannelMechanism);
+                String fileName = commandString().substring(5);
+                kernel.realMachine.copyProgramToSupervisorMemory(fileName);
                 state = 13;
                 break;
             case 13:
-                kernel.releaseResource(ResourceNames.ExternalMemory);
+                kernel.releaseResource(ResourceNames.ChannelMechanism);
                 state = 14;
                 break;
             case 14:
-                if(! programNotFound){
-                    kernel.releaseResource(ResourceNames.TaskInSupervisorMemory);
-                }
-                else {
-                    kernel.releaseResource(ResourceNames.SupervisorMemory);
-                }
-                state = 1;
+                kernel.releaseResource(ResourceNames.ExternalMemory);
+                state = 15;
                 break;
             case 15:
+                kernel.releaseResource(ResourceNames.TaskInSupervisorMemory);
+                state = 1;
+                break;
+            case 16:
+                Resource lineResource = kernel.getResource(ResourceNames.LineInMemory);
+                String line16 = "Program not found";
+                lineResource.addElement(line16);
+                kernel.releaseResource(ResourceNames.LineInMemory);
+                state = 1;
+                break;
+            case 17:
+                kernel.releaseResource(ResourceNames.SupervisorMemory);
+                state = 1;
+                break;
+            case 18:
                 Resource lineInMemory = kernel.getResource(ResourceNames.LineInMemory);
-                String line = "incorrect command";
-                lineInMemory.addElement(line);
+                String line17 = "incorrect command";
+                lineInMemory.addElement(line17);
                 kernel.releaseResource(ResourceNames.LineInMemory);
                 state = 1;
                 break;
